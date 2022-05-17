@@ -1,12 +1,3 @@
-<style>
-body { margin-right: 50%% }
-li.L0, li.L1, li.L2, li.L3,
-li.L5, li.L6, li.L7, li.L8 {
-  list-style-type: decimal !important;
-  }
-</style>
-<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
-
 ### Creating a reusable library
 
 > TODO: move this note to the landing page/index
@@ -101,18 +92,74 @@ Avoid the 'builder' pattern:
 
 %(pitfall1.jsonnet)s
 
-This practice works with functions nested in the object, allowing the user to 'chain'
+Notice the odd `withImage():: self + {}` structure.
+
+This practice nests functions in the newly created object, allowing the user to 'chain'
 functions to modify `self`. However this comes at a performance impact in the Jsonnet
 interpreter and should be avoided.
 
 ---
 
+A common pattern are libraries that use the `_config` and `_images` keys. This supposedly
+attempts to differentiate between 'public' and 'private' APIs on libraries. However the
+underscore prefix has no real meaning in jsonnet, at best it is a convention with implied
+meaning.
 
-<script>
-var pres = document.getElementsByTagName('pre');
-for (i=0;i<pres.length; i++) {
-  pres[i].className='prettyprint linenums';
-}
-PR.prettyPrint();
-</script>
+Applying the convention to above library would make it look like this:
 
+%(pitfall2.jsonnet)s
+
+This convention attempts to provide a 'stable' API through the `_config` and `_images`
+parameters, implying that patching other attributes will not be supported. However the
+'public' attributes (indicated by the `_` prefix) are not more public or private than the
+'private' attributes as they exists the same space. To make the `name` parameter
+a required argument, an `error` is returned if it is not set in `_config`. 
+
+This pattern is comparable to the `values.yaml` in Helm charts, however Jsonnet does not
+face the same limitations and as said before users can modify the final output after the
+fact either way.
+
+This pattern also has an impact on extensibility. When introducing a new attribute, the
+author needs to take into account that users might not want the same default.
+
+%(pitfall3.jsonnet)s
+
+This can be accomplished with imperative statements, however these pile up over time and
+make the library brittle and hard to read. In this example the default for
+`imagePullPolicy` is `null`, the author avoids adding an additional boolean parameter
+(`_config.imagePullPolicyEnabled` for example) with the drawback that no default value can
+be provided.
+
+In the object-oriented library this can be done with a new function:
+
+%(example7.jsonnet)s
+
+The `withImagePullPolicy()` function provides a more declarative approach to configure
+this new option. In contrast to the approach above this new feature does not have to
+modify the existing code, keeping a strong separation of concerns and reduces the risk of
+introducing bugs.
+
+At the same time functions provide a clean API for the end user and the author alike,
+replacing the implied convention with declarative statements with required and optional
+arguments. Calling the function implies that the user wants to set a value, the optional
+arguments provides a default value `Always` to get the user going.
+
+---
+
+As you might have noticed, the `$` keyword is not used in any of these examples. In many
+libraries it is used to refer to variables that still need to be set.
+
+%(pitfall4.jsonnet)s
+
+This pattern makes it hard to determine which library is consuming which attribute. On top
+of that libraries can influence each other unintentionally. 
+
+In this example:
+- `_config.httpd_replicas` is only consumed by `webpage2` while it seems to apply to both.
+- `_image.httpd` is set on both libraries, however `webpage2` overrides the image of
+    `webpage1` as it was concatenated later.
+
+This practice comes from an anti-pattern to merge several libraries on top of each other
+and refer to attributes that need to be set elsewhere. Or in other words, `$` promotes the
+concept known as 'globals' in other programming libraries. It is best to avoid this as it
+leads to spaghetti code.

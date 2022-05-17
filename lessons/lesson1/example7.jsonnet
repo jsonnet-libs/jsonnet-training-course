@@ -5,6 +5,9 @@ local webpage = {
     container:: {
       name: 'webserver',
       image: 'httpd:2.4',
+      ports: [{
+        containerPort: 80,
+      }],
     },
 
     deployment: {
@@ -24,13 +27,17 @@ local webpage = {
         },
       },
     },
+  },
 
-    withImage(image):: self + {
-      container+: { image: image },
-    },
+  withImage(image): {
+    container+: { image: image },
+  },
+
+  withImagePullPolicy(policy='Always'): {
+    container+: { imagePullPolicy: policy },
   },
 };
 
-webpage
-.new('wonderful-webpage')
-.withImage('httpd:2.5')
+webpage.new('wonderful-webpage')
++ webpage.withImage('httpd:2.5')
++ webpage.withImagePullPolicy()

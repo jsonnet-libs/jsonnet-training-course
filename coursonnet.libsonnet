@@ -75,16 +75,16 @@
       code:
         |||
           ```jsonnet
-          // %(filename)s
           %(string)s
+          // %(filename)s
           ```
         ||| % self,
 
       iframe: '<iframe src="%s" width="100%%" height="500px"></iframe>' % self.playground,
 
-      withLink(): '[Try `%(filename)s` in Jsonnet Playground](%(playground)s)' % self,
+      withLink():: '[Try `%(filename)s` in Jsonnet Playground](%(playground)s)' % self,
 
-      withFoldedIframe():
+      withFoldedIframe()::
         |||
           <details>
             <summary><small>Try in Jsonnet Playground</small></summary>
