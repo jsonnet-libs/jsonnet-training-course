@@ -82,7 +82,7 @@
 
       iframe: '<iframe src="%s" width="100%%" height="500px"></iframe>' % self.playground,
 
-      withLink():: '[Try `%(filename)s` in Jsonnet Playground](%(playground)s)' % self,
+      withLink():: '<small>[Try `%(filename)s` in Jsonnet Playground](%(playground)s)</small>' % self,
 
       withFoldedIframe()::
         |||
@@ -94,7 +94,7 @@
 
       render:
         self.code
-        + self.withFoldedIframe(),
+        + self.withLink(),
     },
   },
 }

@@ -11,6 +11,19 @@ TODO:
 - IDE configuration, guest lessons/breakouts (vim, emacs, neovim, VSCode,  IntelliJ)
 - Consider Terminology list
 - Provide good-read list
+- CD/Kube-manifests
+
+Common questions:
+
+What are the lessons we’ve learned after using jsonnet for years?
+Why jsonnet? What benefit do we gain from it?
+Why is it worth the inconvenience of people having to learn a new language/paradigm?
+Why we use jsonnet (vs other solutions/tools)?
+Tools/tricks when writing/debugging jsonnet?
+What are some GrafanaLabs jsonnet idioms that we try to use?
+
+ref: https://docs.google.com/document/d/1zDFaASBuDdsuxEXXc1E1UGhsYvWnYqc3m8QBNzM9hTU/edit#
+
 
 Lessons:
 
