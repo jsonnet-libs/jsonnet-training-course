@@ -67,6 +67,10 @@ with `metadata.name` and `spec.template.spec.containers[0].name`.
 Let's wrap this into a small `webpage` library and parameterize the name because
 'webpage' may be a bit too generic:
 
+<table>
+<tr>
+<td>
+
 ```jsonnet
 local webpage = {
   new(name, replicas=1): {
@@ -97,6 +101,8 @@ webpage.new('wonderful-webpage')
 ```
 <small>[Try `example2.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2VicGFnZSA9IHsKICBuZXcobmFtZSwgcmVwbGljYXM9MSk6IHsKICAgIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgIG1ldGFkYXRhOiB7CiAgICAgIG5hbWU6IG5hbWUsCiAgICB9LAogICAgc3BlYzogewogICAgICByZXBsaWNhczogcmVwbGljYXMsCiAgICAgIHRlbXBsYXRlOiB7CiAgICAgICAgc3BlYzogewogICAgICAgICAgY29udGFpbmVyczogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgbmFtZTogJ3dlYnNlcnZlcicsCiAgICAgICAgICAgICAgaW1hZ2U6ICdodHRwZDoyLjQnLAogICAgICAgICAgICB9LAogICAgICAgICAgXSwKICAgICAgICB9LAogICAgICB9LAogICAgfSwKICB9LAp9OwoKd2VicGFnZS5uZXcoJ3dvbmRlcmZ1bC13ZWJwYWdlJykK)</small>
 
+</td>
+<td>
 The `local` keyword makes this part of the code only available within this file, it is
 often used for importing libraries from other files, for example `local myapp = import
 'myapp.libsonnet';`.
@@ -104,6 +110,9 @@ often used for importing libraries from other files, for example `local myapp = 
 The Deployment is wrapped into a `new()` function with a `name` and an optional
 `replicas` arguments, this configures `metadata.name` and `spec.replicas`
 respectively.
+</td>
+</tr>
+</table>
 
 ---
 

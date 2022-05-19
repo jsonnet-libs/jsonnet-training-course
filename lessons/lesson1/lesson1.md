@@ -20,8 +20,14 @@ with `metadata.name` and `spec.template.spec.containers[0].name`.
 Let's wrap this into a small `webpage` library and parameterize the name because
 'webpage' may be a bit too generic:
 
+<table>
+<tr>
+<td>
+
 %(example2.jsonnet)s
 
+</td>
+<td>
 The `local` keyword makes this part of the code only available within this file, it is
 often used for importing libraries from other files, for example `local myapp = import
 'myapp.libsonnet';`.
@@ -29,6 +35,9 @@ often used for importing libraries from other files, for example `local myapp = 
 The Deployment is wrapped into a `new()` function with a `name` and an optional
 `replicas` arguments, this configures `metadata.name` and `spec.replicas`
 respectively.
+</td>
+</tr>
+</table>
 
 ---
 
