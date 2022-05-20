@@ -49,6 +49,11 @@
           p {
             display: flow-root;
           }
+          h1 a, h2 a, h3 a,
+          h4 a, h5 a, h6 a {
+              text-decoration: none;
+              color: black;
+          }
           h1, h2, h3, h4, h5, h6, hr {
             clear: both;
           }
