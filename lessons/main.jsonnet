@@ -8,7 +8,7 @@ page.new(
     lessons: std.foldl(
       function(acc, l)
         acc +
-        '- [%(title)s](%(filename)s)\n' % l.page
+        '1. [%(title)s](%(filename)s)\n' % l.page
       ,
       import './lessons.jsonnet',
       '',

@@ -20,7 +20,7 @@ Common questions:
 
 Lessons:
 
-- [Write a reusable library](lesson1.md)
-- [Don't write libraries](lesson2.md)
+1. [Write a reusable library](lesson1.md)
+1. [Don't write libraries](lesson2.md)
 
 

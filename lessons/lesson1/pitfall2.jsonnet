@@ -1,4 +1,4 @@
-local webpage = {
+local webserver = {
   local base = self,
 
   _config:: {
@@ -11,7 +11,7 @@ local webpage = {
   },
 
   container:: {
-    name: 'webserver',
+    name: 'httpd',
     image: base._images.httpd,
   },
 
@@ -34,9 +34,9 @@ local webpage = {
   },
 };
 
-webpage {
+webserver {
   _config+: {
-    name: 'wonderful-webpage',
+    name: 'wonderful-webserver',
   },
   _images+: {
     httpd: 'httpd:2.5',

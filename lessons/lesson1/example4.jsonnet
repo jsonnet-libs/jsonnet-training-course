@@ -1,9 +1,9 @@
-local webpage = {
+local webserver = {
   new(name, replicas=1): {
     local base = self,
 
     container:: {
-      name: 'webserver',
+      name: 'httpd',
       image: 'httpd:2.4',
     },
 
@@ -31,5 +31,5 @@ local webpage = {
   },
 };
 
-webpage.new('wonderful-webpage')
-+ webpage.withImage('httpd:2.5')
+webserver.new('wonderful-webserver')
++ webserver.withImage('httpd:2.5')

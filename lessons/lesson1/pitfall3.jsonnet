@@ -12,7 +12,7 @@ local webpage = {
   },
 
   container:: {
-    name: 'webserver',
+    name: 'httpd',
     image: base._images.httpd,
   } + (
     if base._config.imagePullPolicy != null

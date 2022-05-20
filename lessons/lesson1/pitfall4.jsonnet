@@ -1,19 +1,19 @@
-local webpage1 = {
+local webserver1 = {
   _images:: {
     httpd: 'httpd:2.4',
   },
-  webpage1: {
+  webserver1: {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: 'webpage1',
+      name: 'webserver1',
     },
     spec: {
       replicas: 1,
       template: {
         spec: {
           containers: [{
-            name: 'webserver',
+            name: 'httpd',
             image: $._images.httpd,
           }],
         },
@@ -22,22 +22,22 @@ local webpage1 = {
   },
 };
 
-local webpage2 = {
+local webserver2 = {
   _images:: {
     httpd: 'httpd:2.5',
   },
-  webpage2: {
+  webserver2: {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: 'webpage2',
+      name: 'webserver2',
     },
     spec: {
       replicas: $._config.httpd_replicas,
       template: {
         spec: {
           containers: [{
-            name: 'webserver',
+            name: 'httpd',
             image: $._images.httpd,
           }],
         },
@@ -46,7 +46,7 @@ local webpage2 = {
   },
 };
 
-webpage1 + webpage2 + {
+webserver1 + webserver2 + {
   _config:: {
     httpd_replicas: 1,
   },

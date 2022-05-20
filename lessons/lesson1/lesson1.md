@@ -13,8 +13,8 @@ with `metadata.name` and `spec.template.spec.containers[0].name`.
 
 ---
 
-Let's wrap this into a small `webpage` library and parameterize the name because
-'webpage' may be a bit too generic:
+Let's wrap this into a small `webserver` library and parameterize the name because
+'webserver' may be a bit too generic:
 
 %(example2.jsonnet)s
 
@@ -28,7 +28,7 @@ respectively.
 
 ---
 
-Let's add another function to modify the image of the webserver container:
+Let's add another function to modify the image of the httpd container:
 
 %(example3.jsonnet)s
 
@@ -40,6 +40,7 @@ access the `container` attribute.
 As the `container` attribute is an array, it is not intuitive to modify an single entry.
 We have to loop over the array, find the matching container and apply a patch. This is
 quite verbose and hard to read.
+
 
 ---
 
@@ -152,9 +153,9 @@ This pattern makes it hard to determine which library is consuming which attribu
 of that libraries can influence each other unintentionally. 
 
 In this example:
-- `_config.httpd_replicas` is only consumed by `webpage2` while it seems to apply to both.
-- `_image.httpd` is set on both libraries, however `webpage2` overrides the image of
-    `webpage1` as it was concatenated later.
+- `_config.httpd_replicas` is only consumed by `webserver2` while it seems to apply to both.
+- `_image.httpd` is set on both libraries, however `webserver2` overrides the image of
+    `webserver1` as it was concatenated later.
 
 This practice comes from an anti-pattern to merge several libraries on top of each other
 and refer to attributes that need to be set elsewhere. Or in other words, `$` promotes the

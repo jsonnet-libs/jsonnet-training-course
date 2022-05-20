@@ -1,4 +1,4 @@
-local webpage = {
+local webserver = {
   new(name, replicas=1): {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
@@ -11,7 +11,7 @@ local webpage = {
         spec: {
           containers: [
             {
-              name: 'webserver',
+              name: 'httpd',
               image: 'httpd:2.4',
             },
           ],
@@ -21,4 +21,4 @@ local webpage = {
   },
 };
 
-webpage.new('wonderful-webpage')
+webserver.new('wonderful-webserver')

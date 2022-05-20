@@ -1,4 +1,4 @@
-local webpage = {
+local webserver = {
   new(name, replicas=1): {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
@@ -11,7 +11,7 @@ local webpage = {
         spec: {
           containers: [
             {
-              name: 'webserver',
+              name: 'httpd',
               image: 'httpd:2.4',
             },
           ],
@@ -26,7 +26,7 @@ local webpage = {
       template+: {
         spec+: {
           containers: [
-            if container.name == 'webserver'
+            if container.name == 'httpd'
             then container { image: image }
             else container
             for container in containers
@@ -37,5 +37,5 @@ local webpage = {
   },
 };
 
-webpage.new('wonderful-webpage')
-+ webpage.withImage('httpd:2.5')
+webserver.new('wonderful-webserver')
++ webserver.withImage('httpd:2.5')
