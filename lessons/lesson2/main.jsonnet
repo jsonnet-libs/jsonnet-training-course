@@ -4,7 +4,7 @@ local lesson = c.lesson;
 local examples = import './examples.jsonnet';
 
 lesson.new(
-  'lesson3',
+  'lesson2',
   "Don't write libraries",
   |||
     There are a ton of Jsonnet libraries out there, ranging from big generated libraries
@@ -18,7 +18,7 @@ lesson.new(
     'Develop on a vendored library',
     'Generate new libraries from specifications',
   ],
-  (importstr './lesson.md') %
+  (importstr './lesson2.md') %
   std.foldr(
     function(e, acc)
       acc { [e.filename]: e.render },

@@ -3,7 +3,7 @@
 Jsonnet gives us a lot of freedom to organize our libraries, there is no right or
 wrong, however a well-organized library can get you a long way. While applying common
 software development best-practices, we'll come up with an extensible library to
-deploy a webserver on Kubernetes.
+deploy a web page on Kubernetes.
 
 
 ## Objectives
