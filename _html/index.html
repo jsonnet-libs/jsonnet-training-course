@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta name="generator" content="md2html">
+</head>
+<body>
+<p>[<a href="index.html">index</a>]</p>
+<h1>Jsonnet Training Materials</h1>
+<p>Exciting as you might be after following the <a href="https://jsonnet.org/learning/tutorial.html">excellent jsonnet.org tutorial</a>,
+it can still be daunting to actually use Jsonnet in the real world. Instead of working
+with arbitrary examples like cocktails or your favorite pets, these training materials
+contain real worlds examples (good and bad) in the hope to lower the bar of entry.</p>
+<blockquote>
+<p>Note: A lot of the examples will be around Kubernetes objects, but don't worry if you
+don't know how Kubernetes works, this is not a requirement for understanding the Jsonnet
+examples.</p>
+</blockquote>
+<p>Common questions:</p>
+<ul>
+<li>What are the lessons we’ve learned after using jsonnet for years?</li>
+<li>Why jsonnet? What benefit do we gain from it?</li>
+<li>Why is it worth the inconvenience of people having to learn a new language/paradigm?</li>
+<li>Why we use jsonnet (vs other solutions/tools)?</li>
+<li>Tools/tricks when writing/debugging jsonnet?</li>
+<li>What are some GrafanaLabs jsonnet idioms that we try to use?</li>
+</ul>
+<p>Lessons:</p>
+<ul>
+<li><a href="lesson1.html">Write a reusable library</a></li>
+<li><a href="lesson2.html">Don't write libraries</a></li>
+</ul>
+<style>
+html {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: lightgrey;
+}
+body {
+  margin: 0;
+  padding: 1em;
+  min-height: 100%;
+  margin-left: 15%;
+  margin-right: 15%;
+  background: white;
+  border: thin solid grey;
+  border-top: 0;
+}
+blockquote {
+  background: lightyellow;
+  padding: .1em;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  display: flow-root;
+}
+h1, h2, h3, h4, h5, h6, hr {
+  clear: both;
+}
+hr {
+  visibility: hidden;
+}
+ul {
+  display: flow-root;
+}
+ul li code, p code {
+  background: ghostwhite;
+  padding: 0.2em;
+}
+pre {
+  float: left;
+  margin-top: 0;
+  margin-right: 1em;
+  width: 70ch;
+  overflow-x: scroll;
+}
+
+li.L0, li.L1, li.L2, li.L3,
+li.L5, li.L6, li.L7, li.L8 {
+  list-style-type: decimal !important;
+}
+</style>
+<script>
+var pres = document.getElementsByTagName('pre');
+for (i=0;i<pres.length; i++) {
+  pres[i].className='prettyprint linenums';
+}
+PR.prettyPrint();
+</script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+</body>
+</html>

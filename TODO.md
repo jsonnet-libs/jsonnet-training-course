@@ -1,5 +1,7 @@
 ## TODO notes
 
+ref: [brainstorm doc](https://docs.google.com/document/d/1zDFaASBuDdsuxEXXc1E1UGhsYvWnYqc3m8QBNzM9hTU/edit#)
+
 TODO:
 - Consider Jsonnet introduction lesson
 - Structure of the 'lessons' (Intro, Goals, Content, Conclusion)

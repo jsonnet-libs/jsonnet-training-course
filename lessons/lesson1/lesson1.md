@@ -1,9 +1,5 @@
 ### Creating a reusable library
 
-> TODO: move this note to the landing page/index
-> Note: Don't worry if you don't know how Kubernetes works, it isn't a requirement to
-> understand the Jsonnet examples.
-
 Let's start with a simple `Deployment` of a webserver:
 
 %(example1.jsonnet)s
@@ -69,6 +65,8 @@ To expose the webserver, we need to configure a port:
 
 %(example5.jsonnet)s
 
+---
+
 Now imagine that you are not the author of this library and want to change the `ports`
 attribute.
 
@@ -85,6 +83,8 @@ library and users to extend it easily. Authors don't need to think about every u
 out there, they can apply [YAGNI (you aren't gonna need
 it)](https://www.martinfowler.com/bliki/Yagni.html), this keeps the library code terse and
 maintainable without sacrificing extensibility.
+
+---
 
 ### Common pitfalls when creating libraries
 
@@ -119,6 +119,8 @@ This pattern is comparable to the `values.yaml` in Helm charts, however Jsonnet 
 face the same limitations and as said before users can modify the final output after the
 fact either way.
 
+---
+
 This pattern also has an impact on extensibility. When introducing a new attribute, the
 author needs to take into account that users might not want the same default.
 
@@ -129,6 +131,8 @@ make the library brittle and hard to read. In this example the default for
 `imagePullPolicy` is `null`, the author avoids adding an additional boolean parameter
 (`_config.imagePullPolicyEnabled` for example) with the drawback that no default value can
 be provided.
+
+---
 
 In the object-oriented library this can be done with a new function:
 

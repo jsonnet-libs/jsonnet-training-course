@@ -23,10 +23,6 @@ deploy a web page on Kubernetes.
 
 ### Creating a reusable library
 
-> TODO: move this note to the landing page/index
-> Note: Don't worry if you don't know how Kubernetes works, it isn't a requirement to
-> understand the Jsonnet examples.
-
 Let's start with a simple `Deployment` of a webserver:
 
 ```jsonnet
@@ -270,6 +266,8 @@ webpage.new('wonderful-webpage')
 ```
 <small>[Try `example5.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2VicGFnZSA9IHsKICBuZXcobmFtZSwgcmVwbGljYXM9MSk6IHsKICAgIGxvY2FsIGJhc2UgPSBzZWxmLAoKICAgIGNvbnRhaW5lcjo6IHsKICAgICAgbmFtZTogJ3dlYnNlcnZlcicsCiAgICAgIGltYWdlOiAnaHR0cGQ6Mi40JywKICAgICAgcG9ydHM6IFt7CiAgICAgICAgY29udGFpbmVyUG9ydDogODAsCiAgICAgIH1dLAogICAgfSwKCiAgICBkZXBsb3ltZW50OiB7CiAgICAgIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICAgICAga2luZDogJ0RlcGxveW1lbnQnLAogICAgICBtZXRhZGF0YTogewogICAgICAgIG5hbWU6IG5hbWUsCiAgICAgIH0sCiAgICAgIHNwZWM6IHsKICAgICAgICByZXBsaWNhczogcmVwbGljYXMsCiAgICAgICAgdGVtcGxhdGU6IHsKICAgICAgICAgIHNwZWM6IHsKICAgICAgICAgICAgY29udGFpbmVyczogWwogICAgICAgICAgICAgIGJhc2UuY29udGFpbmVyLAogICAgICAgICAgICBdLAogICAgICAgICAgfSwKICAgICAgICB9LAogICAgICB9LAogICAgfSwKICB9LAoKICB3aXRoSW1hZ2UoaW1hZ2UpOiB7CiAgICBjb250YWluZXIrOiB7IGltYWdlOiBpbWFnZSB9LAogIH0sCn07Cgp3ZWJwYWdlLm5ldygnd29uZGVyZnVsLXdlYnBhZ2UnKQorIHdlYnBhZ2Uud2l0aEltYWdlKCdodHRwZDoyLjUnKQo=)</small>
 
+---
+
 Now imagine that you are not the author of this library and want to change the `ports`
 attribute.
 
@@ -335,6 +333,8 @@ library and users to extend it easily. Authors don't need to think about every u
 out there, they can apply [YAGNI (you aren't gonna need
 it)](https://www.martinfowler.com/bliki/Yagni.html), this keeps the library code terse and
 maintainable without sacrificing extensibility.
+
+---
 
 ### Common pitfalls when creating libraries
 
@@ -455,6 +455,8 @@ This pattern is comparable to the `values.yaml` in Helm charts, however Jsonnet 
 face the same limitations and as said before users can modify the final output after the
 fact either way.
 
+---
+
 This pattern also has an impact on extensibility. When introducing a new attribute, the
 author needs to take into account that users might not want the same default.
 
@@ -519,6 +521,8 @@ make the library brittle and hard to read. In this example the default for
 `imagePullPolicy` is `null`, the author avoids adding an additional boolean parameter
 (`_config.imagePullPolicyEnabled` for example) with the drawback that no default value can
 be provided.
+
+---
 
 In the object-oriented library this can be done with a new function:
 

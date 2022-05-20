@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta name="generator" content="md2html">
+</head>
+<body>
+<p>[<a href="index.html">index</a>]</p>
+<h1>Don't write libraries</h1>
+<p>There are a ton of Jsonnet libraries out there, ranging from big generated libraries
+to manually curated for a very specific purpose. Let's have a look at how to find and
+vendor them.</p>
+<h2>Objectives</h2>
+<ul>
+<li>Find existing libraries</li>
+<li>Vendor libraries with <code>jsonnet-bundler</code></li>
+<li>Use a vendored library with <code>JSONNET_PATH</code></li>
+<li>Develop on a vendored library</li>
+<li>Generate new libraries from specifications</li>
+</ul>
+<h2>Lesson</h2>
+<p>The ecosystem for Jsonnet libraries has organically grown and is quite distributed, there
+is no central entity in control. Even though this gives the authors a great deal of
+autonomy, it makes it harder to find libraries. The majority of libraries can be found in
+Git repositories and are wholeheartedly open source.</p>
+<ul>
+<li>Github Topic <a href="https://github.com/topics/jsonnet-lib"><code>jsonnet-lib</code></a> lists the libraries
+that are tagged with <code>jsonnet-lib</code>. Cultivating this tag is encouraged.</li>
+<li>In the observability space, there is a sub-ecosystem of &quot;mixins&quot;. The <a href="https://monitoring.mixins.dev/">Monitoring
+Mixins project</a> is an effort to centralize them.</li>
+<li>Keyword search on Github:<ul>
+<li><a href="https://github.com/search?q=jsonnet-libs"><code>jsonnet-libs</code></a>
+Organisations often share their libraries in such a repository.</li>
+<li><a href="https://github.com/search?q=libsonnet"><code>libsonnet</code></a>
+Libraries are often suffixed with <code>-libsonnet</code></li>
+</ul>
+</li>
+<li>Some applications offer jsonnet libraries to deploy, configure and/or monitor their
+application, look for a <code>jsonnetfile.json</code> in their repository.</li>
+<li>A few community members maintain an 'awesome list':<ul>
+<li><a href="https://github.com/MacroPower/awesome-jsonnet">https://github.com/MacroPower/awesome-jsonnet</a></li>
+<li><a href="https://github.com/metalmatze/awesome-jsonnet">https://github.com/metalmatze/awesome-jsonnet</a></li>
+<li><a href="https://github.com/sh0rez/awesome-libsonnet">https://github.com/sh0rez/awesome-libsonnet</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>Now that we can find libraries, we need a way to &quot;install&quot; them. Jsonnet libraries are
+distributed as source code,  makes it quite simple process.</p>
+<p>The <a href="https://github.com/jsonnet-bundler/jsonnet-bundler/"><code>jsonnet-bundler</code></a> project is
+the de facto package manager for Jsonnet. It vendors libraries from Git repositories and
+tracks them in <code>jsonnetfile.json</code>and its corresponding lockfile <code>jsonnetfile.lock.json</code>.</p>
+<p>To get started, initialize the directory with the <code>jb init</code>:</p>
+<pre><code class="language-json">{
+  &quot;version&quot;: 1,
+  &quot;dependencies&quot;: [],
+  &quot;legacyImports&quot;: true
+}
+
+// example1.jsonnetfile.json
+</code></pre>
+<p><code>jb init</code> creates a virtually empty <code>jsonnetfile.json</code>.</p>
+<p>Originally <code>jb</code> vendored libraries as <code>vendor/&lt;name&gt;</code>, in large code bases this can cause
+naming conflicts. To resolve this, <code>jb</code> started vendoring on the full repository path
+<code>github.com/&lt;org&gt;/&lt;repo&gt;/&lt;path/to/lib&gt;/name</code>. However many libraries have references to
+the short path, for that <code>&quot;legacyImports&quot;: true</code> tells <code>jb</code> to also create a symlink to
+this full path on short path <code>vendor/&lt;name&gt;</code> to keep this working.</p>
+<p>Let's vendor a library:</p>
+<p><code>$ jb install github.com/jsonnet-libs/xtd</code></p>
+<blockquote>
+<p>For this example we use <a href="https://github.com/jsonnet-libs/xtd"><code>xtd</code></a>, it is a simple
+helper library with a collection of useful functions.</p>
+</blockquote>
+<pre><code class="language-json">{
+  &quot;version&quot;: 1,
+  &quot;dependencies&quot;: [
+    {
+      &quot;source&quot;: {
+        &quot;git&quot;: {
+          &quot;remote&quot;: &quot;https://github.com/jsonnet-libs/xtd.git&quot;,
+          &quot;subdir&quot;: &quot;&quot;
+        }
+      },
+      &quot;version&quot;: &quot;master&quot;
+    }
+  ],
+  &quot;legacyImports&quot;: true
+}
+
+// example2/jsonnetfile.json
+</code></pre>
+<p><code>jsonnetfile.json</code> has a new entry in the <code>dependency</code> key, it refers to the source on
+Github and defaults to the <code>master</code> branch for tracking its <code>version</code>.</p>
+<hr>
+<pre><code class="language-json">{
+  &quot;version&quot;: 1,
+  &quot;dependencies&quot;: [
+    {
+      &quot;source&quot;: {
+        &quot;git&quot;: {
+          &quot;remote&quot;: &quot;https://github.com/jsonnet-libs/xtd.git&quot;,
+          &quot;subdir&quot;: &quot;&quot;
+        }
+      },
+      &quot;version&quot;: &quot;803739029925cf31b0e3c6db2f4aae09b0378a6e&quot;,
+      &quot;sum&quot;: &quot;d/c+3om56mfddeYWrsxOwsrlH008BmX/5NoquXMj0+g=&quot;
+    }
+  ],
+  &quot;legacyImports&quot;: false
+}
+
+// example2/jsonnetfile.lock.json
+</code></pre>
+<p>A new file <code>jsonnetfile.lock.json</code> is created, this contains the actual <code>version</code> that
+should be installed, as this is a Git source it refers to a Git hash. Additionally it also
+tracks a checksum value in <code>sum</code>.</p>
+<hr>
+<pre><code>.
+├── jsonnetfile.json
+├── jsonnetfile.lock.json
+└── vendor
+    ├── github.com
+    │   └── jsonnet-libs
+    │       └── xtd
+    │           ├── ascii.libsonnet
+    │           ├── camelcase.libsonnet
+    │           ├── docs
+    │           │   ├── ascii.md
+    │           │   ├── camelcase.md
+    │           │   ├── _config.yml
+    │           │   ├── Gemfile
+    │           │   ├── inspect.md
+    │           │   ├── README.md
+    │           │   └── url.md
+    │           ├── inspect.libsonnet
+    │           ├── LICENSE
+    │           ├── main.libsonnet
+    │           ├── Makefile
+    │           ├── README.md
+    │           ├── test.jsonnet
+    │           └── url.libsonnet
+    └── xtd -&gt; github.com/jsonnet-libs/xtd
+</code></pre>
+<p>The library is vendored into <code>vendor/github.com/jsonnet-libs/xtd</code> and a symlink on
+<code>vendor/xtd</code> was added. The <code>vendor/</code> directory is a widespread convention, tools like
+Tanka look here for imports.</p>
+<p>It is often not necessary and even undesirable to distribute <code>jsonnetfile.lock.json</code> or
+<code>vendor</code> along with your library, the <code>version</code> tag in <code>jsonnetfile.json</code> can be leveraged
+in case a specific version is expected (for example when newer versions of dependencies have breaking changes).</p>
+<h2>Conclusion</h2>
+<p>TODO</p>
+<style>
+html {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: lightgrey;
+}
+body {
+  margin: 0;
+  padding: 1em;
+  min-height: 100%;
+  margin-left: 15%;
+  margin-right: 15%;
+  background: white;
+  border: thin solid grey;
+  border-top: 0;
+}
+blockquote {
+  background: lightyellow;
+  padding: .1em;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  display: flow-root;
+}
+h1, h2, h3, h4, h5, h6, hr {
+  clear: both;
+}
+hr {
+  visibility: hidden;
+}
+ul {
+  display: flow-root;
+}
+ul li code, p code {
+  background: ghostwhite;
+  padding: 0.2em;
+}
+pre {
+  float: left;
+  margin-top: 0;
+  margin-right: 1em;
+  width: 70ch;
+  overflow-x: scroll;
+}
+
+li.L0, li.L1, li.L2, li.L3,
+li.L5, li.L6, li.L7, li.L8 {
+  list-style-type: decimal !important;
+}
+</style>
+<script>
+var pres = document.getElementsByTagName('pre');
+for (i=0;i<pres.length; i++) {
+  pres[i].className='prettyprint linenums';
+}
+PR.prettyPrint();
+</script>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+</body>
+</html>

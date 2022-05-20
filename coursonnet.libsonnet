@@ -17,6 +17,71 @@
         ||| % this,
       },
     },
+
+    withHTML():: {
+      render+:
+        |||
+          <style>
+          html {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: lightgrey;
+          }
+          body {
+            margin: 0;
+            padding: 1em;
+            min-height: 100%;
+            margin-left: 15%;
+            margin-right: 15%;
+            background: white;
+            border: thin solid grey;
+            border-top: 0;
+          }
+          blockquote {
+            background: lightyellow;
+            padding: .1em;
+            padding-left: 1em;
+            margin-left: 0;
+            margin-right: 0;
+            display: flow-root;
+          }
+          h1, h2, h3, h4, h5, h6, hr {
+            clear: both;
+          }
+          hr {
+            visibility: hidden;
+          }
+          ul {
+            display: flow-root;
+          }
+          ul li code, p code {
+            background: ghostwhite;
+            padding: 0.2em;
+          }
+          pre {
+            float: left;
+            margin-top: 0;
+            margin-right: 1em;
+            width: 70ch;
+            overflow-x: scroll;
+          }
+
+          li.L0, li.L1, li.L2, li.L3,
+          li.L5, li.L6, li.L7, li.L8 {
+            list-style-type: decimal !important;
+          }
+          </style>
+          <script>
+          var pres = document.getElementsByTagName('pre');
+          for (i=0;i<pres.length; i++) {
+            pres[i].className='prettyprint linenums';
+          }
+          PR.prettyPrint();
+          </script>
+          <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+        |||,
+    },
   },
 
   lesson: {

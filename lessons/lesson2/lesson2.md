@@ -42,23 +42,25 @@ this full path on short path `vendor/<name>` to keep this working.
 
 Let's vendor a library:
 
-```bash
-jb install github.com/jsonnet-libs/xtd
-```
+`$ jb install github.com/jsonnet-libs/xtd`
 
-> [`xtd`](https://github.com/jsonnet-libs/xtd) is a simple helper library with
-> a collection of useful functions.
+> For this example we use [`xtd`](https://github.com/jsonnet-libs/xtd), it is a simple
+> helper library with a collection of useful functions.
 
 %(example2/jsonnetfile.json)s
 
 `jsonnetfile.json` has a new entry in the `dependency` key, it refers to the source on
 Github and defaults to the `master` branch for tracking its `version`.
 
+---
+
 %(example2/jsonnetfile.lock.json)s
 
 A new file `jsonnetfile.lock.json` is created, this contains the actual `version` that
 should be installed, as this is a Git source it refers to a Git hash. Additionally it also
 tracks a checksum value in `sum`.
+
+---
 
 ```
 .
