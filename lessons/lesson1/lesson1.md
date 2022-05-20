@@ -61,14 +61,8 @@ as `self` is late-bound any changes to `container` will be reflected in `deploym
 
 ---
 
-To expose the webserver, we need to configure a port:
-
-%(example5.jsonnet)s
-
----
-
-Now imagine that you are not the author of this library and want to change the `ports`
-attribute.
+To expose the webserver, a port is configured below. Now imagine that you are not the
+author of this library and want to change the `ports` attribute.
 
 %(example6.jsonnet)s
 
@@ -78,11 +72,10 @@ attribute after the fact by concatenating a 'patch'. The `container+:` will main
 visibility of the `container` attribute while `ports:` will change the value of
 `container.ports`.
 
-This trait of Jsonnet allows to keep a balance between library authors providing a useful
-library and users to extend it easily. Authors don't need to think about every use case
-out there, they can apply [YAGNI (you aren't gonna need
-it)](https://www.martinfowler.com/bliki/Yagni.html), this keeps the library code terse and
-maintainable without sacrificing extensibility.
+This trait of Jsonnet keeps a balance between library authors providing a useful library
+and users to extend it easily. Authors don't need to think about every use case out
+there, they can apply [YAGNI](https://www.martinfowler.com/bliki/Yagni.html) and keep the
+library code terse and maintainable without sacrificing extensibility.
 
 ---
 
@@ -92,7 +85,7 @@ Avoid the 'builder' pattern:
 
 %(pitfall1.jsonnet)s
 
-Notice the odd `withImage():: self + {}` structure.
+Notice the odd `withImage():: self + {}` structure within `new()`.
 
 This practice nests functions in the newly created object, allowing the user to 'chain'
 functions to modify `self`. However this comes at a performance impact in the Jsonnet
@@ -115,9 +108,9 @@ parameters, implying that patching other attributes will not be supported. Howev
 'private' attributes as they exists the same space. To make the `name` parameter
 a required argument, an `error` is returned if it is not set in `_config`. 
 
-This pattern is comparable to the `values.yaml` in Helm charts, however Jsonnet does not
-face the same limitations and as said before users can modify the final output after the
-fact either way.
+It is comparable to the `values.yaml` in Helm charts, however Jsonnet does not face the
+same limitations and as mentioned before users can modify the final output after the fact
+either way.
 
 ---
 

@@ -220,56 +220,8 @@ as `self` is late-bound any changes to `container` will be reflected in `deploym
 
 ---
 
-To expose the webserver, we need to configure a port:
-
-```jsonnet
-local webpage = {
-  new(name, replicas=1): {
-    local base = self,
-
-    container:: {
-      name: 'webserver',
-      image: 'httpd:2.4',
-      ports: [{
-        containerPort: 80,
-      }],
-    },
-
-    deployment: {
-      apiVersion: 'apps/v1',
-      kind: 'Deployment',
-      metadata: {
-        name: name,
-      },
-      spec: {
-        replicas: replicas,
-        template: {
-          spec: {
-            containers: [
-              base.container,
-            ],
-          },
-        },
-      },
-    },
-  },
-
-  withImage(image): {
-    container+: { image: image },
-  },
-};
-
-webpage.new('wonderful-webpage')
-+ webpage.withImage('httpd:2.5')
-
-// example5.jsonnet
-```
-<small>[Try `example5.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2VicGFnZSA9IHsKICBuZXcobmFtZSwgcmVwbGljYXM9MSk6IHsKICAgIGxvY2FsIGJhc2UgPSBzZWxmLAoKICAgIGNvbnRhaW5lcjo6IHsKICAgICAgbmFtZTogJ3dlYnNlcnZlcicsCiAgICAgIGltYWdlOiAnaHR0cGQ6Mi40JywKICAgICAgcG9ydHM6IFt7CiAgICAgICAgY29udGFpbmVyUG9ydDogODAsCiAgICAgIH1dLAogICAgfSwKCiAgICBkZXBsb3ltZW50OiB7CiAgICAgIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICAgICAga2luZDogJ0RlcGxveW1lbnQnLAogICAgICBtZXRhZGF0YTogewogICAgICAgIG5hbWU6IG5hbWUsCiAgICAgIH0sCiAgICAgIHNwZWM6IHsKICAgICAgICByZXBsaWNhczogcmVwbGljYXMsCiAgICAgICAgdGVtcGxhdGU6IHsKICAgICAgICAgIHNwZWM6IHsKICAgICAgICAgICAgY29udGFpbmVyczogWwogICAgICAgICAgICAgIGJhc2UuY29udGFpbmVyLAogICAgICAgICAgICBdLAogICAgICAgICAgfSwKICAgICAgICB9LAogICAgICB9LAogICAgfSwKICB9LAoKICB3aXRoSW1hZ2UoaW1hZ2UpOiB7CiAgICBjb250YWluZXIrOiB7IGltYWdlOiBpbWFnZSB9LAogIH0sCn07Cgp3ZWJwYWdlLm5ldygnd29uZGVyZnVsLXdlYnBhZ2UnKQorIHdlYnBhZ2Uud2l0aEltYWdlKCdodHRwZDoyLjUnKQo=)</small>
-
----
-
-Now imagine that you are not the author of this library and want to change the `ports`
-attribute.
+To expose the webserver, a port is configured below. Now imagine that you are not the
+author of this library and want to change the `ports` attribute.
 
 ```jsonnet
 local webpage = {
@@ -328,11 +280,10 @@ attribute after the fact by concatenating a 'patch'. The `container+:` will main
 visibility of the `container` attribute while `ports:` will change the value of
 `container.ports`.
 
-This trait of Jsonnet allows to keep a balance between library authors providing a useful
-library and users to extend it easily. Authors don't need to think about every use case
-out there, they can apply [YAGNI (you aren't gonna need
-it)](https://www.martinfowler.com/bliki/Yagni.html), this keeps the library code terse and
-maintainable without sacrificing extensibility.
+This trait of Jsonnet keeps a balance between library authors providing a useful library
+and users to extend it easily. Authors don't need to think about every use case out
+there, they can apply [YAGNI](https://www.martinfowler.com/bliki/Yagni.html) and keep the
+library code terse and maintainable without sacrificing extensibility.
 
 ---
 
@@ -380,7 +331,7 @@ webpage.new('wonderful-webpage').withImage('httpd:2.5')
 ```
 <small>[Try `pitfall1.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2VicGFnZSA9IHsKICBuZXcobmFtZSwgcmVwbGljYXM9MSk6IHsKICAgIGxvY2FsIGJhc2UgPSBzZWxmLAoKICAgIGNvbnRhaW5lcjo6IHsKICAgICAgbmFtZTogJ3dlYnNlcnZlcicsCiAgICAgIGltYWdlOiAnaHR0cGQ6Mi40JywKICAgIH0sCgogICAgZGVwbG95bWVudDogewogICAgICBhcGlWZXJzaW9uOiAnYXBwcy92MScsCiAgICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgICAgbWV0YWRhdGE6IHsKICAgICAgICBuYW1lOiBuYW1lLAogICAgICB9LAogICAgICBzcGVjOiB7CiAgICAgICAgcmVwbGljYXM6IHJlcGxpY2FzLAogICAgICAgIHRlbXBsYXRlOiB7CiAgICAgICAgICBzcGVjOiB7CiAgICAgICAgICAgIGNvbnRhaW5lcnM6IFsKICAgICAgICAgICAgICBiYXNlLmNvbnRhaW5lciwKICAgICAgICAgICAgXSwKICAgICAgICAgIH0sCiAgICAgICAgfSwKICAgICAgfSwKICAgIH0sCgogICAgd2l0aEltYWdlKGltYWdlKTo6IHNlbGYgKyB7CiAgICAgIGNvbnRhaW5lcis6IHsgaW1hZ2U6IGltYWdlIH0sCiAgICB9LAogIH0sCn07Cgp3ZWJwYWdlLm5ldygnd29uZGVyZnVsLXdlYnBhZ2UnKS53aXRoSW1hZ2UoJ2h0dHBkOjIuNScpCg==)</small>
 
-Notice the odd `withImage():: self + {}` structure.
+Notice the odd `withImage():: self + {}` structure within `new()`.
 
 This practice nests functions in the newly created object, allowing the user to 'chain'
 functions to modify `self`. However this comes at a performance impact in the Jsonnet
@@ -451,9 +402,9 @@ parameters, implying that patching other attributes will not be supported. Howev
 'private' attributes as they exists the same space. To make the `name` parameter
 a required argument, an `error` is returned if it is not set in `_config`. 
 
-This pattern is comparable to the `values.yaml` in Helm charts, however Jsonnet does not
-face the same limitations and as said before users can modify the final output after the
-fact either way.
+It is comparable to the `values.yaml` in Helm charts, however Jsonnet does not face the
+same limitations and as mentioned before users can modify the final output after the fact
+either way.
 
 ---
 

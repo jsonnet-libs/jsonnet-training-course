@@ -198,52 +198,8 @@ maintains the same hidden visibility as the <code>Deployment</code> object has d
 (first curly brackets it encounters). The <code>deployment</code> then refers to <code>self.container</code>,
 as <code>self</code> is late-bound any changes to <code>container</code> will be reflected in <code>deployment</code>.</p>
 <hr>
-<p>To expose the webserver, we need to configure a port:</p>
-<pre><code class="language-jsonnet">local webpage = {
-  new(name, replicas=1): {
-    local base = self,
-
-    container:: {
-      name: 'webserver',
-      image: 'httpd:2.4',
-      ports: [{
-        containerPort: 80,
-      }],
-    },
-
-    deployment: {
-      apiVersion: 'apps/v1',
-      kind: 'Deployment',
-      metadata: {
-        name: name,
-      },
-      spec: {
-        replicas: replicas,
-        template: {
-          spec: {
-            containers: [
-              base.container,
-            ],
-          },
-        },
-      },
-    },
-  },
-
-  withImage(image): {
-    container+: { image: image },
-  },
-};
-
-webpage.new('wonderful-webpage')
-+ webpage.withImage('httpd:2.5')
-
-// example5.jsonnet
-</code></pre>
-<p><small><a href="https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2VicGFnZSA9IHsKICBuZXcobmFtZSwgcmVwbGljYXM9MSk6IHsKICAgIGxvY2FsIGJhc2UgPSBzZWxmLAoKICAgIGNvbnRhaW5lcjo6IHsKICAgICAgbmFtZTogJ3dlYnNlcnZlcicsCiAgICAgIGltYWdlOiAnaHR0cGQ6Mi40JywKICAgICAgcG9ydHM6IFt7CiAgICAgICAgY29udGFpbmVyUG9ydDogODAsCiAgICAgIH1dLAogICAgfSwKCiAgICBkZXBsb3ltZW50OiB7CiAgICAgIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICAgICAga2luZDogJ0RlcGxveW1lbnQnLAogICAgICBtZXRhZGF0YTogewogICAgICAgIG5hbWU6IG5hbWUsCiAgICAgIH0sCiAgICAgIHNwZWM6IHsKICAgICAgICByZXBsaWNhczogcmVwbGljYXMsCiAgICAgICAgdGVtcGxhdGU6IHsKICAgICAgICAgIHNwZWM6IHsKICAgICAgICAgICAgY29udGFpbmVyczogWwogICAgICAgICAgICAgIGJhc2UuY29udGFpbmVyLAogICAgICAgICAgICBdLAogICAgICAgICAgfSwKICAgICAgICB9LAogICAgICB9LAogICAgfSwKICB9LAoKICB3aXRoSW1hZ2UoaW1hZ2UpOiB7CiAgICBjb250YWluZXIrOiB7IGltYWdlOiBpbWFnZSB9LAogIH0sCn07Cgp3ZWJwYWdlLm5ldygnd29uZGVyZnVsLXdlYnBhZ2UnKQorIHdlYnBhZ2Uud2l0aEltYWdlKCdodHRwZDoyLjUnKQo=">Try <code>example5.jsonnet</code> in Jsonnet Playground</a></small></p>
-<hr>
-<p>Now imagine that you are not the author of this library and want to change the <code>ports</code>
-attribute.</p>
+<p>To expose the webserver, a port is configured below. Now imagine that you are not the
+author of this library and want to change the <code>ports</code> attribute.</p>
 <pre><code class="language-jsonnet">local webpage = {
   new(name, replicas=1): {
     local base = self,
@@ -298,11 +254,10 @@ necessary to fork the library to make this change. Jsonnet allows you to change 
 attribute after the fact by concatenating a 'patch'. The <code>container+:</code> will maintain the
 visibility of the <code>container</code> attribute while <code>ports:</code> will change the value of
 <code>container.ports</code>.</p>
-<p>This trait of Jsonnet allows to keep a balance between library authors providing a useful
-library and users to extend it easily. Authors don't need to think about every use case
-out there, they can apply <a href="https://www.martinfowler.com/bliki/Yagni.html">YAGNI (you aren't gonna need
-it)</a>, this keeps the library code terse and
-maintainable without sacrificing extensibility.</p>
+<p>This trait of Jsonnet keeps a balance between library authors providing a useful library
+and users to extend it easily. Authors don't need to think about every use case out
+there, they can apply <a href="https://www.martinfowler.com/bliki/Yagni.html">YAGNI</a> and keep the
+library code terse and maintainable without sacrificing extensibility.</p>
 <hr>
 <h3>Common pitfalls when creating libraries</h3>
 <p>Avoid the 'builder' pattern:</p>
@@ -344,7 +299,7 @@ webpage.new('wonderful-webpage').withImage('httpd:2.5')
 // pitfall1.jsonnet
 </code></pre>
 <p><small><a href="https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2VicGFnZSA9IHsKICBuZXcobmFtZSwgcmVwbGljYXM9MSk6IHsKICAgIGxvY2FsIGJhc2UgPSBzZWxmLAoKICAgIGNvbnRhaW5lcjo6IHsKICAgICAgbmFtZTogJ3dlYnNlcnZlcicsCiAgICAgIGltYWdlOiAnaHR0cGQ6Mi40JywKICAgIH0sCgogICAgZGVwbG95bWVudDogewogICAgICBhcGlWZXJzaW9uOiAnYXBwcy92MScsCiAgICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgICAgbWV0YWRhdGE6IHsKICAgICAgICBuYW1lOiBuYW1lLAogICAgICB9LAogICAgICBzcGVjOiB7CiAgICAgICAgcmVwbGljYXM6IHJlcGxpY2FzLAogICAgICAgIHRlbXBsYXRlOiB7CiAgICAgICAgICBzcGVjOiB7CiAgICAgICAgICAgIGNvbnRhaW5lcnM6IFsKICAgICAgICAgICAgICBiYXNlLmNvbnRhaW5lciwKICAgICAgICAgICAgXSwKICAgICAgICAgIH0sCiAgICAgICAgfSwKICAgICAgfSwKICAgIH0sCgogICAgd2l0aEltYWdlKGltYWdlKTo6IHNlbGYgKyB7CiAgICAgIGNvbnRhaW5lcis6IHsgaW1hZ2U6IGltYWdlIH0sCiAgICB9LAogIH0sCn07Cgp3ZWJwYWdlLm5ldygnd29uZGVyZnVsLXdlYnBhZ2UnKS53aXRoSW1hZ2UoJ2h0dHBkOjIuNScpCg==">Try <code>pitfall1.jsonnet</code> in Jsonnet Playground</a></small></p>
-<p>Notice the odd <code>withImage():: self + {}</code> structure.</p>
+<p>Notice the odd <code>withImage():: self + {}</code> structure within <code>new()</code>.</p>
 <p>This practice nests functions in the newly created object, allowing the user to 'chain'
 functions to modify <code>self</code>. However this comes at a performance impact in the Jsonnet
 interpreter and should be avoided.</p>
@@ -407,9 +362,9 @@ parameters, implying that patching other attributes will not be supported. Howev
 'public' attributes (indicated by the <code>_</code> prefix) are not more public or private than the
 'private' attributes as they exists the same space. To make the <code>name</code> parameter
 a required argument, an <code>error</code> is returned if it is not set in <code>_config</code>.</p>
-<p>This pattern is comparable to the <code>values.yaml</code> in Helm charts, however Jsonnet does not
-face the same limitations and as said before users can modify the final output after the
-fact either way.</p>
+<p>It is comparable to the <code>values.yaml</code> in Helm charts, however Jsonnet does not face the
+same limitations and as mentioned before users can modify the final output after the fact
+either way.</p>
 <hr>
 <p>This pattern also has an impact on extensibility. When introducing a new attribute, the
 author needs to take into account that users might not want the same default.</p>
