@@ -18,7 +18,7 @@ lesson.new(
     'Develop on a vendored library',
     'Generate new libraries from specifications',
   ],
-  (importstr './lesson2.md') %
+  (importstr './lesson.md') %
   std.foldr(
     function(e, acc)
       acc { [e.filename]: e.render },

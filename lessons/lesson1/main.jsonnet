@@ -10,7 +10,7 @@ lesson.new(
     Jsonnet gives us a lot of freedom to organize our libraries, there is no right or
     wrong, however a well-organized library can get you a long way. While applying common
     software development best-practices, we'll come up with an extensible library to
-    deploy a web page on Kubernetes.
+    deploy a webserver on Kubernetes.
   |||,
   [
     'Write an object-oriented library',
@@ -25,7 +25,7 @@ lesson.new(
         - overuse of `$`
     |||,
   ],
-  (importstr './lesson1.md') %
+  (importstr './lesson.md') %
   std.foldr(
     function(e, acc)
       acc { [e.filename]: e.render },
@@ -34,28 +34,3 @@ lesson.new(
   ),
   'TODO',
 )
-//{
-//  page+: {
-//    render+: {
-//      'lesson1.md'+:
-//        |||
-//          <style>
-//          body { margin-right: 50% }
-//
-//          li.L0, li.L1, li.L2, li.L3,
-//          li.L5, li.L6, li.L7, li.L8 {
-//            list-style-type: decimal !important;
-//          }
-//          </style>
-//          <script>
-//          var pres = document.getElementsByTagName('pre');
-//          for (i=0;i<pres.length; i++) {
-//            pres[i].className='prettyprint linenums';
-//          }
-//          PR.prettyPrint();
-//          </script>
-//          <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
-//        |||,
-//    },
-//  },
-//}
