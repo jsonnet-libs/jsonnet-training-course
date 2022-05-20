@@ -14,6 +14,8 @@ mkdir -p _html
 for f in ${FILES[@]}; do
     FILENAME=$(basename $f)
     md2html -f --github $f -o _html/${FILENAME%.md}.html
+    TITLE=$(grep '<h1>' _html/${FILENAME%.md}.html|sed 's;<\(/\?\)h1>;<\1title>;g')
+    sed -i "s;<title></title>;$TITLE;" _html/${FILENAME%.md}.html
 done
 
 for f in ${FILES[@]}; do
