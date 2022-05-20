@@ -63,18 +63,19 @@
   },
 
   example: {
-    new(filename, jsonnet, string): {
+    new(filename, jsonnet, string, type='jsonnet'): {
       local this = self,
 
       filename: filename,
       jsonnet: jsonnet,
       string: string,
+      type: type,
       base64: std.base64(self.string),
       playground: 'https://jsonnet-libs.github.io/playground/?code=%s' % self.base64,
 
       code:
         |||
-          ```jsonnet
+          ```%(type)s
           %(string)s
           // %(filename)s
           ```

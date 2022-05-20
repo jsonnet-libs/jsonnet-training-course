@@ -5,8 +5,8 @@ page.new(
   'index.md',
   'Jsonnet Training Materials',
   (importstr './index.md') % {
-    lessons: std.foldr(
-      function(l, acc)
+    lessons: std.foldl(
+      function(acc, l)
         acc +
         '- [%(title)s](%(filename)s)\n' % l.page
       ,

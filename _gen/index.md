@@ -19,5 +19,6 @@ ref: https://docs.google.com/document/d/1zDFaASBuDdsuxEXXc1E1UGhsYvWnYqc3m8QBNzM
 Lessons:
 
 - [Write a reusable library](lesson1.md)
+- [Don't write libraries](lesson2.md)
 
 
