@@ -72,14 +72,7 @@ tracks a checksum value in `sum`.
     │       └── xtd
     │           ├── ascii.libsonnet
     │           ├── camelcase.libsonnet
-    │           ├── docs
-    │           │   ├── ascii.md
-    │           │   ├── camelcase.md
-    │           │   ├── _config.yml
-    │           │   ├── Gemfile
-    │           │   ├── inspect.md
-    │           │   ├── README.md
-    │           │   └── url.md
+    │           ├── docs/
     │           ├── inspect.libsonnet
     │           ├── LICENSE
     │           ├── main.libsonnet

@@ -124,14 +124,7 @@ tracks a checksum value in <code>sum</code>.</p>
     │       └── xtd
     │           ├── ascii.libsonnet
     │           ├── camelcase.libsonnet
-    │           ├── docs
-    │           │   ├── ascii.md
-    │           │   ├── camelcase.md
-    │           │   ├── _config.yml
-    │           │   ├── Gemfile
-    │           │   ├── inspect.md
-    │           │   ├── README.md
-    │           │   └── url.md
+    │           ├── docs/
     │           ├── inspect.libsonnet
     │           ├── LICENSE
     │           ├── main.libsonnet
@@ -172,6 +165,9 @@ blockquote {
   padding-left: 1em;
   margin-left: 0;
   margin-right: 0;
+  display: flow-root;
+}
+p {
   display: flow-root;
 }
 h1, h2, h3, h4, h5, h6, hr {
