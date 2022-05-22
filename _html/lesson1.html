@@ -250,7 +250,7 @@ webserver.new('wonderful-webserver')
 </code></pre>
 <p><small><a href="https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIG5ldyhuYW1lLCByZXBsaWNhcz0xKTogewogICAgbG9jYWwgYmFzZSA9IHNlbGYsCgogICAgY29udGFpbmVyOjogewogICAgICBuYW1lOiAnaHR0cGQnLAogICAgICBpbWFnZTogJ2h0dHBkOjIuNCcsCiAgICAgIHBvcnRzOiBbewogICAgICAgIGNvbnRhaW5lclBvcnQ6IDgwLAogICAgICB9XSwKICAgIH0sCgogICAgZGVwbG95bWVudDogewogICAgICBhcGlWZXJzaW9uOiAnYXBwcy92MScsCiAgICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgICAgbWV0YWRhdGE6IHsKICAgICAgICBuYW1lOiBuYW1lLAogICAgICB9LAogICAgICBzcGVjOiB7CiAgICAgICAgcmVwbGljYXM6IHJlcGxpY2FzLAogICAgICAgIHRlbXBsYXRlOiB7CiAgICAgICAgICBzcGVjOiB7CiAgICAgICAgICAgIGNvbnRhaW5lcnM6IFsKICAgICAgICAgICAgICBiYXNlLmNvbnRhaW5lciwKICAgICAgICAgICAgXSwKICAgICAgICAgIH0sCiAgICAgICAgfSwKICAgICAgfSwKICAgIH0sCiAgfSwKCiAgd2l0aEltYWdlKGltYWdlKTogewogICAgY29udGFpbmVyKzogeyBpbWFnZTogaW1hZ2UgfSwKICB9LAp9OwoKd2Vic2VydmVyLm5ldygnd29uZGVyZnVsLXdlYnNlcnZlcicpCisgd2Vic2VydmVyLndpdGhJbWFnZSgnaHR0cGQ6Mi41JykKKyB7CiAgY29udGFpbmVyKzogewogICAgcG9ydHM6IFt7CiAgICAgIGNvbnRhaW5lclBvcnQ6IDgwODAsCiAgICB9XSwKICB9LAp9Cg==">Try <code>example6.jsonnet</code> in Jsonnet Playground</a></small></p>
 <p>The author has not provided a function for that however, unlike Helm charts, it is not
-necessary to fork the library to make this change. Jsonnet allows you to change any
+necessary to fork the library to make this change. Jsonnet allows the user to change any
 attribute after the fact by concatenating a 'patch'. The <code>container+:</code> will maintain the
 visibility of the <code>container</code> attribute while <code>ports:</code> will change the value of
 <code>container.ports</code>.</p>
@@ -574,6 +574,8 @@ body {
   background: white;
   border: thin solid grey;
   border-top: 0;
+  /* sans-serif fonts are generally better readable for people with dyslexia */
+  font-family: sans-serif;
 }
 blockquote {
   background: lightyellow;
@@ -585,6 +587,7 @@ blockquote {
 }
 p {
   display: flow-root;
+  line-height: 1.5em;
 }
 h1 a, h2 a, h3 a,
 h4 a, h5 a, h6 a {
@@ -599,6 +602,10 @@ hr {
 }
 ul {
   display: flow-root;
+}
+ol li,
+ul li {
+  line-height: 1.5em;
 }
 ul li code, p code {
   background: ghostwhite;
@@ -615,6 +622,7 @@ pre {
 li.L0, li.L1, li.L2, li.L3,
 li.L5, li.L6, li.L7, li.L8 {
   list-style-type: decimal !important;
+  line-height: normal;
 }
 </style>
 <script>

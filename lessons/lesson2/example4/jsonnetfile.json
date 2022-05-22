@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/jsonnet-libs/istio-libsonnet.git",
+          "subdir": "1.13"
+        }
+      },
+      "version": "main",
+      "name": "istio-lib"
+    }
+  ],
+  "legacyImports": true
+}

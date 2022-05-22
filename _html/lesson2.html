@@ -13,8 +13,8 @@ vendor them.</p>
 <h2>Objectives</h2>
 <ul>
 <li>Find existing libraries</li>
-<li>Vendor libraries with <code>jsonnet-bundler</code></li>
-<li>Use a vendored library with <code>JSONNET_PATH</code></li>
+<li>Vendor and update libraries with jsonnet-bundler</li>
+<li><code>import</code> and use a vendored library with <code>JSONNET_PATH</code></li>
 <li>Develop on a vendored library</li>
 <li>Generate new libraries from specifications</li>
 </ul>
@@ -45,9 +45,10 @@ application, look for a <code>jsonnetfile.json</code> in their repository.</li>
 </li>
 </ul>
 <hr>
+<h3><a id="jsonnet-bundler" href="#jsonnet-bundler">jsonnet-bundler</a></h3>
 <p>Now that we can find libraries, we need a way to &quot;install&quot; them. Jsonnet libraries are
 distributed as source code,  makes it quite simple process.</p>
-<p>The <a href="https://github.com/jsonnet-bundler/jsonnet-bundler/"><code>jsonnet-bundler</code></a> project is
+<p>The <a href="https://github.com/jsonnet-bundler/jsonnet-bundler/">jsonnet-bundler</a> project is
 the de facto package manager for Jsonnet. It vendors libraries from Git repositories and
 tracks them in <code>jsonnetfile.json</code>and its corresponding lockfile <code>jsonnetfile.lock.json</code>.</p>
 <p>To get started, initialize the directory with the <code>jb init</code>:</p>
@@ -57,7 +58,7 @@ tracks them in <code>jsonnetfile.json</code>and its corresponding lockfile <code
   &quot;legacyImports&quot;: true
 }
 
-// example1.jsonnetfile.json
+// example1/jsonnetfile.json
 </code></pre>
 <p><code>jb init</code> creates a virtually empty <code>jsonnetfile.json</code>.</p>
 <p>Originally <code>jb</code> vendored libraries as <code>vendor/&lt;name&gt;</code>, in large code bases this can cause
@@ -186,6 +187,124 @@ this, add <code>@main</code>:</p>
 <p><code>$ jb install github.com/jsonnet-libs/xtd@v1.0</code></p>
 <p><em>(eg, v1.0 tag does not exist on the xtd repo)</em></p>
 <hr>
+<p>There are also libraries that might have a bit of an alternative naming pattern that
+doesn't align well with the <code>legacyImports</code> feature. For example
+<a href="https://github.com/jsonnet-libs/istio-libsonnet"><code>istio-libsonnet</code></a> provides multiple
+libraries for multiple versions of the Istio CRDs.</p>
+<p>Let's install a certain version:</p>
+<p><code>jb install github.com/jsonnet-libs/istio-libsonnet/1.12@main</code></p>
+<pre><code>.
+├── jsonnetfile.json
+├── jsonnetfile.lock.json
+└── vendor
+    ├── 1.12 -&gt; github.com/jsonnet-libs/istio-libsonnet/1.12
+    └── github.com
+        └── jsonnet-libs
+            └── istio-libsonnet
+                └── 1.12
+                    ├── _gen
+                    ├── gen.libsonnet
+                    └── main.libsonnet
+</code></pre>
+<p>This creates a symlink on <code>vendor/1.12</code>, which doesn't express clearly to which
+library it refers to and can cause naming conflicts with other libraries following the
+same pattern.</p>
+<hr>
+<p>To overcome this, we can set the name on install:</p>
+<p><code>jb install github.com/jsonnet-libs/istio-libsonnet/1.12@main --legacy-name istio-lib</code></p>
+<pre><code>.
+├── jsonnetfile.json
+├── jsonnetfile.lock.json
+└── vendor
+    ├── github.com
+    │   └── jsonnet-libs
+    │       └── istio-libsonnet
+    │           └── 1.12
+    │               ├── _gen
+    │               ├── gen.libsonnet
+    │               └── main.libsonnet
+    └── istio-lib -&gt; github.com/jsonnet-libs/istio-libsonnet/1.12
+</code></pre>
+<p>This creates a symlink at <code>vendor/istio-lib</code>, which is easily distinguishable.</p>
+<hr>
+<pre><code class="language-json">{
+  &quot;version&quot;: 1,
+  &quot;dependencies&quot;: [
+    {
+      &quot;source&quot;: {
+        &quot;git&quot;: {
+          &quot;remote&quot;: &quot;https://github.com/jsonnet-libs/istio-libsonnet.git&quot;,
+          &quot;subdir&quot;: &quot;1.13&quot;
+        }
+      },
+      &quot;version&quot;: &quot;main&quot;,
+      &quot;name&quot;: &quot;istio-lib&quot;
+    }
+  ],
+  &quot;legacyImports&quot;: true
+}
+
+// example4/jsonnetfile.json
+</code></pre>
+<p>Note the <code>name</code> attribute on the <code>dependencies</code> entry, it has the value of <code>--legacy-name</code>
+parameter.</p>
+<p>Additionally this has the added benefit of doing in-place updates of the istio-lib. This
+isn't a standard feature of jsonnet-bundler so we have to manually update
+<code>jsonnetfile.json</code> and update the <code>subdir</code> attribute to <code>1.13</code>.</p>
+<hr>
+<pre><code>.
+├── jsonnetfile.json
+├── jsonnetfile.lock.json
+└── vendor
+    ├── github.com
+    │   └── jsonnet-libs
+    │       └── istio-libsonnet
+    │           └── 1.13
+    │               ├── _gen
+    │               ├── gen.libsonnet
+    │               └── main.libsonnet
+    └── istio-lib -&gt; github.com/jsonnet-libs/istio-libsonnet/1.13
+</code></pre>
+<p>Now by calling <code>jb install</code> without additional parameters, jsonnet-bundler will replace
+this library.</p>
+<blockquote>
+<p>This is an example on how jsonnet-bundler claims ownership over the <code>vendor/</code> directory.
+It will install all libraries to match <code>jsonnetfile.json</code> complemented by
+<code>jsonnetfile.lock.json</code> and it will remove everything else.</p>
+</blockquote>
+<hr>
+<h3><a id="usage" href="#usage">Usage</a></h3>
+<p>Now that we can vendor libraries, it is time to <code>import</code> and use them.</p>
+<p>Let's use the <code>xtd</code> library that we installed:</p>
+<pre><code class="language-jsonnet">local xtd = import 'github.com/jsonnet-libs/xtd/main.libsonnet';
+
+xtd.ascii.isNumber('2')
+
+// example5/usage1.jsonnet
+</code></pre>
+<p>Using the long path is the recommended way on how to import vendored dependencies. It
+allows the authors to assume that the <code>vendor/</code> directory is in the <code>JSONNET_PATH</code> so that
+dependencies don't have to be vendored relative to the library.</p>
+<p>The long path provides a sufficiently unique path to prevent naming conflicts in most
+cases, taking into consideration the usage of <code>legacyImports</code> and the alternative naming
+pattern explained above.</p>
+<hr>
+<pre><code class="language-jsonnet">local xtd = import 'xtd/main.libsonnet';
+
+xtd.ascii.isNumber('2')
+
+// example5/usage2.jsonnet
+</code></pre>
+<p>If <code>legacyImports</code> was set on install, then the symlink allows to import the library with
+a short handle like this. Many libraries still follow this practice.</p>
+<hr>
+<pre><code class="language-jsonnet">local istiolib = import 'istio-lib/main.libsonnet';
+
+istiolib.networking.v1beta1.virtualService.new('test')
+
+// example5/usage3.jsonnet
+</code></pre>
+<p>When using <code>--legacy-name istio-lib</code>, the import can look like this.</p>
 <h2>Conclusion</h2>
 <p>TODO</p>
 <style>
@@ -204,6 +323,8 @@ body {
   background: white;
   border: thin solid grey;
   border-top: 0;
+  /* sans-serif fonts are generally better readable for people with dyslexia */
+  font-family: sans-serif;
 }
 blockquote {
   background: lightyellow;
@@ -215,6 +336,7 @@ blockquote {
 }
 p {
   display: flow-root;
+  line-height: 1.5em;
 }
 h1 a, h2 a, h3 a,
 h4 a, h5 a, h6 a {
@@ -229,6 +351,10 @@ hr {
 }
 ul {
   display: flow-root;
+}
+ol li,
+ul li {
+  line-height: 1.5em;
 }
 ul li code, p code {
   background: ghostwhite;
@@ -245,6 +371,7 @@ pre {
 li.L0, li.L1, li.L2, li.L3,
 li.L5, li.L6, li.L7, li.L8 {
   list-style-type: decimal !important;
+  line-height: normal;
 }
 </style>
 <script>

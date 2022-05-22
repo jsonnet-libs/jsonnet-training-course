@@ -13,8 +13,8 @@ lesson.new(
   |||,
   [
     'Find existing libraries',
-    'Vendor libraries with `jsonnet-bundler`',
-    'Use a vendored library with `JSONNET_PATH`',
+    'Vendor and update libraries with jsonnet-bundler',
+    '`import` and use a vendored library with `JSONNET_PATH`',
     'Develop on a vendored library',
     'Generate new libraries from specifications',
   ],

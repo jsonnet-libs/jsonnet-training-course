@@ -68,7 +68,7 @@ author of this library and want to change the `ports` attribute.
 %(example6.jsonnet)s
 
 The author has not provided a function for that however, unlike Helm charts, it is not
-necessary to fork the library to make this change. Jsonnet allows you to change any
+necessary to fork the library to make this change. Jsonnet allows the user to change any
 attribute after the fact by concatenating a 'patch'. The `container+:` will maintain the
 visibility of the `container` attribute while `ports:` will change the value of
 `container.ports`.
