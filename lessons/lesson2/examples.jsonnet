@@ -21,4 +21,18 @@ local example = (import 'coursonnet.libsonnet').example;
     'json'
   ) + { render: self.code },
 
+  example.new(
+    'example3/jsonnetfile.json',
+    import './example3/jsonnetfile.json',
+    importstr './example3/jsonnetfile.json',
+    'json'
+  ) + { render: self.code },
+
+  example.new(
+    'example3/.gitignore',
+    {},
+    importstr './example3/.gitignore',
+    'json'
+  ) + { render: self.code },
+
 ]

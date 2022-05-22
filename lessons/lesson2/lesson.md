@@ -52,6 +52,9 @@ Let's vendor a library:
 `jsonnetfile.json` has a new entry in the `dependency` key, it refers to the source on
 Github and defaults to the `master` branch for tracking its `version`.
 
+When updating libraries, it will follow the `version` tag, for example `jb update
+github.com/jsonnet-libs/xtd` will pull in the git commit that `master` refers to.
+
 ---
 
 %(example2/jsonnetfile.lock.json)s
@@ -59,6 +62,8 @@ Github and defaults to the `master` branch for tracking its `version`.
 A new file `jsonnetfile.lock.json` is created, this contains the actual `version` that
 should be installed, as this is a Git source it refers to a Git hash. Additionally it also
 tracks a checksum value in `sum`.
+
+With the lock file in place, calling `jb install` without param
 
 ---
 
@@ -87,6 +92,46 @@ The library is vendored into `vendor/github.com/jsonnet-libs/xtd` and a symlink 
 `vendor/xtd` was added. The `vendor/` directory is a widespread convention, tools like
 Tanka look here for imports.
 
-It is often not necessary and even undesirable to distribute `jsonnetfile.lock.json` or
-`vendor` along with your library, the `version` tag in `jsonnetfile.json` can be leveraged
-in case a specific version is expected (for example when newer versions of dependencies have breaking changes).
+%(example3/.gitignore)s
+
+When shipping a library, generally only `jsonnetfile.json` is included. This way when
+calling `jb install` on a library, it will pull whatever value is set in `version`. If
+that is `master`, it will match the latest git commit.
+
+It is often not necessary and even undesirable to distribute `jsonnetfile.lock.json` and
+`vendor/` with a library, the `version` tag in `jsonnetfile.json` can be leveraged in case
+a specific version is expected (for example when newer versions of dependencies have
+breaking changes).
+
+Add `jsonnetfile.lock.json` and `vendor/` to the `.gitignore` file so they are not
+accidentally committed
+
+---
+
+_But what if `master` has a breaking change? Shouldn't the lock file be there to ensure
+a specific version is installed?_
+
+Although it is uncommon that things break often (based on empirical data), it is possible
+to pin to a specific version of a dependency.
+
+`$ jb install github.com/jsonnet-libs/xtd@803739029925cf31b0e3c6db2f4aae09b0378a6e`
+
+%(example3/jsonnetfile.json)s
+
+This will set `version` in `jsonnetfile.json` to ensure downstream users install the
+dependency that works with the library.
+
+`jb` defaults to the `master` tag, new Github repos default to the `main` tag. To override
+this, add `@main`:
+
+`$ jb install github.com/jsonnet-libs/xtd@main`
+
+Alternatively it is possible to pin to a certain tag:
+
+`$ jb install github.com/jsonnet-libs/xtd@v1.0`
+
+_(eg, v1.0 tag does not exist on the xtd repo)_
+
+---
+
+

@@ -91,6 +91,7 @@ helper library with a collection of useful functions.</p>
 </code></pre>
 <p><code>jsonnetfile.json</code> has a new entry in the <code>dependency</code> key, it refers to the source on
 Github and defaults to the <code>master</code> branch for tracking its <code>version</code>.</p>
+<p>When updating libraries, it will follow the <code>version</code> tag, for example <code>jb update github.com/jsonnet-libs/xtd</code> will pull in the git commit that <code>master</code> refers to.</p>
 <hr>
 <pre><code class="language-json">{
   &quot;version&quot;: 1,
@@ -114,6 +115,7 @@ Github and defaults to the <code>master</code> branch for tracking its <code>ver
 <p>A new file <code>jsonnetfile.lock.json</code> is created, this contains the actual <code>version</code> that
 should be installed, as this is a Git source it refers to a Git hash. Additionally it also
 tracks a checksum value in <code>sum</code>.</p>
+<p>With the lock file in place, calling <code>jb install</code> without param</p>
 <hr>
 <pre><code>.
 ├── jsonnetfile.json
@@ -137,9 +139,53 @@ tracks a checksum value in <code>sum</code>.</p>
 <p>The library is vendored into <code>vendor/github.com/jsonnet-libs/xtd</code> and a symlink on
 <code>vendor/xtd</code> was added. The <code>vendor/</code> directory is a widespread convention, tools like
 Tanka look here for imports.</p>
-<p>It is often not necessary and even undesirable to distribute <code>jsonnetfile.lock.json</code> or
-<code>vendor</code> along with your library, the <code>version</code> tag in <code>jsonnetfile.json</code> can be leveraged
-in case a specific version is expected (for example when newer versions of dependencies have breaking changes).</p>
+<pre><code class="language-json">jsonnetfile.lock.json
+vendor/
+
+// example3/.gitignore
+</code></pre>
+<p>When shipping a library, generally only <code>jsonnetfile.json</code> is included. This way when
+calling <code>jb install</code> on a library, it will pull whatever value is set in <code>version</code>. If
+that is <code>master</code>, it will match the latest git commit.</p>
+<p>It is often not necessary and even undesirable to distribute <code>jsonnetfile.lock.json</code> and
+<code>vendor/</code> with a library, the <code>version</code> tag in <code>jsonnetfile.json</code> can be leveraged in case
+a specific version is expected (for example when newer versions of dependencies have
+breaking changes).</p>
+<p>Add <code>jsonnetfile.lock.json</code> and <code>vendor/</code> to the <code>.gitignore</code> file so they are not
+accidentally committed</p>
+<hr>
+<p><em>But what if <code>master</code> has a breaking change? Shouldn't the lock file be there to ensure
+a specific version is installed?</em></p>
+<p>Although it is uncommon that things break often (based on empirical data), it is possible
+to pin to a specific version of a dependency.</p>
+<p><code>$ jb install github.com/jsonnet-libs/xtd@803739029925cf31b0e3c6db2f4aae09b0378a6e</code></p>
+<pre><code class="language-json">{
+  &quot;version&quot;: 1,
+  &quot;dependencies&quot;: [
+    {
+      &quot;source&quot;: {
+        &quot;git&quot;: {
+          &quot;remote&quot;: &quot;https://github.com/jsonnet-libs/xtd.git&quot;,
+          &quot;subdir&quot;: &quot;&quot;
+        }
+      },
+      &quot;version&quot;: &quot;803739029925cf31b0e3c6db2f4aae09b0378a6e&quot;
+    }
+  ],
+  &quot;legacyImports&quot;: true
+}
+
+// example3/jsonnetfile.json
+</code></pre>
+<p>This will set <code>version</code> in <code>jsonnetfile.json</code> to ensure downstream users install the
+dependency that works with the library.</p>
+<p><code>jb</code> defaults to the <code>master</code> tag, new Github repos default to the <code>main</code> tag. To override
+this, add <code>@main</code>:</p>
+<p><code>$ jb install github.com/jsonnet-libs/xtd@main</code></p>
+<p>Alternatively it is possible to pin to a certain tag:</p>
+<p><code>$ jb install github.com/jsonnet-libs/xtd@v1.0</code></p>
+<p><em>(eg, v1.0 tag does not exist on the xtd repo)</em></p>
+<hr>
 <h2>Conclusion</h2>
 <p>TODO</p>
 <style>
