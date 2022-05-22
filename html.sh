@@ -15,6 +15,8 @@ for f in ${FILES[@]}; do
     FILENAME=$(basename $f)
     md2html -f --github $f -o _html/${FILENAME%.md}.html
     TITLE=$(grep '<h1>' _html/${FILENAME%.md}.html|sed 's;<\(/\?\)h1>;<\1title>;g')
+    TITLE=${TITLE}'\n<meta charset="utf-8">'
+    TITLE=${TITLE}'\n<meta name="viewport" content="width=device-width, initial-scale=1.0">'
     sed -i "s;<title></title>;$TITLE;" _html/${FILENAME%.md}.html
 done
 

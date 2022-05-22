@@ -39,6 +39,7 @@
             border-top: 0;
             /* sans-serif fonts are generally better readable for people with dyslexia */
             font-family: sans-serif;
+            font-size: 1.15rem;
           }
           blockquote {
             background: lightyellow;
@@ -78,8 +79,22 @@
             float: left;
             margin-top: 0;
             margin-right: 1em;
-            width: 70ch;
+            width: min(50%, 70ch);
             overflow-x: scroll;
+          }
+
+          @media only screen and (max-width: 720px) {
+            body {
+              width: auto;
+              margin-left: 0;
+              margin-right: 0;
+              border: 0;
+            }
+            pre {
+              clear: both;
+              float: none;
+              width: min(95%, 70ch);
+            }
           }
 
           li.L0, li.L1, li.L2, li.L3,

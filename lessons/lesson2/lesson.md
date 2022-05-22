@@ -65,8 +65,6 @@ A new file `jsonnetfile.lock.json` is created, this contains the actual `version
 should be installed, as this is a Git source it refers to a Git hash. Additionally it also
 tracks a checksum value in `sum`.
 
-With the lock file in place, calling `jb install` without param
-
 ---
 
 ```
