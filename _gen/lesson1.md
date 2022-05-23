@@ -1,4 +1,4 @@
-# Write a reusable library
+# Write an extensible library
 
 Jsonnet gives us a lot of freedom to organize our libraries, there is no right or
 wrong, however a well-organized library can get you a long way. While applying common
@@ -21,7 +21,7 @@ deploy a webserver on Kubernetes.
 
 ## Lesson
 
-###  Creating a reusable library
+###  Creating an extensible library
 
 Let's start with a simple `Deployment` of a webserver:
 

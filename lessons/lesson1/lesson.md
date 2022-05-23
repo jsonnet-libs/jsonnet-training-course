@@ -1,4 +1,4 @@
-###  Creating a reusable library
+###  Creating an extensible library
 
 Let's start with a simple `Deployment` of a webserver:
 

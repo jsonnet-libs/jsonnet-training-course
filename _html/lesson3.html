@@ -1,43 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Jsonnet Training Materials</title>
+<title>Exercise: rewrite a library with <code>k8s-libsonnet</code></title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="md2html">
 </head>
 <body>
 <p>[<a href="index.html">index</a>]</p>
-<h1>Jsonnet Training Materials</h1>
-<p>Exciting as you might be after following the <a href="https://jsonnet.org/learning/tutorial.html">excellent jsonnet.org tutorial</a>,
-it can still be daunting to actually use Jsonnet in the real world. Instead of working
-with arbitrary examples like cocktails or your favorite pets, these training materials
-contain real worlds examples (good and bad) in the hope to lower the bar of entry.</p>
-<blockquote>
-<p>Note: A lot of the examples will be around Kubernetes objects, but don't worry if you
-don't know how Kubernetes works, this is not a requirement for understanding the Jsonnet
-examples.</p>
-</blockquote>
-<p>TODO: Answer questions tl;dr, make reference to longer descriptions)</p>
-<p>Why?</p>
+<h1>Exercise: rewrite a library with <code>k8s-libsonnet</code></h1>
+<p>In the first lesson we've written a extensible library and in the second lesson we've
+covered package management with jsonnet-bundler. In this lesson we'll combine what
+we've learned and rewrite that library.</p>
+<h2>Objectives</h2>
 <ul>
-<li>Why jsonnet? What benefit do we gain from it?</li>
-<li>Why is it worth the inconvenience of people having to learn a new language/paradigm?</li>
-<li>Why we use jsonnet (vs other solutions/tools)?</li>
-<li>TODO: Create longer retrospective design doc</li>
+<li>Rewrite a library</li>
+<li>Vendor and use <code>k8s-libsonnet</code></li>
+<li>Understand the <code>lib/k.libsonnet</code> convention</li>
 </ul>
-<p>How?</p>
-<ul>
-<li>What are the lessons we’ve learned after using jsonnet for years?</li>
-<li>What are some GrafanaLabs jsonnet idioms that we try to use?</li>
-<li>Tools/tricks when writing/debugging jsonnet?</li>
-</ul>
-<p>Lessons:</p>
-<ol>
-<li><a href="lesson1.html">Write an extensible library</a></li>
-<li><a href="lesson2.html">Don't write libraries</a></li>
-<li><a href="lesson3.html">Exercise: rewrite a library with <code>k8s-libsonnet</code></a></li>
-</ol>
+<h2>Lesson</h2>
+<p>In <a href="lesson1.html">Write an extensible library</a>, we created this library:</p>
+<pre><code class="language-jsonnet">local webserver = {
+  new(name, replicas=1): {
+    local base = self,
+
+    container:: {
+      name: 'httpd',
+      image: 'httpd:2.4',
+    },
+
+    deployment: {
+      apiVersion: 'apps/v1',
+      kind: 'Deployment',
+      metadata: {
+        name: name,
+      },
+      spec: {
+        replicas: replicas,
+        template: {
+          spec: {
+            containers: [
+              base.container,
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  withImage(image): {
+    container+: { image: image },
+  },
+};
+
+webserver.new('wonderful-webserver')
++ webserver.withImage('httpd:2.5')
+
+// example1.jsonnet
+</code></pre>
+<p>This library is quite verbose as the author has to provide the <code>apiVersion</code>, <code>kind</code> and
+other attributes.</p>
+<p>To simplify this, the community has created a Kubernetes client library for Jsonnet called
+<a href="https://github.com/jsonnet-libs/k8s-libsonnet"><code>k8s-libsonnet</code></a>. By leveraging this
+client library, the author can provide an abstraction that can work across most Kubernetes
+versions.</p>
+<hr>
+<p>Let's install <code>k8s-libsonnet</code> with jsonnet-bundler and import it:</p>
+<p><code>$ jb install https://github.com/jsonnet-libs/k8s-libsonnet/1.23@main</code></p>
+<p>Note the alternative naming pattern ending on <code>1.23</code>, referencing the Kubernetes version
+this was generated for.</p>
+<pre><code class="language-jsonnet">(import 'github.com/jsonnet-libs/k8s-libsonnet/1.23/main.libsonnet')
+
+// example2/lib/k.libsonnet
+</code></pre>
+<p>The most common convention to work with this is to provide <code>lib/k.libsonnet</code> as
+a shortcut.</p>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnnet';
+
+// example2/example1.jsonnet
+</code></pre>
+<p>Many libraries have a line <code>local k = import 'k.libsonnet'</code> to refer to this
+library.</p>
+<h2>Conclusion</h2>
+<p>TODO</p>
 <style>
 html {
     margin: 0;

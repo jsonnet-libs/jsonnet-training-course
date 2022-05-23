@@ -5,7 +5,7 @@ local examples = import './examples.jsonnet';
 
 lesson.new(
   'lesson1',
-  'Write a reusable library',
+  'Write an extensible library',
   |||
     Jsonnet gives us a lot of freedom to organize our libraries, there is no right or
     wrong, however a well-organized library can get you a long way. While applying common

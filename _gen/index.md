@@ -27,7 +27,8 @@ How?
 
 Lessons:
 
-1. [Write a reusable library](lesson1.md)
+1. [Write an extensible library](lesson1.md)
 1. [Don't write libraries](lesson2.md)
+1. [Exercise: rewrite a library with `k8s-libsonnet`](lesson3.md)
 
 
