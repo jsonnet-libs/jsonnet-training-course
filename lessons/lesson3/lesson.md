@@ -51,7 +51,7 @@ The library has grouped a number of functions under `k.core.v1.container`, we'll
 
 ---
 
-And now for the [deployment](https://jsonnet-libs.github.io/k8s-libsonnet/1.23/core/v1/container/):
+And now for the [deployment](https://jsonnet-libs.github.io/k8s-libsonnet/1.23/apps/v1/deployment/):
 
 %(example2/example3.jsonnet)s
 
