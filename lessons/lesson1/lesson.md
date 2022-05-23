@@ -1,4 +1,4 @@
-###  <a id="reusable-library" href="#reusable-library">Creating a reusable library</a>
+###  Creating a reusable library
 
 Let's start with a simple `Deployment` of a webserver:
 
@@ -80,7 +80,7 @@ library code terse and maintainable without sacrificing extensibility.
 
 ---
 
-### <a id="common-pitfalls" href="#common-pitfalls">Common pitfalls when creating libraries</a>
+### Common pitfalls when creating libraries
 
 Avoid the 'builder' pattern:
 

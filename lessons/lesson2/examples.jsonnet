@@ -60,4 +60,16 @@ local example = (import 'coursonnet.libsonnet').example;
     importstr './example5/usage3.jsonnet',
   ) + { render: self.code },
 
+  example.new(
+    'example5/usage4.jsonnet',
+    import './example5/usage4.jsonnet',
+    importstr './example5/usage4.jsonnet',
+  ) + { render: self.code },
+
+  example.new(
+    'example5/lib/istiolib.libsonnet',
+    {},  //import './example5/lib/istiolib.libsonnet',
+    importstr './example5/lib/istiolib.libsonnet',
+  ) + { render: self.code },
+
 ]

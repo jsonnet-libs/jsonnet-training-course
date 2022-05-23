@@ -21,7 +21,7 @@ Git repositories and are wholeheartedly open source.
 
 ---
 
-### <a id="jsonnet-bundler" href="#jsonnet-bundler">jsonnet-bundler</a>
+### jsonnet-bundler
 
 Now that we can find libraries, we need a way to "install" them. Jsonnet libraries are
 distributed as source code,  makes it quite simple process.
@@ -89,8 +89,7 @@ tracks a checksum value in `sum`.
 ```
 
 The library is vendored into `vendor/github.com/jsonnet-libs/xtd` and a symlink on
-`vendor/xtd` was added. The `vendor/` directory is a widespread convention, tools like
-Tanka look here for imports.
+`vendor/xtd` was added. The `vendor/` directory is a widespread convention.
 
 %(example3/.gitignore)s
 
@@ -222,7 +221,7 @@ this library.
 
 ---
 
-### <a id="usage" href="#usage">Usage</a>
+### Usage
 
 Now that we can vendor libraries, it is time to `import` and use them.
 
@@ -231,7 +230,7 @@ Let's use the `xtd` library that we installed:
 %(example5/usage1.jsonnet)s
 
 Using the long path is the recommended way on how to import vendored dependencies. It
-allows the authors to assume that the `vendor/` directory is in the `JSONNET_PATH` so that
+builds on the assumption that the `vendor/` directory is in the `JSONNET_PATH` so that
 dependencies don't have to be vendored relative to the library.
 
 The long path provides a sufficiently unique path to prevent naming conflicts in most
@@ -251,5 +250,58 @@ a short handle like this. Many libraries still follow this practice.
 
 When using `--legacy-name istio-lib`, the import can look like this.
 
+---
+
+An alternative to naming a dependency with jsonnet-bundler is to create a local library
+with the sole purpose of providing a shortcut.
+
+%(example5/lib/istiolib.libsonnet)s
+
+%(example5/usage4.jsonnet)s
+
+The added advantage of this approach is the ability add local overrides for the library in
+`lib/istiolib.libsonnet`. It is also doesn't depend on the `jsonnet-bundler` behavior.
+
+Note the location of this library, `lib/` is another directory is commonly added to
+`JSONNET_PATH` as to where libraries can `import` dependencies from.
 
 
+### `JSONNET_PATH`
+
+`JSONNET_PATH` is a semicolon `:` separated list of directories that `jsonnet` will
+attempt to resolve imports from. Two common paths are `vendor/` and `lib/`, relative to
+the project root, which is usually indicated by `jsonnetfile.json`.
+
+`$ JSONNET_PATH="lib/:vendor/" jsonnet usage4.jsonnet`
+
+_Order matters: `JSONNET_PATH` follows FIFO, if the import is found in `lib/` then it will
+not look in `vendor/`._
+
+This will resolve the imports accordingly:
+
+- `import 'istiolib.libsonnet'` &rarr; `lib/istiolib.libsonnnet`
+- `import 'github.com/.../1.13/main.libsonnet'` &rarr; `vendor/.../1.13/main.libsonnet`
+
+Alternatively it is possible to add paths as attributes to `jsonnet`:
+
+`$ jsonnet -J vendor/ -J lib/ usage4.jsonnet`
+
+_Order matters: `-J` follows LIFO, if the import is found in `lib/` then it will not look
+in `vendor/`._
+
+### Development
+
+It often happens that a vendored library is developed alongside the environment that is
+using it. However `jb install` will reset the contents of edits in `vendor/`, so that is
+not an ideal location to develop a library.
+
+TODO: several options here, not sure which is most useful
+
+- Simply edit in `vendor/`, copy over the contents to the local path, risk of `jb install`
+    removing the changes.
+- Git clone/checkout/submodule in `vendor/`, same risk of `jb install` removing the
+    changes.
+- Change jsonnetfile.json to use file://path/to/local/library
+- Depend on import order and symlink/develop in `lib/`, taking precedence over `vendor/`.
+
+> Idea: perhaps jsonnet-bundler could benefit from an --editable feature like `pip`.

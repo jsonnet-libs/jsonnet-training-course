@@ -7,14 +7,21 @@ contain real worlds examples (good and bad) in the hope to lower the bar of entr
 > don't know how Kubernetes works, this is not a requirement for understanding the Jsonnet
 > examples.
 
-Common questions:
+TODO: Answer questions tl;dr, make reference to longer descriptions)
 
-- What are the lessons we’ve learned after using jsonnet for years?
+
+Why?
+
 - Why jsonnet? What benefit do we gain from it?
 - Why is it worth the inconvenience of people having to learn a new language/paradigm?
 - Why we use jsonnet (vs other solutions/tools)?
-- Tools/tricks when writing/debugging jsonnet?
+- TODO: Create longer retrospective design doc
+
+How?
+
+- What are the lessons we’ve learned after using jsonnet for years?
 - What are some GrafanaLabs jsonnet idioms that we try to use?
+- Tools/tricks when writing/debugging jsonnet?
 
 Lessons:
 

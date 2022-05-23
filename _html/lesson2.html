@@ -47,7 +47,7 @@ application, look for a <code>jsonnetfile.json</code> in their repository.</li>
 </li>
 </ul>
 <hr>
-<h3><a id="jsonnet-bundler" href="#jsonnet-bundler">jsonnet-bundler</a></h3>
+<h3>jsonnet-bundler</h3>
 <p>Now that we can find libraries, we need a way to &quot;install&quot; them. Jsonnet libraries are
 distributed as source code,  makes it quite simple process.</p>
 <p>The <a href="https://github.com/jsonnet-bundler/jsonnet-bundler/">jsonnet-bundler</a> project is
@@ -139,8 +139,7 @@ tracks a checksum value in <code>sum</code>.</p>
     └── xtd -&gt; github.com/jsonnet-libs/xtd
 </code></pre>
 <p>The library is vendored into <code>vendor/github.com/jsonnet-libs/xtd</code> and a symlink on
-<code>vendor/xtd</code> was added. The <code>vendor/</code> directory is a widespread convention, tools like
-Tanka look here for imports.</p>
+<code>vendor/xtd</code> was added. The <code>vendor/</code> directory is a widespread convention.</p>
 <pre><code class="language-json">jsonnetfile.lock.json
 vendor/
 
@@ -274,7 +273,7 @@ It will install all libraries to match <code>jsonnetfile.json</code> complemente
 <code>jsonnetfile.lock.json</code> and it will remove everything else.</p>
 </blockquote>
 <hr>
-<h3><a id="usage" href="#usage">Usage</a></h3>
+<h3>Usage</h3>
 <p>Now that we can vendor libraries, it is time to <code>import</code> and use them.</p>
 <p>Let's use the <code>xtd</code> library that we installed:</p>
 <pre><code class="language-jsonnet">local xtd = import 'github.com/jsonnet-libs/xtd/main.libsonnet';
@@ -284,7 +283,7 @@ xtd.ascii.isNumber('2')
 // example5/usage1.jsonnet
 </code></pre>
 <p>Using the long path is the recommended way on how to import vendored dependencies. It
-allows the authors to assume that the <code>vendor/</code> directory is in the <code>JSONNET_PATH</code> so that
+builds on the assumption that the <code>vendor/</code> directory is in the <code>JSONNET_PATH</code> so that
 dependencies don't have to be vendored relative to the library.</p>
 <p>The long path provides a sufficiently unique path to prevent naming conflicts in most
 cases, taking into consideration the usage of <code>legacyImports</code> and the alternative naming
@@ -306,97 +305,185 @@ istiolib.networking.v1beta1.virtualService.new('test')
 // example5/usage3.jsonnet
 </code></pre>
 <p>When using <code>--legacy-name istio-lib</code>, the import can look like this.</p>
+<hr>
+<p>An alternative to naming a dependency with jsonnet-bundler is to create a local library
+with the sole purpose of providing a shortcut.</p>
+<pre><code class="language-jsonnet">(import 'github.com/jsonnet-libs/istio-libsonnet/1.13/main.libsonnet')
+
+// example5/lib/istiolib.libsonnet
+</code></pre>
+<pre><code class="language-jsonnet">local istiolib = import 'istiolib.libsonnet';
+
+istiolib.networking.v1beta1.virtualService.new('test')
+
+// example5/usage4.jsonnet
+</code></pre>
+<p>The added advantage of this approach is the ability add local overrides for the library in
+<code>lib/istiolib.libsonnet</code>. It is also doesn't depend on the <code>jsonnet-bundler</code> behavior.</p>
+<p>Note the location of this library, <code>lib/</code> is another directory is commonly added to
+<code>JSONNET_PATH</code> as to where libraries can <code>import</code> dependencies from.</p>
+<h3><code>JSONNET_PATH</code></h3>
+<p><code>JSONNET_PATH</code> is a semicolon <code>:</code> separated list of directories that <code>jsonnet</code> will
+attempt to resolve imports from. Two common paths are <code>vendor/</code> and <code>lib/</code>, relative to
+the project root, which is usually indicated by <code>jsonnetfile.json</code>.</p>
+<p><code>$ JSONNET_PATH=&quot;lib/:vendor/&quot; jsonnet usage4.jsonnet</code></p>
+<p><em>Order matters: <code>JSONNET_PATH</code> follows FIFO, if the import is found in <code>lib/</code> then it will
+not look in <code>vendor/</code>.</em></p>
+<p>This will resolve the imports accordingly:</p>
+<ul>
+<li><code>import 'istiolib.libsonnet'</code> → <code>lib/istiolib.libsonnnet</code></li>
+<li><code>import 'github.com/.../1.13/main.libsonnet'</code> → <code>vendor/.../1.13/main.libsonnet</code></li>
+</ul>
+<p>Alternatively it is possible to add paths as attributes to <code>jsonnet</code>:</p>
+<p><code>$ jsonnet -J vendor/ -J lib/ usage4.jsonnet</code></p>
+<p><em>Order matters: <code>-J</code> follows LIFO, if the import is found in <code>lib/</code> then it will not look
+in <code>vendor/</code>.</em></p>
+<h3>Development</h3>
+<p>It often happens that a vendored library is developed alongside the environment that is
+using it. However <code>jb install</code> will reset the contents of edits in <code>vendor/</code>, so that is
+not an ideal location to develop a library.</p>
+<p>TODO: several options here, not sure which is most useful</p>
+<ul>
+<li>Simply edit in <code>vendor/</code>, copy over the contents to the local path, risk of <code>jb install</code>
+removing the changes.</li>
+<li>Git clone/checkout/submodule in <code>vendor/</code>, same risk of <code>jb install</code> removing the
+changes.</li>
+<li>Change jsonnetfile.json to use file://path/to/local/library</li>
+<li>Depend on import order and symlink/develop in <code>lib/</code>, taking precedence over <code>vendor/</code>.</li>
+</ul>
+<blockquote>
+<p>Idea: perhaps jsonnet-bundler could benefit from an --editable feature like <code>pip</code>.</p>
+</blockquote>
 <h2>Conclusion</h2>
 <p>TODO</p>
 <style>
 html {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  background: lightgrey;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: lightgrey;
 }
+
 body {
-  margin: 0;
-  padding: 1em;
-  min-height: 100%;
-  margin-left: 15%;
-  margin-right: 15%;
-  background: white;
-  border: thin solid grey;
-  border-top: 0;
-  /* sans-serif fonts are generally better readable for people with dyslexia */
-  font-family: sans-serif;
-  font-size: 1.15rem;
+    margin: 0;
+    padding: 1em;
+    min-height: 100%;
+    margin-left: 15%;
+    margin-right: 15%;
+    background: white;
+    border: thin solid grey;
+    border-top: 0;
+    /* sans-serif fonts are generally better readable for people with dyslexia */
+    font-family: sans-serif;
+    font-size: 1.15rem;
 }
+
 blockquote {
-  background: lightyellow;
-  padding: .1em;
-  padding-left: 1em;
-  margin-left: 0;
-  margin-right: 0;
-  display: flow-root;
+    background: lightyellow;
+    padding: .1em;
+    padding-left: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    display: flow-root;
 }
+
 p {
-  display: flow-root;
-  line-height: 1.5em;
+    display: flow-root;
+    line-height: 1.5em;
 }
+
 h1 a, h2 a, h3 a,
 h4 a, h5 a, h6 a {
     text-decoration: none;
     color: black;
 }
+
+a.anchor-link {
+    font-size: 0.9rem;
+    vertical-align: middle;
+    margin: 0.2em;
+}
+
 h1, h2, h3, h4, h5, h6, hr {
-  clear: both;
+    clear: both;
 }
+
 hr {
-  visibility: hidden;
+    visibility: hidden;
 }
+
 ul {
-  display: flow-root;
+    display: flow-root;
 }
+
 ol li,
 ul li {
-  line-height: 1.5em;
+    line-height: 1.5em;
 }
+
 ul li code, p code {
-  background: ghostwhite;
-  padding: 0.2em;
+    background: ghostwhite;
+    padding: 0.2em;
 }
+
 pre {
-  float: left;
-  margin-top: 0;
-  margin-right: 1em;
-  width: min(50%, 70ch);
-  overflow-x: scroll;
+    float: left;
+    margin-top: 0;
+    margin-right: 1em;
+    width: min(50%, 70ch);
+    overflow-x: scroll;
 }
 
 @media only screen and (max-width: 720px) {
-  body {
-    width: auto;
-    margin-left: 0;
-    margin-right: 0;
-    border: 0;
-  }
-  pre {
-    clear: both;
-    float: none;
-    width: min(95%, 70ch);
-  }
+    body {
+        width: auto;
+        margin-left: 0;
+        margin-right: 0;
+        border: 0;
+    }
+    pre {
+        clear: both;
+        float: none;
+        width: min(95%, 70ch);
+    }
 }
 
 li.L0, li.L1, li.L2, li.L3,
 li.L5, li.L6, li.L7, li.L8 {
-  list-style-type: decimal !important;
-  line-height: normal;
+    list-style-type: decimal !important;
+    line-height: normal;
 }
+
 </style>
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 <script>
 var pres = document.getElementsByTagName('pre');
 for (i=0;i<pres.length; i++) {
-  pres[i].className='prettyprint linenums';
+    pres[i].className='prettyprint linenums';
 }
 PR.prettyPrint();
+
+// Source: https://attacomsian.com/blog/deep-anchor-links-javascript
+document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach($heading => {
+    //create id from heading text
+    var id = $heading.getAttribute("id") || $heading.innerText.toLowerCase().replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '').replace(/ +/g, '-');
+
+    //add id to heading
+    $heading.setAttribute('id', id);
+
+    //append parent class to heading
+    $heading.classList.add('anchor-heading');
+
+    //create anchor
+    $anchor = document.createElement('a');
+    $anchor.className = 'anchor-link';
+    $anchor.href = '#' + id;
+    $anchor.innerHTML = '☍';
+
+    //append anchor after heading text
+    $heading.appendChild($anchor);
+});
+
 </script>
-<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 </body>
 </html>
