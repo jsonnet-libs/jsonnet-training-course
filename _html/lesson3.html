@@ -64,7 +64,17 @@ other attributes.</p>
 <a href="https://github.com/jsonnet-libs/k8s-libsonnet"><code>k8s-libsonnet</code></a>. By leveraging this
 client library, the author can provide an abstraction that can work across most Kubernetes
 versions.</p>
-<hr>
+<p>Now go ahead with the <code>k8s-libsonnet</code> library and work out on your own with the resources
+in these lessons:</p>
+<ol>
+<li><a href="lesson1.html">Write an extensible library</a></li>
+<li><a href="lesson2.html">Don't write libraries</a></li>
+</ol>
+<p>Find the steps to a solution below.</p>
+<h3>Solution</h3>
+<blockquote>
+<p>Examples below expect to have an environment with <code>export JSONNET_PATH=&quot;lib/:vendor/&quot;</code></p>
+</blockquote>
 <p>Let's install <code>k8s-libsonnet</code> with jsonnet-bundler and import it:</p>
 <p><code>$ jb install https://github.com/jsonnet-libs/k8s-libsonnet/1.23@main</code></p>
 <p>Note the alternative naming pattern ending on <code>1.23</code>, referencing the Kubernetes version
@@ -75,12 +85,144 @@ this was generated for.</p>
 </code></pre>
 <p>The most common convention to work with this is to provide <code>lib/k.libsonnet</code> as
 a shortcut.</p>
-<pre><code class="language-jsonnet">local k = import 'k.libsonnnet';
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+
+k.core.v1.container.new('container-name', 'container-image')
 
 // example2/example1.jsonnet
 </code></pre>
 <p>Many libraries have a line <code>local k = import 'k.libsonnet'</code> to refer to this
 library.</p>
+<hr>
+<p>Let's rewrite the container following the
+<a href="https://jsonnet-libs.github.io/k8s-libsonnet/1.23/core/v1/container/">documentation</a>:</p>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+
+local webserver = {
+  new(name, replicas=1): {
+    local base = self,
+
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment: {
+      apiVersion: 'apps/v1',
+      kind: 'Deployment',
+      metadata: {
+        name: name,
+      },
+      spec: {
+        replicas: replicas,
+        template: {
+          spec: {
+            containers: [
+              base.container,
+            ],
+          },
+        },
+      },
+    },
+  },
+
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+};
+
+webserver.new('wonderful-webserver')
++ webserver.withImage('httpd:2.5')
+
+// example2/example2.jsonnet
+</code></pre>
+<p>The library has grouped a number of functions under <code>k.core.v1.container</code>, we'll use the
+<code>new(name, image)</code> function here, this makes it concise. Additionally the <code>withImage()</code> function uses the function with the same name in the library.</p>
+<hr>
+<p>And now for the <a href="https://jsonnet-libs.github.io/k8s-libsonnet/1.23/core/v1/container/">deployment</a>:</p>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+
+local webserver = {
+  new(name, replicas=1): {
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment:
+      k.apps.v1.deployment.new(
+        name,
+        replicas,
+        [self.container]
+      ),
+  },
+
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+};
+
+webserver.new('wonderful-webserver')
++ webserver.withImage('httpd:2.5')
+
+// example2/example3.jsonnet
+</code></pre>
+<p>The <code>new(name, replicas, images)</code> function makes things even more concise. The <code>new()</code>
+function is actually a custom shortcut with the most common parameters for a deployment.</p>
+<p>Note that we've removed <code>local base = self,</code>, this was not longer needed as the reference
+to <code>self.container</code> can now be made inside the same object.</p>
+<hr>
+<p>Having the library and execution together is not so useful, let's move it into a separate
+library and import it again.</p>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+
+{
+  new(name, replicas=1): {
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment:
+      k.apps.v1.deployment.new(
+        name,
+        replicas,
+        [self.container]
+      ),
+  },
+
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+}
+
+// example2/lib/webserver/main.libsonnet
+</code></pre>
+<p>This removes the <code>local webserver</code> and moves the contents to the root of the file.</p>
+<hr>
+<pre><code class="language-jsonnet">local webserver = import 'webserver/main.libsonnet';
+
+webserver.new('wonderful-webserver')
++ webserver.withImage('httpd:2.5')
+
+// example2/example4.jsonnet
+</code></pre>
+<p>If we now <code>import</code> the library, we can access its functions just like before.</p>
+<hr>
+<pre><code class="language-jsonnet">local webserver = import 'webserver/main.libsonnet';
+
+{
+  webserver1:
+    webserver.new('wonderful-webserver')
+    + webserver.withImage('httpd:2.3'),
+
+  webserver2:
+    webserver.new('marvellous-webserver'),
+
+  webserver3:
+    webserver.new('incredible-webserver', 2),
+}
+
+// example2/example5.jsonnet
+</code></pre>
+<p>Or, if we want more instances, we can simply do so.</p>
 <h2>Conclusion</h2>
 <p>TODO</p>
 <style>
@@ -139,7 +281,7 @@ hr {
     visibility: hidden;
 }
 
-ul {
+ol, ul {
     display: flow-root;
 }
 
@@ -151,6 +293,10 @@ ul li {
 ul li code, p code {
     background: ghostwhite;
     padding: 0.2em;
+}
+
+pre ol {
+    display: block;
 }
 
 pre {
