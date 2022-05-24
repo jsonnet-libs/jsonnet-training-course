@@ -26,6 +26,7 @@ blockquote {
     margin-left: 0;
     margin-right: 0;
     display: flow-root;
+    font-size: 1rem;
 }
 
 p {
