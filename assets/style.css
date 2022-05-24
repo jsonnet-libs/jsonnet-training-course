@@ -82,6 +82,12 @@ pre {
     overflow-x: scroll;
 }
 
+div#toc {
+    background: white;
+    border: 1px solid grey;
+    padding-right: 1em;
+}
+
 @media only screen and (max-width: 720px) {
     body {
         width: auto;

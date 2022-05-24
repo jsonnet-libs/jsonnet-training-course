@@ -6,19 +6,8 @@ anchor.className = 'anchor-link';
 anchor.innerHTML = '☰';
 anchor.style.cursor = 'pointer';
 
-//prepend anchor before heading text
-var text = heading.innerText;
-heading.innerText = "";
-heading.appendChild(anchor);
-heading.append(text);
-
 var toc = document.createElement('div');
 toc.id = 'toc';
-toc.style.position = 'absolute';
-toc.style.top = anchor.offsetTop + 'px';
-toc.style.left = anchor.offsetLeft + 'px';
-toc.style.background = 'white';
-toc.style.border = '1px solid grey';
 toc.style.display = 'none';
 
 toc.addEventListener('mouseleave', e => {
@@ -58,4 +47,16 @@ document.querySelectorAll('h2, h3, h4, h5, h6').forEach($heading => {
     li.appendChild(a)
 })
 
-document.querySelector('body').appendChild(toc);
+if (document.querySelectorAll('h2, h3, h4, h5, h6').length > 0) {
+    //prepend anchor before heading text
+    var text = heading.innerText;
+    heading.innerText = "";
+    heading.appendChild(anchor);
+    heading.append(text);
+
+    toc.style.position = 'absolute';
+    toc.style.top = anchor.offsetTop + 'px';
+    toc.style.left = anchor.offsetLeft + 'px';
+
+    document.querySelector('body').appendChild(toc);
+}
