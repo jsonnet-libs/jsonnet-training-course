@@ -1,5 +1,5 @@
 // Source: https://attacomsian.com/blog/deep-anchor-links-javascript
-document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach($heading => {
+document.querySelectorAll('h2, h3, h4, h5, h6').forEach($heading => {
     //create id from heading text
     var id = $heading.getAttribute("id") || $heading.innerText.toLowerCase().replace(/[`~!@#$%^&*()|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '').replace(/ +/g, '-');
 
@@ -14,9 +14,9 @@ document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach($heading => {
     $anchor.className = 'anchor-link';
     $anchor.href = '#' + id;
     $anchor.innerHTML = '☍';
-    var text = $heading.innerText;
 
-    //append anchor after heading text
+    //prepend anchor before heading text
+    var text = $heading.innerText;
     $heading.innerText = "";
     $heading.appendChild($anchor);
     $heading.append(text);

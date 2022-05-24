@@ -28,11 +28,13 @@
           <script>
           %(prettyprint)s
           %(anchorlinks)s
+          %(toc)s
           </script>
         ||| % {
           stylesheet: importstr 'assets/style.css',
           prettyprint: importstr 'assets/prettyprint.js',
           anchorlinks: importstr 'assets/anchorlinks.js',
+          toc: importstr 'assets/toc.js',
         },
     },
   },
