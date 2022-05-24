@@ -46,6 +46,7 @@ a.anchor-link {
     line-height: 1;
     margin: 0.2em;
     margin-left: -1.2em;
+    color: lightgray;
 }
 
 h1, h2, h3, h4, h5, h6, hr {

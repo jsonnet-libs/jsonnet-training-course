@@ -609,6 +609,7 @@ a.anchor-link {
     line-height: 1;
     margin: 0.2em;
     margin-left: -1.2em;
+    color: lightgray;
 }
 
 h1, h2, h3, h4, h5, h6, hr {
@@ -692,6 +693,7 @@ document.querySelectorAll('h2, h3, h4, h5, h6').forEach($heading => {
     $heading.classList.add('anchor-heading');
 
     //create anchor
+    var $anchor;
     $anchor = document.createElement('a');
     $anchor.className = 'anchor-link';
     $anchor.href = '#' + id;
