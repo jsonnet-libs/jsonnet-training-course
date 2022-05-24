@@ -193,7 +193,7 @@ xtd.ascii.isNumber('2')
 
 Using the long path is the recommended way on how to import vendored dependencies. It
 builds on the assumption that the `vendor/` directory is in the
-[`JSONNET_PATH`](#jsonnetpath) so that dependencies don't have to be vendored relative to
+[`JSONNET_PATH`](#jsonnet_path) so that dependencies don't have to be vendored relative to
 the library.
 
 The long path provides a sufficiently unique path to prevent naming conflicts in most
@@ -442,7 +442,7 @@ The added advantage of this approach is the ability add local overrides for the 
 `lib/istiolib.libsonnet`. It is also doesn't depend on the `jsonnet-bundler` behavior.
 
 Note the location of this library, `lib/` is another directory is commonly added to
-[`JSONNET_PATH`](#jsonnetpath) as to where libraries can `import` dependencies from.
+[`JSONNET_PATH`](#jsonnet_path) as to where libraries can `import` dependencies from.
 
 
 ### Development

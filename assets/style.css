@@ -7,7 +7,7 @@ html {
 
 body {
     margin: 0;
-    padding: 1em;
+    padding: 1.2em;
     min-height: 100%;
     margin-left: 15%;
     margin-right: 15%;
@@ -43,7 +43,9 @@ h4 a, h5 a, h6 a {
 a.anchor-link {
     font-size: 0.9rem;
     vertical-align: middle;
+    line-height: 1;
     margin: 0.2em;
+    margin-left: -1.2em;
 }
 
 h1, h2, h3, h4, h5, h6, hr {

@@ -48,7 +48,7 @@ html {
 
 body {
     margin: 0;
-    padding: 1em;
+    padding: 1.2em;
     min-height: 100%;
     margin-left: 15%;
     margin-right: 15%;
@@ -84,7 +84,9 @@ h4 a, h5 a, h6 a {
 a.anchor-link {
     font-size: 0.9rem;
     vertical-align: middle;
+    line-height: 1;
     margin: 0.2em;
+    margin-left: -1.2em;
 }
 
 h1, h2, h3, h4, h5, h6, hr {
@@ -153,7 +155,7 @@ PR.prettyPrint();
 // Source: https://attacomsian.com/blog/deep-anchor-links-javascript
 document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach($heading => {
     //create id from heading text
-    var id = $heading.getAttribute("id") || $heading.innerText.toLowerCase().replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '').replace(/ +/g, '-');
+    var id = $heading.getAttribute("id") || $heading.innerText.toLowerCase().replace(/[`~!@#$%^&*()|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '').replace(/ +/g, '-');
 
     //add id to heading
     $heading.setAttribute('id', id);
@@ -166,9 +168,12 @@ document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach($heading => {
     $anchor.className = 'anchor-link';
     $anchor.href = '#' + id;
     $anchor.innerHTML = '☍';
+    var text = $heading.innerText;
 
     //append anchor after heading text
+    $heading.innerText = "";
     $heading.appendChild($anchor);
+    $heading.append(text);
 });
 
 </script>

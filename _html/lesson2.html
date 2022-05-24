@@ -163,7 +163,7 @@ xtd.ascii.isNumber('2')
 </code></pre>
 <p>Using the long path is the recommended way on how to import vendored dependencies. It
 builds on the assumption that the <code>vendor/</code> directory is in the
-<a href="#jsonnetpath"><code>JSONNET_PATH</code></a> so that dependencies don't have to be vendored relative to
+<a href="#jsonnet_path"><code>JSONNET_PATH</code></a> so that dependencies don't have to be vendored relative to
 the library.</p>
 <p>The long path provides a sufficiently unique path to prevent naming conflicts in most
 cases, taking into consideration the usage of <code>legacyImports</code> and the alternative naming
@@ -346,7 +346,7 @@ istiolib.networking.v1beta1.virtualService.new('test')
 <p>The added advantage of this approach is the ability add local overrides for the library in
 <code>lib/istiolib.libsonnet</code>. It is also doesn't depend on the <code>jsonnet-bundler</code> behavior.</p>
 <p>Note the location of this library, <code>lib/</code> is another directory is commonly added to
-<a href="#jsonnetpath"><code>JSONNET_PATH</code></a> as to where libraries can <code>import</code> dependencies from.</p>
+<a href="#jsonnet_path"><code>JSONNET_PATH</code></a> as to where libraries can <code>import</code> dependencies from.</p>
 <h3>Development</h3>
 <p>It often happens that a vendored library is developed alongside the environment that is
 using it. However <code>jb install</code> will reset the contents of edits in <code>vendor/</code>, so that is
@@ -375,7 +375,7 @@ html {
 
 body {
     margin: 0;
-    padding: 1em;
+    padding: 1.2em;
     min-height: 100%;
     margin-left: 15%;
     margin-right: 15%;
@@ -411,7 +411,9 @@ h4 a, h5 a, h6 a {
 a.anchor-link {
     font-size: 0.9rem;
     vertical-align: middle;
+    line-height: 1;
     margin: 0.2em;
+    margin-left: -1.2em;
 }
 
 h1, h2, h3, h4, h5, h6, hr {
@@ -480,7 +482,7 @@ PR.prettyPrint();
 // Source: https://attacomsian.com/blog/deep-anchor-links-javascript
 document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach($heading => {
     //create id from heading text
-    var id = $heading.getAttribute("id") || $heading.innerText.toLowerCase().replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '').replace(/ +/g, '-');
+    var id = $heading.getAttribute("id") || $heading.innerText.toLowerCase().replace(/[`~!@#$%^&*()|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '').replace(/ +/g, '-');
 
     //add id to heading
     $heading.setAttribute('id', id);
@@ -493,9 +495,12 @@ document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach($heading => {
     $anchor.className = 'anchor-link';
     $anchor.href = '#' + id;
     $anchor.innerHTML = '☍';
+    var text = $heading.innerText;
 
     //append anchor after heading text
+    $heading.innerText = "";
     $heading.appendChild($anchor);
+    $heading.append(text);
 });
 
 </script>
