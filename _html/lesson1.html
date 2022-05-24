@@ -306,10 +306,10 @@ webpage.new('wonderful-webpage').withImage('httpd:2.5')
 functions to modify <code>self</code>. However this comes at a performance impact in the Jsonnet
 interpreter and should be avoided.</p>
 <hr>
-<p>A common pattern are libraries that use the <code>_config</code> and <code>_images</code> keys. This supposedly
-attempts to differentiate between 'public' and 'private' APIs on libraries. However the
-underscore prefix has no real meaning in jsonnet, at best it is a convention with implied
-meaning.</p>
+<p>A common pattern involves libraries that use the <code>_config</code> and <code>_images</code> keys. This
+supposedly attempts to differentiate between 'public' and 'private' APIs on libraries.
+However the underscore prefix has no real meaning in jsonnet, at best it is a convention
+with implied meaning.</p>
 <p>Applying the convention to above library would make it look like this:</p>
 <pre><code class="language-jsonnet">local webserver = {
   local base = self,

@@ -340,10 +340,10 @@ interpreter and should be avoided.
 
 ---
 
-A common pattern are libraries that use the `_config` and `_images` keys. This supposedly
-attempts to differentiate between 'public' and 'private' APIs on libraries. However the
-underscore prefix has no real meaning in jsonnet, at best it is a convention with implied
-meaning.
+A common pattern involves libraries that use the `_config` and `_images` keys. This
+supposedly attempts to differentiate between 'public' and 'private' APIs on libraries.
+However the underscore prefix has no real meaning in jsonnet, at best it is a convention
+with implied meaning.
 
 Applying the convention to above library would make it look like this:
 

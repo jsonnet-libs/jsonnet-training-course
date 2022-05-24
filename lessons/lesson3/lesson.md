@@ -14,7 +14,7 @@ Now go ahead with the `k8s-libsonnet` library and work out on your own with the 
 in these lessons:
 
 1. [Write an extensible library](lesson1.md)
-1. [Don't write libraries](lesson2.md)
+1. [Package management](lesson2.md)
 
 Find the steps to a solution below.
 

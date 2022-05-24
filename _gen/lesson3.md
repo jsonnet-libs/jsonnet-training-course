@@ -68,7 +68,7 @@ Now go ahead with the `k8s-libsonnet` library and work out on your own with the 
 in these lessons:
 
 1. [Write an extensible library](lesson1.md)
-1. [Don't write libraries](lesson2.md)
+1. [Package management](lesson2.md)
 
 Find the steps to a solution below.
 
@@ -157,7 +157,7 @@ The library has grouped a number of functions under `k.core.v1.container`, we'll
 
 ---
 
-And now for the [deployment](https://jsonnet-libs.github.io/k8s-libsonnet/1.23/core/v1/container/):
+And now for the [deployment](https://jsonnet-libs.github.io/k8s-libsonnet/1.23/apps/v1/deployment/):
 
 ```jsonnet
 local k = import 'k.libsonnet';

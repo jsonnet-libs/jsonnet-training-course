@@ -68,7 +68,7 @@ versions.</p>
 in these lessons:</p>
 <ol>
 <li><a href="lesson1.html">Write an extensible library</a></li>
-<li><a href="lesson2.html">Don't write libraries</a></li>
+<li><a href="lesson2.html">Package management</a></li>
 </ol>
 <p>Find the steps to a solution below.</p>
 <h3>Solution</h3>
@@ -138,7 +138,7 @@ webserver.new('wonderful-webserver')
 <p>The library has grouped a number of functions under <code>k.core.v1.container</code>, we'll use the
 <code>new(name, image)</code> function here, this makes it concise. Additionally the <code>withImage()</code> function uses the function with the same name in the library.</p>
 <hr>
-<p>And now for the <a href="https://jsonnet-libs.github.io/k8s-libsonnet/1.23/core/v1/container/">deployment</a>:</p>
+<p>And now for the <a href="https://jsonnet-libs.github.io/k8s-libsonnet/1.23/apps/v1/deployment/">deployment</a>:</p>
 <pre><code class="language-jsonnet">local k = import 'k.libsonnet';
 
 local webserver = {
