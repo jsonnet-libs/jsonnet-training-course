@@ -82,7 +82,7 @@ pre {
     overflow-x: scroll;
 }
 
-div#toc {
+nav#toc {
     background: white;
     border: 1px solid grey;
     padding-right: 1em;

@@ -6,7 +6,7 @@ anchor.className = 'anchor-link';
 anchor.innerHTML = '☰';
 anchor.style.cursor = 'pointer';
 
-var toc = document.createElement('div');
+var toc = document.createElement('nav');
 toc.id = 'toc';
 toc.style.display = 'none';
 
