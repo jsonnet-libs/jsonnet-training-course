@@ -2,7 +2,7 @@
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: 'webpage',
+    name: 'webserver',
   },
   spec: {
     replicas: 1,
@@ -10,7 +10,7 @@
       spec: {
         containers: [
           {
-            name: 'webserver',
+            name: 'httpd',
             image: 'httpd:2.4',
           },
         ],

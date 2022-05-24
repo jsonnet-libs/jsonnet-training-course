@@ -1,4 +1,4 @@
-local webpage = {
+local webserver = {
   local base = self,
 
   _config:: {
@@ -39,9 +39,9 @@ local webpage = {
   },
 };
 
-webpage {
+webserver {
   _config+: {
-    name: 'wonderful-webpage',
+    name: 'wonderful-webserver',
     imagePullPolicy: 'Always',
   },
   _images+: {

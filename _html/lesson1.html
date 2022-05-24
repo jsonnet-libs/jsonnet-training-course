@@ -34,7 +34,7 @@ deploy a webserver on Kubernetes.</p>
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: 'webpage',
+    name: 'webserver',
   },
   spec: {
     replicas: 1,
@@ -42,7 +42,7 @@ deploy a webserver on Kubernetes.</p>
       spec: {
         containers: [
           {
-            name: 'webserver',
+            name: 'httpd',
             image: 'httpd:2.4',
           },
         ],
@@ -53,7 +53,7 @@ deploy a webserver on Kubernetes.</p>
 
 // example1.jsonnet
 </code></pre>
-<p><small><a href="https://jsonnet-libs.github.io/playground/?code=ewogIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICBraW5kOiAnRGVwbG95bWVudCcsCiAgbWV0YWRhdGE6IHsKICAgIG5hbWU6ICd3ZWJwYWdlJywKICB9LAogIHNwZWM6IHsKICAgIHJlcGxpY2FzOiAxLAogICAgdGVtcGxhdGU6IHsKICAgICAgc3BlYzogewogICAgICAgIGNvbnRhaW5lcnM6IFsKICAgICAgICAgIHsKICAgICAgICAgICAgbmFtZTogJ3dlYnNlcnZlcicsCiAgICAgICAgICAgIGltYWdlOiAnaHR0cGQ6Mi40JywKICAgICAgICAgIH0sCiAgICAgICAgXSwKICAgICAgfSwKICAgIH0sCiAgfSwKfQo=">Try <code>example1.jsonnet</code> in Jsonnet Playground</a></small></p>
+<p><small><a href="https://jsonnet-libs.github.io/playground/?code=ewogIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICBraW5kOiAnRGVwbG95bWVudCcsCiAgbWV0YWRhdGE6IHsKICAgIG5hbWU6ICd3ZWJzZXJ2ZXInLAogIH0sCiAgc3BlYzogewogICAgcmVwbGljYXM6IDEsCiAgICB0ZW1wbGF0ZTogewogICAgICBzcGVjOiB7CiAgICAgICAgY29udGFpbmVyczogWwogICAgICAgICAgewogICAgICAgICAgICBuYW1lOiAnaHR0cGQnLAogICAgICAgICAgICBpbWFnZTogJ2h0dHBkOjIuNCcsCiAgICAgICAgICB9LAogICAgICAgIF0sCiAgICAgIH0sCiAgICB9LAogIH0sCn0K">Try <code>example1.jsonnet</code> in Jsonnet Playground</a></small></p>
 <p>A <code>Deployment</code> needs a number of configuration options, most importantly a unique <code>name</code>
 and an array of <code>containers</code></p>
 <p>The <code>name</code> attribute exists on both the <code>metadata</code> and the first container. To refer to
@@ -263,12 +263,12 @@ library code terse and maintainable without sacrificing extensibility.</p>
 <hr>
 <h3>Common pitfalls when creating libraries</h3>
 <p>Avoid the 'builder' pattern:</p>
-<pre><code class="language-jsonnet">local webpage = {
+<pre><code class="language-jsonnet">local webserver = {
   new(name, replicas=1): {
     local base = self,
 
     container:: {
-      name: 'webserver',
+      name: 'httpd',
       image: 'httpd:2.4',
     },
 
@@ -296,11 +296,11 @@ library code terse and maintainable without sacrificing extensibility.</p>
   },
 };
 
-webpage.new('wonderful-webpage').withImage('httpd:2.5')
+webserver.new('wonderful-webserver').withImage('httpd:2.5')
 
 // pitfall1.jsonnet
 </code></pre>
-<p><small><a href="https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2VicGFnZSA9IHsKICBuZXcobmFtZSwgcmVwbGljYXM9MSk6IHsKICAgIGxvY2FsIGJhc2UgPSBzZWxmLAoKICAgIGNvbnRhaW5lcjo6IHsKICAgICAgbmFtZTogJ3dlYnNlcnZlcicsCiAgICAgIGltYWdlOiAnaHR0cGQ6Mi40JywKICAgIH0sCgogICAgZGVwbG95bWVudDogewogICAgICBhcGlWZXJzaW9uOiAnYXBwcy92MScsCiAgICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgICAgbWV0YWRhdGE6IHsKICAgICAgICBuYW1lOiBuYW1lLAogICAgICB9LAogICAgICBzcGVjOiB7CiAgICAgICAgcmVwbGljYXM6IHJlcGxpY2FzLAogICAgICAgIHRlbXBsYXRlOiB7CiAgICAgICAgICBzcGVjOiB7CiAgICAgICAgICAgIGNvbnRhaW5lcnM6IFsKICAgICAgICAgICAgICBiYXNlLmNvbnRhaW5lciwKICAgICAgICAgICAgXSwKICAgICAgICAgIH0sCiAgICAgICAgfSwKICAgICAgfSwKICAgIH0sCgogICAgd2l0aEltYWdlKGltYWdlKTo6IHNlbGYgKyB7CiAgICAgIGNvbnRhaW5lcis6IHsgaW1hZ2U6IGltYWdlIH0sCiAgICB9LAogIH0sCn07Cgp3ZWJwYWdlLm5ldygnd29uZGVyZnVsLXdlYnBhZ2UnKS53aXRoSW1hZ2UoJ2h0dHBkOjIuNScpCg==">Try <code>pitfall1.jsonnet</code> in Jsonnet Playground</a></small></p>
+<p><small><a href="https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIG5ldyhuYW1lLCByZXBsaWNhcz0xKTogewogICAgbG9jYWwgYmFzZSA9IHNlbGYsCgogICAgY29udGFpbmVyOjogewogICAgICBuYW1lOiAnaHR0cGQnLAogICAgICBpbWFnZTogJ2h0dHBkOjIuNCcsCiAgICB9LAoKICAgIGRlcGxveW1lbnQ6IHsKICAgICAgYXBpVmVyc2lvbjogJ2FwcHMvdjEnLAogICAgICBraW5kOiAnRGVwbG95bWVudCcsCiAgICAgIG1ldGFkYXRhOiB7CiAgICAgICAgbmFtZTogbmFtZSwKICAgICAgfSwKICAgICAgc3BlYzogewogICAgICAgIHJlcGxpY2FzOiByZXBsaWNhcywKICAgICAgICB0ZW1wbGF0ZTogewogICAgICAgICAgc3BlYzogewogICAgICAgICAgICBjb250YWluZXJzOiBbCiAgICAgICAgICAgICAgYmFzZS5jb250YWluZXIsCiAgICAgICAgICAgIF0sCiAgICAgICAgICB9LAogICAgICAgIH0sCiAgICAgIH0sCiAgICB9LAoKICAgIHdpdGhJbWFnZShpbWFnZSk6OiBzZWxmICsgewogICAgICBjb250YWluZXIrOiB7IGltYWdlOiBpbWFnZSB9LAogICAgfSwKICB9LAp9OwoKd2Vic2VydmVyLm5ldygnd29uZGVyZnVsLXdlYnNlcnZlcicpLndpdGhJbWFnZSgnaHR0cGQ6Mi41JykK">Try <code>pitfall1.jsonnet</code> in Jsonnet Playground</a></small></p>
 <p>Notice the odd <code>withImage():: self + {}</code> structure within <code>new()</code>.</p>
 <p>This practice nests functions in the newly created object, allowing the user to 'chain'
 functions to modify <code>self</code>. However this comes at a performance impact in the Jsonnet
@@ -370,7 +370,7 @@ either way.</p>
 <hr>
 <p>This pattern also has an impact on extensibility. When introducing a new attribute, the
 author needs to take into account that users might not want the same default.</p>
-<pre><code class="language-jsonnet">local webpage = {
+<pre><code class="language-jsonnet">local webserver = {
   local base = self,
 
   _config:: {
@@ -411,9 +411,9 @@ author needs to take into account that users might not want the same default.</p
   },
 };
 
-webpage {
+webserver {
   _config+: {
-    name: 'wonderful-webpage',
+    name: 'wonderful-webserver',
     imagePullPolicy: 'Always',
   },
   _images+: {
@@ -423,7 +423,7 @@ webpage {
 
 // pitfall3.jsonnet
 </code></pre>
-<p><small><a href="https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2VicGFnZSA9IHsKICBsb2NhbCBiYXNlID0gc2VsZiwKCiAgX2NvbmZpZzo6IHsKICAgIG5hbWU6IGVycm9yICdwcm92aWRlIG5hbWUnLAogICAgcmVwbGljYXM6IDEsCiAgICBpbWFnZVB1bGxQb2xpY3k6IG51bGwsCiAgfSwKCiAgX2ltYWdlczo6IHsKICAgIGh0dHBkOiAnaHR0cGQ6Mi40JywKICB9LAoKICBjb250YWluZXI6OiB7CiAgICBuYW1lOiAnaHR0cGQnLAogICAgaW1hZ2U6IGJhc2UuX2ltYWdlcy5odHRwZCwKICB9ICsgKAogICAgaWYgYmFzZS5fY29uZmlnLmltYWdlUHVsbFBvbGljeSAhPSBudWxsCiAgICB0aGVuIHsgaW1hZ2VQdWxsUG9saWN5OiBiYXNlLl9jb25maWcuaW1hZ2VQdWxsUG9saWN5IH0KICAgIGVsc2Uge30KICApLAoKICBkZXBsb3ltZW50OiB7CiAgICBhcGlWZXJzaW9uOiAnYXBwcy92MScsCiAgICBraW5kOiAnRGVwbG95bWVudCcsCiAgICBtZXRhZGF0YTogewogICAgICBuYW1lOiBiYXNlLl9jb25maWcubmFtZSwKICAgIH0sCiAgICBzcGVjOiB7CiAgICAgIHJlcGxpY2FzOiBiYXNlLl9jb25maWcucmVwbGljYXMsCiAgICAgIHRlbXBsYXRlOiB7CiAgICAgICAgc3BlYzogewogICAgICAgICAgY29udGFpbmVyczogWwogICAgICAgICAgICBiYXNlLmNvbnRhaW5lciwKICAgICAgICAgIF0sCiAgICAgICAgfSwKICAgICAgfSwKICAgIH0sCiAgfSwKfTsKCndlYnBhZ2UgewogIF9jb25maWcrOiB7CiAgICBuYW1lOiAnd29uZGVyZnVsLXdlYnBhZ2UnLAogICAgaW1hZ2VQdWxsUG9saWN5OiAnQWx3YXlzJywKICB9LAogIF9pbWFnZXMrOiB7CiAgICBodHRwZDogJ2h0dHBkOjIuNScsCiAgfSwKfQo=">Try <code>pitfall3.jsonnet</code> in Jsonnet Playground</a></small></p>
+<p><small><a href="https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIGxvY2FsIGJhc2UgPSBzZWxmLAoKICBfY29uZmlnOjogewogICAgbmFtZTogZXJyb3IgJ3Byb3ZpZGUgbmFtZScsCiAgICByZXBsaWNhczogMSwKICAgIGltYWdlUHVsbFBvbGljeTogbnVsbCwKICB9LAoKICBfaW1hZ2VzOjogewogICAgaHR0cGQ6ICdodHRwZDoyLjQnLAogIH0sCgogIGNvbnRhaW5lcjo6IHsKICAgIG5hbWU6ICdodHRwZCcsCiAgICBpbWFnZTogYmFzZS5faW1hZ2VzLmh0dHBkLAogIH0gKyAoCiAgICBpZiBiYXNlLl9jb25maWcuaW1hZ2VQdWxsUG9saWN5ICE9IG51bGwKICAgIHRoZW4geyBpbWFnZVB1bGxQb2xpY3k6IGJhc2UuX2NvbmZpZy5pbWFnZVB1bGxQb2xpY3kgfQogICAgZWxzZSB7fQogICksCgogIGRlcGxveW1lbnQ6IHsKICAgIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgIG1ldGFkYXRhOiB7CiAgICAgIG5hbWU6IGJhc2UuX2NvbmZpZy5uYW1lLAogICAgfSwKICAgIHNwZWM6IHsKICAgICAgcmVwbGljYXM6IGJhc2UuX2NvbmZpZy5yZXBsaWNhcywKICAgICAgdGVtcGxhdGU6IHsKICAgICAgICBzcGVjOiB7CiAgICAgICAgICBjb250YWluZXJzOiBbCiAgICAgICAgICAgIGJhc2UuY29udGFpbmVyLAogICAgICAgICAgXSwKICAgICAgICB9LAogICAgICB9LAogICAgfSwKICB9LAp9OwoKd2Vic2VydmVyIHsKICBfY29uZmlnKzogewogICAgbmFtZTogJ3dvbmRlcmZ1bC13ZWJzZXJ2ZXInLAogICAgaW1hZ2VQdWxsUG9saWN5OiAnQWx3YXlzJywKICB9LAogIF9pbWFnZXMrOiB7CiAgICBodHRwZDogJ2h0dHBkOjIuNScsCiAgfSwKfQo=">Try <code>pitfall3.jsonnet</code> in Jsonnet Playground</a></small></p>
 <p>This can be accomplished with imperative statements, however these pile up over time and
 make the library brittle and hard to read. In this example the default for
 <code>imagePullPolicy</code> is <code>null</code>, the author avoids adding an additional boolean parameter
