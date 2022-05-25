@@ -114,7 +114,7 @@ Jsonnet-bundler vendors libraries from Git repositories and tracks them in
 ```
 
 
-`$ jb install github.com/jsonnet-libs/xtd` adds an new entry to the `dependency` key in
+`$ jb install github.com/jsonnet-libs/xtd` adds an new entry to the `dependencies` in
 `jsonnetfile.json`, the entry refers to the git source on Github and the `master` branch
 for its tracking `version`.
 
