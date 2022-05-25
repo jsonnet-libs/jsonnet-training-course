@@ -1,8 +1,10 @@
+default: generate html
+
 generate:
 	@rm -rf _gen && mkdir -p _gen && \
 	jsonnet -J . -m _gen -S main.jsonnet
 
-html: generate
+html:
 	@./html.sh
 
 generate: lessons/lesson1/examples.jsonnet

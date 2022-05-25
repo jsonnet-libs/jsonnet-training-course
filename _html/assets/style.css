@@ -89,6 +89,29 @@ nav#toc {
     padding-right: 1em;
 }
 
+span.nav a {
+    display: inline-block;
+    width: 5rem;
+    height: 1.15rem;
+    padding: 0.2em;
+    text-decoration: none;
+    border: 1px solid slategrey;
+    line-height: 1.15rem;
+    color: slategrey;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+span.nav.previous a {
+    border-radius: 1em 0 0 1em;
+}
+
+span.nav.next a {
+    border-radius: 0 1em 1em 0;
+    color: white;
+    background: slategrey;
+}
+
 @media only screen and (max-width: 720px) {
     body {
         width: auto;
