@@ -1,22 +1,38 @@
 local c = import 'coursonnet.libsonnet';
-local pages =
-  (import 'lessons/main.jsonnet').render
-  + std.foldr(
-    function(l, acc)
-      acc {
-        [l.page.filename]: l.page.render[l.page.filename],
-      }
-    ,
-    import 'lessons/lessons.jsonnet',
-    {},
-  );
+local pages = import 'lessons/lessons.jsonnet';
 
-function(html=false) {
-  [p]:
-    if html then
-      '[[index](index.html)]\n'
-      + pages[p]
-      + c.page.withHTML().render
-    else pages[p]
-  for p in std.objectFields(pages)
-}
+function(nav=false)
+  (import 'lessons/main.jsonnet').render
+  + {
+    [pages[i].filename]:
+      if nav
+      then
+        (
+          if i > 0
+          then '[[prev](%s.html)]' % pages[i - 1].slug
+          else ''
+        )
+        + '[[index](index.html)]'
+        + (
+          if i < (std.length(pages) - 1)
+          then '[[next](%s.html)]' % pages[i + 1].slug
+          else ''
+        )
+        + '\n'
+        + pages[i].render
+        + (
+          if i > 0
+          then '[[prev](%s.html)]' % pages[i - 1].slug
+          else ''
+        )
+        + '[[index](index.html)]'
+        + (
+          if i < (std.length(pages) - 1)
+          then '[[next](%s.html)]' % pages[i + 1].slug
+          else ''
+        )
+      else
+        pages[i].render
+    for i in std.range(0, std.length(pages) - 1)
+
+  }

@@ -74,6 +74,11 @@
         conclusion: conclusion,
       },
 
+      slug: slug,
+      title: title,
+      filename: self.page.filename,
+      render: self.page.render[self.filename],
+
       page: root.page.new(
         slug + '.md',
         title,
