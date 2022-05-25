@@ -23,8 +23,6 @@ vendor them.</p>
 <li>Find existing libraries</li>
 <li>Vendor and update libraries with jsonnet-bundler</li>
 <li><code>import</code> and use a vendored library with <code>JSONNET_PATH</code></li>
-<li>Develop on a vendored library</li>
-<li>Generate new libraries from specifications</li>
 </ul>
 <h2>Lesson</h2>
 <p>The ecosystem for Jsonnet libraries has organically grown and is quite distributed, there
@@ -54,13 +52,30 @@ application, look for a <code>jsonnetfile.json</code> in their repository.</li>
 </ul>
 <hr>
 <h3>jsonnet-bundler</h3>
-<p>Now that we can find libraries, we need a way to &quot;install&quot; them. Jsonnet libraries are
-distributed as source code,  makes it quite simple process.</p>
-<p>The <a href="https://github.com/jsonnet-bundler/jsonnet-bundler/">jsonnet-bundler</a> project is
-the de facto package manager for Jsonnet. It vendors libraries from Git repositories and
-tracks them in <code>jsonnetfile.json</code>and its corresponding lockfile <code>jsonnetfile.lock.json</code>.</p>
+<p>Now that we can find libraries, we need a way to install and use them. Jsonnet libraries
+are distributed as source code, which makes it a relatively simple process.</p>
+<p>The de facto package manager for Jsonnet is
+<a href="https://github.com/jsonnet-bundler/jsonnet-bundler/">jsonnet-bundler</a>, we'll use it to
+fetch libraries and managed dependencies. Have a look at the project README to install it.</p>
 <p>To get started, initialize the directory:</p>
 <p><code>$ jb init</code></p>
+<p>Then &quot;install&quot; a library, <a href="https://github.com/jsonnet-libs/xtd"><code>xtd</code></a> for example:</p>
+<p><code>$ jb install github.com/jsonnet-libs/xtd</code></p>
+<p>To use it, <code>import</code> the main file:</p>
+<pre><code class="language-jsonnet">local xtd = import 'github.com/jsonnet-libs/xtd/main.libsonnet';
+
+xtd.ascii.isNumber('2')
+
+// example5/usage1.jsonnet
+</code></pre>
+<p>And finally execute it with:</p>
+<p><code>$ jsonnet -J vendor/ usage1.jsonnet</code></p>
+<hr>
+<h4>Under the hood</h4>
+<p>Now that we have covered the basics, let's have a look at what each command does under the
+hood and how it manipulates these files.</p>
+<p>Jsonnet-bundler vendors libraries from Git repositories and tracks them in
+<code>jsonnetfile.json</code>and its corresponding lockfile <code>jsonnetfile.lock.json</code>.</p>
 <pre><code class="language-json">{
   &quot;version&quot;: 1,
   &quot;dependencies&quot;: [],
@@ -69,15 +84,8 @@ tracks them in <code>jsonnetfile.json</code>and its corresponding lockfile <code
 
 // example1/jsonnetfile.json
 </code></pre>
-<p><code>jb init</code> creates a virtually empty <code>jsonnetfile.json</code>.</p>
+<p><code>$ jb init</code> creates a virtually empty <code>jsonnetfile.json</code>.</p>
 <hr>
-<p>Let's vendor the <a href="https://github.com/jsonnet-libs/xtd"><code>xtd</code></a> library:</p>
-<p><code>$ jb install github.com/jsonnet-libs/xtd</code></p>
-<blockquote>
-<p>The default tag used by jsonnet-bundler is <code>master</code>, new Github repos default to the
-<code>main</code> tag. To override this, add <code>@main</code>:</p>
-<p><code>$ jb install github.com/jsonnet-libs/xtd@main</code></p>
-</blockquote>
 <pre><code class="language-json">{
   &quot;version&quot;: 1,
   &quot;dependencies&quot;: [
@@ -96,9 +104,16 @@ tracks them in <code>jsonnetfile.json</code>and its corresponding lockfile <code
 
 // example2/jsonnetfile.json
 </code></pre>
-<p><code>jsonnetfile.json</code> has a new entry in the <code>dependency</code> key, it refers to the source on
-Github and defaults to the <code>master</code> branch for tracking its <code>version</code>.</p>
-<p>When updating libraries, it will follow the <code>version</code> tag, for example <code>jb update github.com/jsonnet-libs/xtd</code> will pull in the git commit that <code>master</code> refers to.</p>
+<p><code>$ jb install github.com/jsonnet-libs/xtd</code> adds an new entry to the <code>dependency</code> key in
+<code>jsonnetfile.json</code>, the entry refers to the git source on Github and the <code>master</code> branch
+for its tracking <code>version</code>.</p>
+<p>When updating libraries, it will use the tracking <code>version</code>, for example <code>$ jb update github.com/jsonnet-libs/xtd</code> will pull in the git commit that <code>master</code> refers to.</p>
+<blockquote>
+<p><strong>Tracking version</strong></p>
+<p>The default tracking <code>version</code> used by jsonnet-bundler is <code>master</code>, new Github repos
+default to the <code>main</code> tag. To override this, add <code>@main</code> to the URI:</p>
+<p><code>$ jb install github.com/jsonnet-libs/xtd@main</code></p>
+</blockquote>
 <hr>
 <pre><code class="language-json">{
   &quot;version&quot;: 1,
@@ -145,22 +160,23 @@ tracks a checksum value in <code>sum</code>.</p>
 <p>The library is vendored into <code>vendor/github.com/jsonnet-libs/xtd</code> and a symlink on
 <code>vendor/xtd</code> was added. The <code>vendor/</code> directory is a widespread convention.</p>
 <hr>
-<p>When shipping a library, generally only <code>jsonnetfile.json</code> is included. This way when
-calling <code>jb install</code> on a library, it will pull whatever value is set in <code>version</code>. If
-that is <code>master</code>, it will match the latest git commit.</p>
+<p>When shipping a library, generally only a <code>jsonnetfile.json</code> is included. This way when
+calling <code>jb install</code> on a library, it will fetch the source corresponding to the tracking
+<code>version</code>. For example, if that is <code>master</code> it will match the latest git commit for that
+branch.</p>
 <p>It is often not necessary and even undesirable to distribute <code>jsonnetfile.lock.json</code> and
-<code>vendor/</code> with a library, the <code>version</code> tag in <code>jsonnetfile.json</code> can be leveraged in case
-a specific version is expected (for example when newer versions of dependencies have
-breaking changes).</p>
+<code>vendor/</code> with a library, the <code>version</code> tag in <code>jsonnetfile.json</code> should be sufficient to
+pin a specific version (for example when <a href="#upstream-has-breaking-changes">upstream has breaking
+changes</a>).</p>
 <pre><code class="language-json">jsonnetfile.lock.json
 vendor/
 
 // example3/.gitignore
 </code></pre>
-<p>Add <code>jsonnetfile.lock.json</code> and <code>vendor/</code> to the <code>.gitignore</code> file so they are not
+<p>Add a <code>.gitignore</code> file with <code>jsonnetfile.lock.json</code> and <code>vendor/</code> so they are not
 accidentally committed</p>
 <h3>Usage</h3>
-<p>Now that we can vendor libraries, it is time to <code>import</code> and use them.</p>
+<p>As shown before, to use a library it needs to be imported:</p>
 <pre><code class="language-jsonnet">local xtd = import 'github.com/jsonnet-libs/xtd/main.libsonnet';
 
 xtd.ascii.isNumber('2')
@@ -172,8 +188,7 @@ builds on the assumption that the <code>vendor/</code> directory is in the
 <a href="#jsonnet_path"><code>JSONNET_PATH</code></a> so that dependencies don't have to be vendored relative to
 the library.</p>
 <p>The long path provides a sufficiently unique path to prevent naming conflicts in most
-cases, taking into consideration the usage of <code>legacyImports</code> and the alternative naming
-pattern explained above.</p>
+cases, the edge cases are covered in <a href="#advanced">advanced</a> below.</p>
 <hr>
 <pre><code class="language-jsonnet">local xtd = import 'xtd/main.libsonnet';
 
@@ -181,8 +196,8 @@ xtd.ascii.isNumber('2')
 
 // example5/usage2.jsonnet
 </code></pre>
-<p>If <code>legacyImports</code> was set on install, then the symlink allows to import the library with
-a short handle like this. Many libraries still follow this practice.</p>
+<p>If <code>legacyImports</code> was <code>true</code> on install, then the symlink allows to import the library
+with a short handle like this. Many libraries still follow this practice.</p>
 <hr>
 <blockquote>
 <p><strong>Legacy Imports</strong></p>
@@ -193,22 +208,25 @@ references to the short path, for that <code>&quot;legacyImports&quot;: true</co
 a symlink to this full path on short path <code>vendor/&lt;name&gt;</code> to keep this working.</p>
 </blockquote>
 <h3><code>JSONNET_PATH</code></h3>
-<p><code>JSONNET_PATH</code> is a semicolon <code>:</code> separated list of directories that <code>jsonnet</code> will
-attempt to resolve imports from. Two common paths are <code>vendor/</code> and <code>lib/</code>, relative to
-the project root, which is usually indicated by a <code>jsonnetfile.json</code>.</p>
-<p><code>$ JSONNET_PATH=&quot;lib/:vendor/&quot; jsonnet usage2.jsonnet</code></p>
-<p><em>Order matters: <code>JSONNET_PATH</code> follows FIFO, if the import is found in <code>lib/</code> then it will
-not look in <code>vendor/</code>.</em></p>
+<p><code>JSONNET_PATH</code> is a list of directories that <code>jsonnet</code> will attempt to resolve imports
+from. Two common paths are <code>vendor/</code> and <code>lib/</code>, relative to the project root, which is
+usually indicated by a <code>jsonnetfile.json</code>. The <code>-J</code> parameter on <code>jsonnet</code> can be used for
+this:</p>
+<p><code>$ jsonnet -J vendor/ -J lib/ usage2.jsonnet</code></p>
+<p><em>Order matters: <code>-J</code> follows LIFO, if the import is found in <code>lib/</code> then it will not look
+in <code>vendor/</code>.</em></p>
 <p>This will resolve the imports until it finds a match:</p>
 <ul>
 <li>✗ <code>./xtd/main.libsonnet</code></li>
 <li>✗ <code>./lib/xtd/main.libsonnet</code></li>
 <li>✓ <code>./vendor/xtd/main.libsonnet</code></li>
 </ul>
-<p>Alternatively it is possible to add paths as attributes to <code>jsonnet</code>:</p>
-<p><code>$ jsonnet -J vendor/ -J lib/ usage2.jsonnet</code></p>
-<p><em>Order matters: <code>-J</code> follows LIFO, if the import is found in <code>lib/</code> then it will not look
-in <code>vendor/</code>.</em></p>
+<p>As we don't want to pass the <code>-J</code> parameters each time, we can also set the <code>JSONNET_PATH</code>
+variable in our environment:</p>
+<p><code>$ export JSONNET_PATH=&quot;lib/:vendor/&quot;</code></p>
+<p><code>$ jsonnet usage2.jsonnet</code></p>
+<p><em>Order matters: <code>JSONNET_PATH</code> follows FIFO, if the import is found in <code>lib/</code> then it will
+not look in <code>vendor/</code>.</em></p>
 <h3>Advanced</h3>
 <p>As package management is quite distributed and jsonnet-bundler is relatively simple, there
 are some use cases that don't get covered well. Fortunately jsonnet and jsonnet-bundler
@@ -236,7 +254,8 @@ better to pin the version in <code>jsonnetfile.json</code>.</p>
 
 // example3/jsonnetfile.json
 </code></pre>
-<p>This can be done by setting <code>version</code> on a dependency, you can use <code>jb install</code> for this.</p>
+<p>This can be done by setting tracking <code>version</code> on a dependency, you can use <code>jb install</code>
+for this.</p>
 <p>If authors are aware, then they often provide a version tag (eg. <code>v1.0</code>):</p>
 <p><code>$ jb install github.com/jsonnet-libs/xtd@v1.0</code></p>
 <p><em>(eg. v1.0 tag does not exist on the xtd repo)</em></p>
@@ -353,22 +372,6 @@ istiolib.networking.v1beta1.virtualService.new('test')
 <code>lib/istiolib.libsonnet</code>. It is also doesn't depend on the <code>jsonnet-bundler</code> behavior.</p>
 <p>Note the location of this library, <code>lib/</code> is another directory is commonly added to
 <a href="#jsonnet_path"><code>JSONNET_PATH</code></a> as to where libraries can <code>import</code> dependencies from.</p>
-<h3>Development</h3>
-<p>It often happens that a vendored library is developed alongside the environment that is
-using it. However <code>jb install</code> will reset the contents of edits in <code>vendor/</code>, so that is
-not an ideal location to develop a library.</p>
-<p>TODO: several options here, not sure which is most useful</p>
-<ul>
-<li>Simply edit in <code>vendor/</code>, copy over the contents to the local path, risk of <code>jb install</code>
-removing the changes.</li>
-<li>Git clone/checkout/submodule in <code>vendor/</code>, same risk of <code>jb install</code> removing the
-changes.</li>
-<li>Change jsonnetfile.json to use file://path/to/local/library</li>
-<li>Depend on import order and symlink/develop in <code>lib/</code>, taking precedence over <code>vendor/</code>.</li>
-</ul>
-<blockquote>
-<p>Idea: perhaps jsonnet-bundler could benefit from an --editable feature like <code>pip</code>.</p>
-</blockquote>
 <h2>Conclusion</h2>
 <p>TODO</p>
 <p>[<a href="lesson1.html">prev</a>][<a href="index.html">index</a>][<a href="lesson3.html">next</a>]</p>
