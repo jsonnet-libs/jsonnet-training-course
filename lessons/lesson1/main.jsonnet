@@ -13,17 +13,10 @@ lesson.new(
     deploy a webserver on Kubernetes.
   |||,
   [
-    'Write an object-oriented library',
-    'Properly use keywords such as `local`, `super`, `self`, `null` and `$`',
-    'Write for extensibility with `::`, `+:` and objects rather than arrays',
     "Write object-oriented with 'mixin' functions",
-    'Apply YAGNI often',
-    |||
-      Know how to avoid common pitfalls:
-        - Builder pattern
-        - `_config` and `_images` pattern
-        - overuse of `$`
-    |||,
+    'Develop for extensibility with `::`, `+:` and objects rather than arrays',
+    'Properly use keywords such as `local`, `super`, `self`, `null` and `$`',
+    'Know how to avoid common pitfalls',
   ],
   (importstr './lesson.md') %
   std.foldr(

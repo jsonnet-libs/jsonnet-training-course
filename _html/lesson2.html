@@ -20,9 +20,10 @@ to manually curated for a very specific purpose. Let's have a look at how to fin
 vendor them.</p>
 <h2>Objectives</h2>
 <ul>
-<li>Find existing libraries</li>
-<li>Vendor and update libraries with jsonnet-bundler</li>
-<li><code>import</code> and use a vendored library with <code>JSONNET_PATH</code></li>
+<li>Find libraries</li>
+<li>Install and update with jsonnet-bundler</li>
+<li>Import a library on the <code>JSONNET_PATH</code></li>
+<li>Handle common use cases</li>
 </ul>
 <h2>Lesson</h2>
 <p>The ecosystem for Jsonnet libraries has organically grown and is quite distributed, there
@@ -188,7 +189,7 @@ builds on the assumption that the <code>vendor/</code> directory is in the
 <a href="#jsonnet_path"><code>JSONNET_PATH</code></a> so that dependencies don't have to be vendored relative to
 the library.</p>
 <p>The long path provides a sufficiently unique path to prevent naming conflicts in most
-cases, the edge cases are covered in <a href="#advanced">advanced</a> below.</p>
+cases, the edge cases are covered in <a href="#common-use-cases">Common use cases</a> below.</p>
 <hr>
 <pre><code class="language-jsonnet">local xtd = import 'xtd/main.libsonnet';
 
@@ -227,7 +228,7 @@ variable in our environment:</p>
 <p><code>$ jsonnet usage2.jsonnet</code></p>
 <p><em>Order matters: <code>JSONNET_PATH</code> follows FIFO, if the import is found in <code>lib/</code> then it will
 not look in <code>vendor/</code>.</em></p>
-<h3>Advanced</h3>
+<h3>Common use cases</h3>
 <p>As package management is quite distributed and jsonnet-bundler is relatively simple, there
 are some use cases that don't get covered well. Fortunately jsonnet and jsonnet-bundler
 are quite flexible.</p>

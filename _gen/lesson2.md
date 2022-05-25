@@ -7,9 +7,10 @@ vendor them.
 
 ## Objectives
 
-- Find existing libraries
-- Vendor and update libraries with jsonnet-bundler
-- `import` and use a vendored library with `JSONNET_PATH`
+- Find libraries
+- Install and update with jsonnet-bundler
+- Import a library on the `JSONNET_PATH`
+- Handle common use cases
 
 ## Lesson
 
@@ -225,7 +226,7 @@ builds on the assumption that the `vendor/` directory is in the
 the library.
 
 The long path provides a sufficiently unique path to prevent naming conflicts in most
-cases, the edge cases are covered in [advanced](#advanced) below.
+cases, the edge cases are covered in [Common use cases](#common-use-cases) below.
 
 ---
 
@@ -280,7 +281,7 @@ variable in our environment:
 _Order matters: `JSONNET_PATH` follows FIFO, if the import is found in `lib/` then it will
 not look in `vendor/`._
 
-### Advanced
+### Common use cases
 
 As package management is quite distributed and jsonnet-bundler is relatively simple, there
 are some use cases that don't get covered well. Fortunately jsonnet and jsonnet-bundler

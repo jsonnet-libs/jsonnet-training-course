@@ -12,9 +12,10 @@ lesson.new(
     vendor them.
   |||,
   [
-    'Find existing libraries',
-    'Vendor and update libraries with jsonnet-bundler',
-    '`import` and use a vendored library with `JSONNET_PATH`',
+    'Find libraries',
+    'Install and update with jsonnet-bundler',
+    'Import a library on the `JSONNET_PATH`',
+    'Handle common use cases',
   ],
   (importstr './lesson.md') %
   std.foldr(
