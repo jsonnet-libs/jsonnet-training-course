@@ -17,26 +17,6 @@
         ||| % this,
       },
     },
-
-    withHTML():: {
-      render+:
-        |||
-          <style>
-          %(stylesheet)s
-          </style>
-          <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
-          <script>
-          %(prettyprint)s
-          %(anchorlinks)s
-          %(toc)s
-          </script>
-        ||| % {
-          stylesheet: importstr 'assets/style.css',
-          prettyprint: importstr 'assets/prettyprint.js',
-          anchorlinks: importstr 'assets/anchorlinks.js',
-          toc: importstr 'assets/toc.js',
-        },
-    },
   },
 
   lesson: {
