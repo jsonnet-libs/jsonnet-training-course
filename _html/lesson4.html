@@ -25,8 +25,8 @@ several techniques that can help us iterate at different velocities.</p>
 </ul>
 <h2>Lesson</h2>
 <h3>Wrapping libraries</h3>
-<p>As shown in the <a href="lesson3.html#solution">refactoring exercise</a>, let's initialize a new project with
-<code>k8s-libsonnet</code>:</p>
+<p>As shown in the <a href="lesson3.html#solution">refactoring exercise</a>, let's initialize a new
+project with <code>k8s-libsonnet</code>:</p>
 <p><code>$ jb init</code></p>
 <p><code>$ jb install github.com/jsonnet-libs/k8s-libsonnet/1.23@main</code></p>
 <p><code>$ mkdir lib</code></p>
@@ -43,8 +43,6 @@ several techniques that can help us iterate at different velocities.</p>
 // example1/example1.jsonnet
 </code></pre>
 <p>This is relatively simple web application that exposes itself on port <code>8080</code>.</p>
-<p>For the purpose of this exercise we want to run this application for different teams and
-each team should be able to change the port to their liking.</p>
 <hr>
 <pre><code class="language-jsonnet">local k = import 'ksonnet-util/kausal.libsonnet';
 
@@ -93,6 +91,8 @@ a compatibility layer towards <code>k8s-libsonnet</code>. Many of the util funct
 made it into <code>k8s-libsonnet</code> with the aim to make this library obsolete over time.</p>
 </blockquote>
 <hr>
+<p>For the purpose of this exercise we want to run this application for different teams and
+each team should be able to change the port to their liking.</p>
 <p>Create a local library in <code>lib/privatebin/</code>:</p>
 <pre><code class="language-jsonnet">local privatebin = import 'github.com/Duologic/privatebin-libsonnet/main.libsonnet';
 local k = import 'k.libsonnet';
@@ -135,7 +135,7 @@ documentation for the details on each.</p>
 <code>JSONNET_PATH</code> will expand it to <code>lib/privatebin/main.libsonnet</code>.</p>
 <p>This makes the <code>withPort()</code> function available and now teams can set their own port.</p>
 <p>In this example, the backend team has named its privatebin <code>backend</code>, this will generate
-a deployment/service with that name. As the name is quite generic, this may cause for
+a deployment/service with that name. As the name is quite generic, this may cause
 conflicts.</p>
 <hr>
 <p>Let's add a suffix to prevent the naming conflict:</p>
@@ -144,6 +144,9 @@ local k = import 'k.libsonnet';
 
 privatebin
 {
+  new(team):
+    super.new(team + '-privatebin'),
+
   withPort(port): {
     container+:
       k.core.v1.container.withPorts([
@@ -155,12 +158,12 @@ privatebin
   },
 }
 
-// example1/lib/privatebin/main.libsonnet
+// example2/lib/privatebin/main.libsonnet
 </code></pre>
 <p>Here we call <code>super.new()</code>, this means it will use the <code>new()</code> function defined in
 privatebin.</p>
 <p>The deployment/service will now be suffixed with <code>-privatebin</code>, ie. <code>backend-privatebin</code>.</p>
-<h4>Use case: replace <a href="https://github.com/grafana/pentagon">Pentagon</a> with <a href="https://external-secrets.io/">External Secrets Operator</a></h4>
+<h4>Use case: replace Pentagon with External Secrets Operator</h4>
 <p>Wrapping libraries is a powerful concept, it can be used to manipulate or even replace
 whole systems that are used across a code base.</p>
 <pre><code class="language-jsonnet">local pentagon = import 'github.com/grafana/jsonnet-libs/pentagon/pentagon.libsonnet';
@@ -196,9 +199,10 @@ pentagon
 
 // usecase-pentagon/example1.jsonnet
 </code></pre>
-<p>For synchronizing secrets between Vault and Kubernetes, Grafana Labs used Pentagon. This
-process was a deployment per namespace with each team managing their own deployments. To
-facilitate a consistent connection configuration we wrapped the <a href="https://github.com/grafana/jsonnet-libs/tree/master/pentagon">pentagon
+<p>For synchronizing secrets between Vault and Kubernetes, Grafana Labs used a fork of
+<a href="https://github.com/grafana/pentagon">Pentagon</a>. This process was a deployment per
+namespace with each team managing their own deployments. To facilitate a consistent
+connection configuration we wrapped the <a href="https://github.com/grafana/jsonnet-libs/tree/master/pentagon">pentagon
 library</a>. Teams could create
 a Vault-&gt;Kubernetes mapping with the shortcut function <code>pentagonKVmapping</code> to populate the
 <code>pentagon_mappings</code> array (which gets turned into a configMap).</p>

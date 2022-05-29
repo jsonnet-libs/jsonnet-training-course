@@ -1,5 +1,5 @@
 window.addEventListener('load', e => {
-    var heading = document.querySelector('h1')
+    var heading = document.querySelector('h1');
 
     //create anchor
     var anchor = document.createElement('a');
@@ -29,7 +29,7 @@ window.addEventListener('load', e => {
             ul = li.querySelector('ul.'+lastId)
             if (ul == null) {
                 ul = document.createElement('ul');
-                ul.classList.add($heading.id)
+                ul.classList.add($heading.id);
                 li.appendChild(ul);
             }
         }
@@ -44,7 +44,7 @@ window.addEventListener('load', e => {
         li = document.createElement('li');
         ul.appendChild(li);
 
-        var headerId = $heading.id
+        var headerId = $heading.id;
         var a = document.createElement('a');
         a.href = '#' + headerId;
         var h = $heading;

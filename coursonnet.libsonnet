@@ -68,12 +68,12 @@
   },
 
   example: {
-    new(filename, jsonnet, string, type='jsonnet'): {
+    new(filename, string, jsonnet={}, type='jsonnet'): {
       local this = self,
 
       filename: filename,
-      jsonnet: jsonnet,
       string: string,
+      jsonnet: jsonnet,
       type: type,
       base64: std.base64(self.string),
       playground: 'https://jsonnet-libs.github.io/playground/?code=%s' % self.base64,
@@ -86,21 +86,25 @@
           ```
         ||| % self,
 
+      render: self.code,
+    },
+
+    withLink():: {
+      render+:
+        '<small>[Try `%(filename)s` in Jsonnet Playground](%(playground)s)</small>' % self,
+    },
+
+    withFoldedIframe():: {
       iframe: '<iframe src="%s" width="100%%" height="500px"></iframe>' % self.playground,
 
-      withLink():: '<small>[Try `%(filename)s` in Jsonnet Playground](%(playground)s)</small>' % self,
-
-      withFoldedIframe()::
+      render+:
         |||
           <details>
             <summary><small>Try in Jsonnet Playground</small></summary>
             %(iframe)s
           </details>
         ||| % self,
-
-      render:
-        self.code
-        + self.withLink(),
     },
+
   },
 }

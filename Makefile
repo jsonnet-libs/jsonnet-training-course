@@ -18,7 +18,7 @@ lessons/lesson1/examples.jsonnet:
 		grep -v main.jsonnet | \
 		grep -v examples.jsonnet | \
 		sort | \
-		xargs --replace echo "  example.new('{}'[2:], import '{}', importstr '{}')," >> \
+		xargs --replace echo "  example.new('{}'[2:], importstr '{}', import '{}')+example.withLink()," >> \
 		examples.jsonnet && \
 	echo "]" >> examples.jsonnet
 

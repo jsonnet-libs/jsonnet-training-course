@@ -42,21 +42,6 @@ Lessons:
       - Grafonnet usecase
     - Developing with upstream libraries
 
-It often happens that a vendored library is developed alongside the environment that is
-using it. However `jb install` will reset the contents of edits in `vendor/`, so that is
-not an ideal location to develop a library.
-
-TODO: several options here, not sure which is most useful
-
-- Simply edit in `vendor/`, copy over the contents to the local path, risk of `jb install`
-    removing the changes.
-- Git clone/checkout/submodule in `vendor/`, same risk of `jb install` removing the
-    changes.
-- Change jsonnetfile.json to use file://path/to/local/library
-- Depend on import order and symlink/develop in `lib/`, taking precedence over `vendor/`.
-
-> Idea: perhaps jsonnet-bundler could benefit from an --editable feature like `pip`.
-
 - Using Tanka
     - Goals:
         - Use of inline environments (hint: `tanka-util`)
@@ -82,7 +67,6 @@ TODO: several options here, not sure which is most useful
 
 - Powerful Jsonnet patterns
     - Goals:
-        - Refactor libraries gradually (pentagon/eso example)
         - Roll out in 'waves' (dev/stag/prod)
         - Provide deprecation notices with `std.trace`
 

@@ -8,7 +8,7 @@ local k = import 'k.libsonnet';
     deployment:
       k.apps.v1.deployment.new(
         name,
-        rreplicas,
+        replicas,
         [self.container]
       ),
   },

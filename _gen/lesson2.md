@@ -196,7 +196,7 @@ It is often not necessary and even undesirable to distribute `jsonnetfile.lock.j
 pin a specific version (for example when [upstream has breaking
 changes](#upstream-has-breaking-changes)).
 
-```json
+```gitignore
 jsonnetfile.lock.json
 vendor/
 

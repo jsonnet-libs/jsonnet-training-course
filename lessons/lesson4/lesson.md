@@ -1,7 +1,7 @@
 ### Wrapping libraries
 
-As shown in the [refactoring exercise](lesson3.md#solution), let's initialize a new project with
-`k8s-libsonnet`:
+As shown in the [refactoring exercise](lesson3.md#solution), let's initialize a new
+project with `k8s-libsonnet`:
 
 `$ jb init`
 
@@ -19,9 +19,6 @@ And install
 %(example1/example1.jsonnet)s
 
 This is relatively simple web application that exposes itself on port `8080`.
-
-For the purpose of this exercise we want to run this application for different teams and
-each team should be able to change the port to their liking.
 
 ---
 
@@ -46,6 +43,10 @@ So, let's try to deal with it locally.
 > made it into `k8s-libsonnet` with the aim to make this library obsolete over time.
 
 ---
+
+For the purpose of this exercise we want to run this application for different teams and
+each team should be able to change the port to their liking.
+
 
 Create a local library in `lib/privatebin/`:
 
@@ -72,21 +73,21 @@ To use the new library, we need to change the import to match `privatebin/main.l
 This makes the `withPort()` function available and now teams can set their own port.
 
 In this example, the backend team has named its privatebin `backend`, this will generate
-a deployment/service with that name. As the name is quite generic, this may cause for
+a deployment/service with that name. As the name is quite generic, this may cause
 conflicts.
 
 ---
 
 Let's add a suffix to prevent the naming conflict:
 
-%(example1/lib/privatebin/main.libsonnet)s
+%(example2/lib/privatebin/main.libsonnet)s
 
 Here we call `super.new()`, this means it will use the `new()` function defined in
 privatebin.
 
 The deployment/service will now be suffixed with `-privatebin`, ie. `backend-privatebin`.
 
-#### Use case: replace [Pentagon](https://github.com/grafana/pentagon) with [External Secrets Operator](https://external-secrets.io/)
+#### Use case: replace Pentagon with External Secrets Operator
 
 Wrapping libraries is a powerful concept, it can be used to manipulate or even replace
 whole systems that are used across a code base.
@@ -95,9 +96,10 @@ whole systems that are used across a code base.
 
 %(usecase-pentagon/example1.jsonnet)s
 
-For synchronizing secrets between Vault and Kubernetes, Grafana Labs used Pentagon. This
-process was a deployment per namespace with each team managing their own deployments. To
-facilitate a consistent connection configuration we wrapped the [pentagon
+For synchronizing secrets between Vault and Kubernetes, Grafana Labs used a fork of
+[Pentagon](https://github.com/grafana/pentagon). This process was a deployment per
+namespace with each team managing their own deployments. To facilitate a consistent
+connection configuration we wrapped the [pentagon
 library](https://github.com/grafana/jsonnet-libs/tree/master/pentagon). Teams could create
 a Vault->Kubernetes mapping with the shortcut function `pentagonKVmapping` to populate the
 `pentagon_mappings` array (which gets turned into a configMap).
