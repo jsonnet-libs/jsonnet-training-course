@@ -18,24 +18,31 @@ window.addEventListener('load', e => {
         toc.style.display = 'block';
     })
 
+    var lastLevel = 1;
+    var lastId = 'null';
+    var li = toc;
+    var ul;
     document.querySelectorAll('h2, h3, h4, h5, h6').forEach($heading => {
         var level = $heading.nodeName.charAt(1);
-        var current = toc;
-        var ul
-        var li;
-        for (i=1; i<level; i++) {
-          ul = current.querySelector('ul:last-child');
-          if (ul == null) {
-            ul = document.createElement('ul');
-            current.appendChild(ul);
-          } else {
-            li = ul.querySelector('li:last-child');
-          }
-          current = li
+
+        if (level > lastLevel) {
+            ul = li.querySelector('ul.'+lastId)
+            if (ul == null) {
+                ul = document.createElement('ul');
+                ul.classList.add($heading.id)
+                li.appendChild(ul);
+            }
         }
 
-        var li = document.createElement('li');
-        ul.appendChild(li)
+        if (level < lastLevel) {
+            for (i=lastLevel; i>level; i--) {
+                ul = li.parentNode.parentNode.parentNode;
+                li = ul.querySelector('li:last-child').parentNode.parentNode;
+            }
+        }
+
+        li = document.createElement('li');
+        ul.appendChild(li);
 
         var headerId = $heading.id
         var a = document.createElement('a');
@@ -45,7 +52,9 @@ window.addEventListener('load', e => {
         a.querySelectorAll('a').forEach($child => {
           a.removeChild($child);
         });
-        li.appendChild(a)
+        li.appendChild(a);
+        lastLevel = level;
+        lastId = headerId;
     })
 
     if (document.querySelectorAll('h2, h3, h4, h5, h6').length > 0) {
