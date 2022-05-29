@@ -244,9 +244,9 @@ Let's install a certain version:
                     └── main.libsonnet
 ```
 
-This creates a symlink on `vendor/1.12`, which doesn't express clearly to which
-library it refers to and can cause naming conflicts with other libraries following the
-same pattern.
+This creates a symlink on `vendor/1.12`, which doesn't express clearly to
+which library it refers to and can cause naming conflicts with other libraries following
+the same pattern.
 
 ---
 
@@ -269,7 +269,8 @@ To overcome this, we can set the name on install:
     └── istio-lib -> github.com/jsonnet-libs/istio-libsonnet/1.12
 ```
 
-This creates a symlink at `vendor/istio-lib`, which is easily distinguishable.
+`--legacy-name` creates a symlink at `vendor/istio-lib` instead of `vendor/1.12`, which
+makes it easily distinguishable.
 
 ---
 

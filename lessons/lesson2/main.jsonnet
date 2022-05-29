@@ -24,5 +24,10 @@ lesson.new(
     examples,
     {}
   ),
-  'TODO',
+  |||
+    Finding libraries and package managemet can be cumbersome, nonetheless
+    jsonnet-bundler makes it a bit easier to work with the distributed ecosystem.
+    Additionally `JSONNET_PATH` offers a level of flexibility to work around the package
+    management shortcomming.
+  |||,
 )

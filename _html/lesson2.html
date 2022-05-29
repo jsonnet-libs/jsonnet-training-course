@@ -282,9 +282,9 @@ libraries for multiple versions of the Istio CRDs.</p>
                     ├── gen.libsonnet
                     └── main.libsonnet
 </code></pre>
-<p>This creates a symlink on <code>vendor/1.12</code>, which doesn't express clearly to which
-library it refers to and can cause naming conflicts with other libraries following the
-same pattern.</p>
+<p>This creates a symlink on <code>vendor/1.12</code>, which doesn't express clearly to
+which library it refers to and can cause naming conflicts with other libraries following
+the same pattern.</p>
 <hr>
 <p>To overcome this, we can set the name on install:</p>
 <p><code>jb install github.com/jsonnet-libs/istio-libsonnet/1.12@main --legacy-name istio-lib</code></p>
@@ -301,7 +301,8 @@ same pattern.</p>
     │               └── main.libsonnet
     └── istio-lib -&gt; github.com/jsonnet-libs/istio-libsonnet/1.12
 </code></pre>
-<p>This creates a symlink at <code>vendor/istio-lib</code>, which is easily distinguishable.</p>
+<p><code>--legacy-name</code> creates a symlink at <code>vendor/istio-lib</code> instead of <code>vendor/1.12</code>, which
+makes it easily distinguishable.</p>
 <hr>
 <pre><code class="language-json">{
   &quot;version&quot;: 1,
@@ -374,7 +375,10 @@ istiolib.networking.v1beta1.virtualService.new('test')
 <p>Note the location of this library, <code>lib/</code> is another directory is commonly added to
 <a href="#jsonnet_path"><code>JSONNET_PATH</code></a> as to where libraries can <code>import</code> dependencies from.</p>
 <h2>Conclusion</h2>
-<p>TODO</p>
+<p>Finding libraries and package managemet can be cumbersome, nonetheless
+jsonnet-bundler makes it a bit easier to work with the distributed ecosystem.
+Additionally <code>JSONNET_PATH</code> offers a level of flexibility to work around the package
+management shortcomming.</p>
 <p><span class="nav previous"><a href="lesson1.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson3.html">next »</a></span></p>
 
 </body>
