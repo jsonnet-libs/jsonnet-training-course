@@ -23,5 +23,9 @@ lesson.new(
     examples,
     {}
   ),
-  'TODO',
+  |||
+    This exercise showed how to make a library more succinct and readable. By using the
+    `k.libsonnet` abstract, the user has the option to use an alternative version of the
+    `k8s-libsonnet` library.
+  |||,
 )
