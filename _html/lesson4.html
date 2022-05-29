@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Further developing libraries</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="md2html">
+<link rel="stylesheet" type="text/css" href="assets/style.css">
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script src="assets/prettyprint.js"></script>
+<script src="assets/anchorlinks.js"></script>
+<script src="assets/toc.js"></script>
+</head>
+<body>
+
+<p><span class="nav previous"><a href="lesson3.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+<h1>Further developing libraries</h1>
+<p>When starting out with Jsonnet, it is very likely that you'll with existing code and
+dependencies. Developing on these can seem confusing and tedious, however there are
+several techniques that can help us iterate at different velocities.</p>
+<h2>Objectives</h2>
+<ul>
+<li>Wrap and extend a dependency locally</li>
+<li>Developing on upstream libraries</li>
+</ul>
+<h2>Lesson</h2>
+<h3>Wrapping libraries</h3>
+<p>As shown in the <a href="lesson3.html#solution">refactoring exercise</a>, let's initialize a new project with
+<code>k8s-libsonnet</code>:</p>
+<p><code>$ jb init</code></p>
+<p><code>$ jb install github.com/jsonnet-libs/k8s-libsonnet/1.23@main</code></p>
+<p><code>$ mkdir lib</code></p>
+<p><code>$ echo &quot;(import 'github.com/jsonnet-libs/k8s-libsonnet/1.23/main.libsonnet')&quot; &gt; lib/k.libsonnet</code></p>
+<p>And install
+<a href="https://github.com/Duologic/privatebin-libsonnet"><code>privatebin-libsonnet</code></a>:</p>
+<p><code>$ jb install github.com/Duologic/privatebin-libsonnet</code></p>
+<pre><code class="language-jsonnet">local privatebin = import 'github.com/Duologic/privatebin-libsonnet/main.libsonnet';
+
+{
+  privatebin: privatebin.new(),
+}
+
+// example1/example1.jsonnet
+</code></pre>
+<p>This is relatively simple web application that exposes itself on port <code>8080</code>.</p>
+<p>For the purpose of this exercise we want to run this application for different teams and
+each team should be able to change the port to their liking.</p>
+<hr>
+<pre><code class="language-jsonnet">local k = import 'ksonnet-util/kausal.libsonnet';
+
+{
+  new(
+    name='privatebin',
+    image='privatebin/nginx-fpm-alpine:1.3.5',
+  ):: {
+
+    local container = k.core.v1.container,
+    container::
+      container.new('privatebin', image)
+      + container.withPorts([
+        k.core.v1.containerPort.newNamed(name='http', containerPort=8080),
+      ])
+      + k.util.resourcesRequests('50m', '100Mi')
+      + k.util.resourcesLimits('150m', '300Mi')
+      + container.livenessProbe.httpGet.withPath('/')
+      + container.livenessProbe.httpGet.withPort('http')
+      + container.readinessProbe.httpGet.withPath('/')
+      + container.readinessProbe.httpGet.withPort('http')
+    ,
+
+    local deployment = k.apps.v1.deployment,
+    deployment: deployment.new(name, 1, [self.container]),
+
+    service: k.util.serviceFor(self.deployment),
+  },
+}
+
+// example1/vendor/github.com/Duologic/privatebin-libsonnet/main.libsonnet
+</code></pre>
+<p><code>privatebin-libsonnet</code> is relatively simple, it already exposes the <code>container</code> separate
+from the <code>deployment</code> and we can pick the <code>name</code> and <code>image</code> when initializing it with
+<code>new()</code>.</p>
+<p>One hurdle: the library does not expose a function to change the port. We could go about
+and create a change request upstream, but considering this is a very trivial change it
+might not be worth the time.</p>
+<p>So, let's try to deal with it locally.</p>
+<blockquote>
+<p><strong><code>ksonnet-util</code></strong></p>
+<p>The <a href="https://github.com/grafana/jsonnet-libs/tree/master/ksonnet-util"><code>ksonnet-util</code></a>
+library contains a set of util functions developed around the now deprecated
+<a href="https://github.com/ksonnet/ksonnet-lib"><code>ksonnet-lib</code></a>. It also functions as
+a compatibility layer towards <code>k8s-libsonnet</code>. Many of the util functions have since
+made it into <code>k8s-libsonnet</code> with the aim to make this library obsolete over time.</p>
+</blockquote>
+<hr>
+<p>Create a local library in <code>lib/privatebin/</code>:</p>
+<pre><code class="language-jsonnet">local privatebin = import 'github.com/Duologic/privatebin-libsonnet/main.libsonnet';
+local k = import 'k.libsonnet';
+
+privatebin
+{
+  withPort(port): {
+    container+:
+      k.core.v1.container.withPorts([
+        k.core.v1.containerPort.newNamed(
+          name='http',
+          containerPort=port
+        ),
+      ]),
+  },
+}
+
+// example1/lib/privatebin/main.libsonnet
+</code></pre>
+<p>Here we import the vendored library and extend it. Read <code>privatebin { ... }</code> as <code>privatebin + { ... }</code>.</p>
+<p>We are extending the privatebin library here extended with the <code>withPort()</code> function that
+will change the ports of the <code>container</code>.</p>
+<p>Have a look at the
+<a href="https://jsonnet-libs.github.io/k8s-libsonnet/1.18/core/v1/container/#fn-withports"><code>container</code></a>
+and
+<a href="https://jsonnet-libs.github.io/k8s-libsonnet/1.18/core/v1/containerPort/#fn-newnamed"><code>containerPort</code></a>
+documentation for the details on each.</p>
+<hr>
+<pre><code class="language-jsonnet">local privatebin = import 'privatebin/main.libsonnet';
+
+{
+  privatebin:
+    privatebin.new('backend')
+    + privatebin.withPort(9000),
+}
+
+// example1/example2.jsonnet
+</code></pre>
+<p>To use the new library, we need to change the import to match <code>privatebin/main.libsonnet</code>,
+<code>JSONNET_PATH</code> will expand it to <code>lib/privatebin/main.libsonnet</code>.</p>
+<p>This makes the <code>withPort()</code> function available and now teams can set their own port.</p>
+<p>In this example, the backend team has named its privatebin <code>backend</code>, this will generate
+a deployment/service with that name. As the name is quite generic, this may cause for
+conflicts.</p>
+<hr>
+<p>Let's add a suffix to prevent the naming conflict:</p>
+<pre><code class="language-jsonnet">local privatebin = import 'github.com/Duologic/privatebin-libsonnet/main.libsonnet';
+local k = import 'k.libsonnet';
+
+privatebin
+{
+  withPort(port): {
+    container+:
+      k.core.v1.container.withPorts([
+        k.core.v1.containerPort.newNamed(
+          name='http',
+          containerPort=port
+        ),
+      ]),
+  },
+}
+
+// example1/lib/privatebin/main.libsonnet
+</code></pre>
+<p>Here we call <code>super.new()</code>, this means it will use the <code>new()</code> function defined in
+privatebin.</p>
+<p>The deployment/service will now be suffixed with <code>-privatebin</code>, ie. <code>backend-privatebin</code>.</p>
+<h4>Use case: replace <a href="https://github.com/grafana/pentagon">Pentagon</a> with <a href="https://external-secrets.io/">External Secrets Operator</a></h4>
+<p>Wrapping libraries is a powerful concept, it can be used to manipulate or even replace
+whole systems that are used across a code base.</p>
+<pre><code class="language-jsonnet">local pentagon = import 'github.com/grafana/jsonnet-libs/pentagon/pentagon.libsonnet';
+
+pentagon
+{
+  _config+:: {
+    local this = self,
+    pentagon+: {
+      vault_address:
+        if this.cluster_name == 'dev'
+        then 'vault-dev.example.com'
+        else 'vault-prod.example.com',
+    },
+  },
+}
+
+// usecase-pentagon/lib/pentagon/example1.libsonnet
+</code></pre>
+<pre><code class="language-jsonnet">local pentagon = import 'pentagon/example1.libsonnet';
+
+{
+  pentagon: pentagon {
+    _config+:: {
+      cluster_name: 'dev',
+      namespace: 'app1',
+    },
+    pentagon_mappings: [
+      pentagon.pentagonKVMapping('path/to/secret', 'k8sSecretName'),
+    ],
+  },
+}
+
+// usecase-pentagon/example1.jsonnet
+</code></pre>
+<p>For synchronizing secrets between Vault and Kubernetes, Grafana Labs used Pentagon. This
+process was a deployment per namespace with each team managing their own deployments. To
+facilitate a consistent connection configuration we wrapped the <a href="https://github.com/grafana/jsonnet-libs/tree/master/pentagon">pentagon
+library</a>. Teams could create
+a Vault-&gt;Kubernetes mapping with the shortcut function <code>pentagonKVmapping</code> to populate the
+<code>pentagon_mappings</code> array (which gets turned into a configMap).</p>
+<p>As a deployment per namespace accumulated quite a bit of resources, we opted to replace it
+with <a href="https://external-secrets.io/">External Secrets Operator</a>. This means we'd go from
+many deployments and configMaps (at least one of each per namespace) to a single operator
+deployment per cluster, a secretStore per namespace and many externalSecret objects.</p>
+<hr>
+<pre><code class="language-jsonnet">local externalSecrets = import 'external-secrets-libsonnet/main.libsonnet';
+local pentagon = import 'github.com/grafana/jsonnet-libs/pentagon/pentagon.libsonnet';
+
+pentagon
+{
+  local this = self,
+
+  // Remove/hide resources
+  _config+:: {},
+  deployment:: {},
+  config_map:: {},
+  rbac:: {},
+  cluster_role:: {},
+  cluster_role_binding:: {},
+
+  local externalSecret = externalSecrets.nogroup.v1beta1.externalSecret,
+  externalSecrets: std.sort([
+    local mapping = this.pentagon_mappings_map[m];
+
+    externalSecret.new(mapping.secretName)
+    + externalSecret.spec.secretStoreRef.withName('vault-backend')
+    + externalSecret.spec.secretStoreRef.withKind('SecretStore')
+    + externalSecret.spec.target.withName(mapping.secretName)
+    + externalSecret.spec.withDataFrom([
+      {
+        extract: {
+          key: mapping.vaultPath,
+        },
+      },
+    ])
+
+    for m in std.objectFields(this.pentagon_mappings_map)
+  ], function(e) if std.objectHasAll(e, 'idx') then e.idx else 0),
+}
+
+// usecase-pentagon/lib/pentagon/example2.libsonnet
+</code></pre>
+<p>The operator deployment and secretStore objects are managed centrally, only thing left to
+do is replace the secret mappings everywhere. With more than 2500 mappings, this would
+have been a hell of a refactoring job. Fortunately we had the wrapped library in place and
+we could transform the mappings array into externalSecret objects transparently.</p>
+<p>As the wrapped library is aware of the cluster it was being deployed too, we were able
+gradually roll this out across the fleet.</p>
+<p>Finally with this in place, we informed each team on how to refactor their code to use
+External Secrets directly, allowing them to work on it at their own pace.</p>
+<h3>Developing on vendored libraries</h3>
+<p>As it gives immediate feedback, it often happens that a vendored library is developed
+alongside the project that is using it. However any invocation of <code>jb install</code> will remove
+changes from <code>vendor/</code>, which makes it a little bit more challenging. Let's have a look at
+the different options.</p>
+<blockquote>
+<p>Idea: jsonnet-bundler could benefit from a feature to make this easier.</p>
+</blockquote>
+<h4>Simply edit files in <code>vendor/</code></h4>
+<p>This is the easiest except the risk of loosing changes is highest. For testing small
+changes this is probably safe, it gives immediate feedback whether the changes match
+expectations. The small changes should be pushed upstream early on so they don't get lost.</p>
+<h4>Clone dependency in <code>vendor/</code></h4>
+<p>Similar but a bit more elaborate, it is possible to <code>git clone</code> the dependency straight
+into <code>vendor/</code>. It faces the same risk as above but allows for a shorter loop to push
+changes upstream.</p>
+<h4>Use local reference</h4>
+<p><code>$ jb install ../../lesson3/example2/lib/webserver</code></p>
+<pre><code class="language-json">{
+  &quot;version&quot;: 1,
+  &quot;dependencies&quot;: [
+    {
+      &quot;source&quot;: {
+        &quot;local&quot;: {
+          &quot;directory&quot;: &quot;../../lesson3/example2/lib/webserver&quot;
+        }
+      },
+      &quot;version&quot;: &quot;&quot;
+    }
+  ],
+  &quot;legacyImports&quot;: true
+}
+
+// example3/jsonnetfile.json
+</code></pre>
+<pre><code>.
+├── jsonnetfile.json
+├── jsonnetfile.lock.json
+└── vendor
+    └── webserver -&gt; ../../../lesson3/example2/lib/webserver
+</code></pre>
+<p>This installs a local library relative to the project root with a symlink. Changes made in
+<code>vendor/</code> or on the real location are unaffected by <code>jb install</code> however it changes
+<code>jsonnetfile.json</code> to something that can't be shared.</p>
+<h4>Symlink in <code>lib/</code></h4>
+<p><code>$ ln -s ../../../lesson3/example2/lib/webserver lib/</code></p>
+<pre><code>.
+└── lib
+    └── webserver -&gt; ../../../lesson3/example2/lib/webserver
+</code></pre>
+<p>By relying on the import order, a symlink in <code>lib/</code> could be made. With <code>lib/</code> being matched before <code>vendor/</code>, it will be used first. This approach is unaffected by <code>jb install</code> and doesn't change <code>jsonnetfile.json</code>.</p>
+<h2>Conclusion</h2>
+<p>TODO</p>
+<p><span class="nav previous"><a href="lesson3.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+
+</body>
+</html>
+

@@ -34,6 +34,8 @@ this was generated for.
 The most common convention to work with this is to provide `lib/k.libsonnet` as
 a shortcut.
 
+---
+
 %(example2/example1.jsonnet)s
 
 Many libraries have a line `local k = import 'k.libsonnet'` to refer to this

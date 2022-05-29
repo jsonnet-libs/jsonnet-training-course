@@ -93,6 +93,8 @@ this was generated for.
 The most common convention to work with this is to provide `lib/k.libsonnet` as
 a shortcut.
 
+---
+
 ```jsonnet
 local k = import 'k.libsonnet';
 

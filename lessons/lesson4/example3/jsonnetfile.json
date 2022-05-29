@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "local": {
+          "directory": "../../lesson3/example2/lib/webserver"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "legacyImports": true
+}

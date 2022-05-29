@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<p><span class="nav previous"><a href="lesson2.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+<p><span class="nav previous"><a href="lesson2.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson4.html">next »</a></span></p>
 <h1>Exercise: rewrite a library with <code>k8s-libsonnet</code></h1>
 <p>In the first lesson we've written a extensible library and in the second lesson we've
 covered package management with jsonnet-bundler. In this lesson we'll combine what
@@ -91,6 +91,7 @@ this was generated for.</p>
 </code></pre>
 <p>The most common convention to work with this is to provide <code>lib/k.libsonnet</code> as
 a shortcut.</p>
+<hr>
 <pre><code class="language-jsonnet">local k = import 'k.libsonnet';
 
 k.core.v1.container.new('container-name', 'container-image')
@@ -188,7 +189,7 @@ library and import it again.</p>
     deployment:
       k.apps.v1.deployment.new(
         name,
-        replicas,
+        rreplicas,
         [self.container]
       ),
   },
@@ -231,7 +232,7 @@ webserver.new('wonderful-webserver')
 <p>Or, if we want more instances, we can simply do so.</p>
 <h2>Conclusion</h2>
 <p>TODO</p>
-<p><span class="nav previous"><a href="lesson2.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+<p><span class="nav previous"><a href="lesson2.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson4.html">next »</a></span></p>
 
 </body>
 </html>

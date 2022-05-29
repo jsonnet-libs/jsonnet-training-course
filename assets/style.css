@@ -2,7 +2,11 @@ html {
     margin: 0;
     padding: 0;
     min-height: 100%;
-    background: lightgrey;
+    /*background: cornflowerblue;*/
+    /* Pattern/color from jsonnet.org
+    background-image: url(https://jsonnet.org/img/isopattern.svg);
+    background-size: 128px;
+    background-color: #0064bd;*/
 }
 
 body {
@@ -12,11 +16,11 @@ body {
     margin-left: 15%;
     margin-right: 15%;
     background: white;
-    border: thin solid grey;
+    /*border: thin solid slategrey;*/
     border-top: 0;
     /* sans-serif fonts are generally better readable for people with dyslexia */
     font-family: sans-serif;
-    font-size: 1.15rem;
+    font-size: 1em;
 }
 
 blockquote {
@@ -44,9 +48,9 @@ a.anchor-link {
     font-size: 0.9rem;
     vertical-align: middle;
     line-height: 1;
-    margin: 0.2em;
-    margin-left: -1.2em;
-    color: lightgray;
+    margin: 0.5em;
+    margin-left: -1.5em;
+    color: slategrey;
 }
 
 h1, h2, h3, h4, h5, h6, hr {
@@ -85,7 +89,7 @@ pre {
 
 nav#toc {
     background: white;
-    border: 1px solid grey;
+    border: 1px solid slategrey;
     padding-right: 1em;
 }
 

@@ -30,5 +30,6 @@ Lessons:
 1. [Write an extensible library](lesson1.md)
 1. [Understanding Package management](lesson2.md)
 1. [Exercise: rewrite a library with `k8s-libsonnet`](lesson3.md)
+1. [Further developing libraries](lesson4.md)
 
 
