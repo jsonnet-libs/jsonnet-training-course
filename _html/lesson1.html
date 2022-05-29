@@ -261,6 +261,7 @@ there, they can apply <a href="https://www.martinfowler.com/bliki/Yagni.html">YA
 library code terse and maintainable without sacrificing extensibility.</p>
 <hr>
 <h3>Common pitfalls when creating libraries</h3>
+<h4>Builder pattern</h4>
 <p>Avoid the 'builder' pattern:</p>
 <pre><code class="language-jsonnet">local webserver = {
   new(name, replicas=1): {
@@ -304,7 +305,7 @@ webserver.new('wonderful-webserver').withImage('httpd:2.5')
 <p>This practice nests functions in the newly created object, allowing the user to 'chain'
 functions to modify <code>self</code>. However this comes at a performance impact in the Jsonnet
 interpreter and should be avoided.</p>
-<hr>
+<h4><code>_config</code> and <code>_images</code> pattern</h4>
 <p>A common pattern involves libraries that use the <code>_config</code> and <code>_images</code> keys. This
 supposedly attempts to differentiate between 'public' and 'private' APIs on libraries.
 However the underscore prefix has no real meaning in jsonnet, at best it is a convention
@@ -485,7 +486,7 @@ introducing bugs.</p>
 replacing the implied convention with declarative statements with required and optional
 arguments. Calling the function implies that the user wants to set a value, the optional
 arguments provides a default value <code>Always</code> to get the user going.</p>
-<hr>
+<h4>Use of <code>$</code></h4>
 <p>As you might have noticed, the <code>$</code> keyword is not used in any of these examples. In many
 libraries it is used to refer to variables that still need to be set.</p>
 <pre><code class="language-jsonnet">local webserver1 = {
@@ -558,7 +559,11 @@ and refer to attributes that need to be set elsewhere. Or in other words, <code>
 concept known as 'globals' in other programming libraries. It is best to avoid this as it
 leads to spaghetti code.</p>
 <h2>Conclusion</h2>
-<p>TODO</p>
+<p>By following an object-oriented approach, it is possible to build extensible jsonnet
+libraries. They can be extended infinitely and in such a way that it doesn't impact
+existing uses, providing backwards compatibility.</p>
+<p>The pitfalls show a few patterns that exist in the wild but should be avoided and
+refactored as they become unsustainable in the long term.</p>
 <p><span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson2.html">next »</a></span></p>
 
 </body>

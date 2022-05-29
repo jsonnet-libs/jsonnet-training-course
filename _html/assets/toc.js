@@ -35,8 +35,14 @@ window.addEventListener('load', e => {
         }
 
         if (level < lastLevel) {
+                console.log($heading.id)
             for (i=lastLevel; i>level; i--) {
                 ul = li.parentNode.parentNode.parentNode;
+                console.log(ul)
+                if (ul == null) {
+                    ul = toc.querySelector('ul:last-child')
+                    break
+                }
                 li = ul.querySelector('li:last-child').parentNode.parentNode;
             }
         }

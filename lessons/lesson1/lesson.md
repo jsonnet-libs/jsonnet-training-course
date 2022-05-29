@@ -82,6 +82,8 @@ library code terse and maintainable without sacrificing extensibility.
 
 ### Common pitfalls when creating libraries
 
+#### Builder pattern
+
 Avoid the 'builder' pattern:
 
 %(pitfall1.jsonnet)s
@@ -92,7 +94,7 @@ This practice nests functions in the newly created object, allowing the user to 
 functions to modify `self`. However this comes at a performance impact in the Jsonnet
 interpreter and should be avoided.
 
----
+#### `_config` and `_images` pattern
 
 A common pattern involves libraries that use the `_config` and `_images` keys. This
 supposedly attempts to differentiate between 'public' and 'private' APIs on libraries.
@@ -142,7 +144,7 @@ replacing the implied convention with declarative statements with required and o
 arguments. Calling the function implies that the user wants to set a value, the optional
 arguments provides a default value `Always` to get the user going.
 
----
+#### Use of `$`
 
 As you might have noticed, the `$` keyword is not used in any of these examples. In many
 libraries it is used to refer to variables that still need to be set.

@@ -25,5 +25,12 @@ lesson.new(
     examples,
     {}
   ),
-  'TODO',
+  |||
+    By following an object-oriented approach, it is possible to build extensible jsonnet
+    libraries. They can be extended infinitely and in such a way that it doesn't impact
+    existing uses, providing backwards compatibility.
+
+    The pitfalls show a few patterns that exist in the wild but should be avoided and
+    refactored as they become unsustainable in the long term.
+  |||,
 )
