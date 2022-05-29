@@ -22,5 +22,12 @@ lesson.new(
     examples,
     {}
   ),
-  'TODO',
+  |||
+    Wrapping libraries locally by leveraging the extensible nature of Jsonnet can be very
+    useful. It can alter default behavior that is more suitable for the project.
+
+    Developing directly on vendored libraries on the other hand is quite clumsy, the
+    techniques described require a bit of pragmatism to be useful. jsonnet-bundler could
+    benefit from a feature to make this easier.
+  |||,
 )

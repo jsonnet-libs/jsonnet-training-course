@@ -112,9 +112,9 @@ privatebin
 
 // example1/lib/privatebin/main.libsonnet
 </code></pre>
-<p>Here we import the vendored library and extend it. Read <code>privatebin { ... }</code> as <code>privatebin + { ... }</code>.</p>
-<p>We are extending the privatebin library here extended with the <code>withPort()</code> function that
-will change the ports of the <code>container</code>.</p>
+<p>Here we import the vendored library and extend it. We are extending the privatebin
+library here extended with the <code>withPort()</code> function that will change the ports of the
+<code>container</code>.</p>
 <p>Have a look at the
 <a href="https://jsonnet-libs.github.io/k8s-libsonnet/1.18/core/v1/container/#fn-withports"><code>container</code></a>
 and
@@ -261,9 +261,6 @@ External Secrets directly, allowing them to work on it at their own pace.</p>
 alongside the project that is using it. However any invocation of <code>jb install</code> will remove
 changes from <code>vendor/</code>, which makes it a little bit more challenging. Let's have a look at
 the different options.</p>
-<blockquote>
-<p>Idea: jsonnet-bundler could benefit from a feature to make this easier.</p>
-</blockquote>
 <h4>Simply edit files in <code>vendor/</code></h4>
 <p>This is the easiest except the risk of loosing changes is highest. For testing small
 changes this is probably safe, it gives immediate feedback whether the changes match
@@ -308,7 +305,11 @@ changes upstream.</p>
 </code></pre>
 <p>By relying on the import order, a symlink in <code>lib/</code> could be made. With <code>lib/</code> being matched before <code>vendor/</code>, it will be used first. This approach is unaffected by <code>jb install</code> and doesn't change <code>jsonnetfile.json</code>.</p>
 <h2>Conclusion</h2>
-<p>TODO</p>
+<p>Wrapping libraries locally by leveraging the extensible nature of Jsonnet can be very
+useful. It can alter default behavior that is more suitable for the project.</p>
+<p>Developing directly on vendored libraries on the other hand is quite clumsy, the
+techniques described require a bit of pragmatism to be useful. jsonnet-bundler could
+benefit from a feature to make this easier.</p>
 <p><span class="nav previous"><a href="lesson3.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
 
 </body>

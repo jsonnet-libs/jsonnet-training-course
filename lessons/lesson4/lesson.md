@@ -52,10 +52,9 @@ Create a local library in `lib/privatebin/`:
 
 %(example1/lib/privatebin/main.libsonnet)s
 
-Here we import the vendored library and extend it. Read `privatebin { ... }` as `privatebin + { ... }`.
-
-We are extending the privatebin library here extended with the `withPort()` function that
-will change the ports of the `container`.
+Here we import the vendored library and extend it. We are extending the privatebin
+library here extended with the `withPort()` function that will change the ports of the
+`container`.
 
 Have a look at the
 [`container`](https://jsonnet-libs.github.io/k8s-libsonnet/1.18/core/v1/container/#fn-withports)
@@ -130,9 +129,6 @@ As it gives immediate feedback, it often happens that a vendored library is deve
 alongside the project that is using it. However any invocation of `jb install` will remove
 changes from `vendor/`, which makes it a little bit more challenging. Let's have a look at
 the different options.
-
-> Idea: jsonnet-bundler could benefit from a feature to make this easier.
-
 
 #### Simply edit files in `vendor/`
 

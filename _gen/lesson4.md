@@ -126,10 +126,9 @@ privatebin
 ```
 
 
-Here we import the vendored library and extend it. Read `privatebin { ... }` as `privatebin + { ... }`.
-
-We are extending the privatebin library here extended with the `withPort()` function that
-will change the ports of the `container`.
+Here we import the vendored library and extend it. We are extending the privatebin
+library here extended with the `withPort()` function that will change the ports of the
+`container`.
 
 Have a look at the
 [`container`](https://jsonnet-libs.github.io/k8s-libsonnet/1.18/core/v1/container/#fn-withports)
@@ -311,9 +310,6 @@ alongside the project that is using it. However any invocation of `jb install` w
 changes from `vendor/`, which makes it a little bit more challenging. Let's have a look at
 the different options.
 
-> Idea: jsonnet-bundler could benefit from a feature to make this easier.
-
-
 #### Simply edit files in `vendor/`
 
 This is the easiest except the risk of loosing changes is highest. For testing small
@@ -377,5 +373,11 @@ By relying on the import order, a symlink in `lib/` could be made. With `lib/` b
 
 ## Conclusion
 
-TODO
+Wrapping libraries locally by leveraging the extensible nature of Jsonnet can be very
+useful. It can alter default behavior that is more suitable for the project.
+
+Developing directly on vendored libraries on the other hand is quite clumsy, the
+techniques described require a bit of pragmatism to be useful. jsonnet-bundler could
+benefit from a feature to make this easier.
+
 
