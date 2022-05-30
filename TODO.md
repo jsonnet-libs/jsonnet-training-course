@@ -58,8 +58,8 @@ Lessons:
 
 - Jsonnet use cases
     - Roll out in 'waves' (dev/stag/prod)
-    - Come up with a few examples (Grafonnet, Github Actions)
-    - Write YAML/JSON files (Grafonnet, Github Actions)
+    - Come up with a few examples (Grafonnet, GitHub Actions)
+    - Write YAML/JSON files (Grafonnet, GitHub Actions)
     - Generate new libraries from specifications (again)
 
 - Jsonnet features/pitfalls
@@ -84,4 +84,3 @@ Already covered by tanka.dev:
     - Load chart with `tanka-util`
     - Modify chart beyond `values.yaml`
     - Patch arrays
-

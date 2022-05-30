@@ -34,7 +34,7 @@ Let's add another function to modify the image of the httpd container:
 
 `withImage` is an optional 'mixin' function to modify the `Deployment`, notice how the
 `new()` function did not have to change to make this possible. The function is intended to
-be concatenated to `Deployment` object created by `new()`, it uses the `super` keyword to
+be concatenated to the `Deployment` object created by `new()`, it uses the `super` keyword to
 access the `container` attribute.
 
 As the `container` attribute is an array, it is not intuitive to modify an single entry.

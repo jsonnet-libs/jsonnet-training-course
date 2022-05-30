@@ -19,11 +19,11 @@ is no central entity in control. Even though this gives the authors a great deal
 autonomy, it makes it harder to find libraries. The majority of libraries can be found in
 Git repositories and are wholeheartedly open source.
 
-- Github Topic [`jsonnet-lib`](https://github.com/topics/jsonnet-lib) lists the libraries
+- GitHub Topic [`jsonnet-lib`](https://github.com/topics/jsonnet-lib) lists the libraries
     that are tagged with `jsonnet-lib`. Cultivating this tag is encouraged.
 - In the observability space, there is a sub-ecosystem of "mixins". The [Monitoring
     Mixins project](https://monitoring.mixins.dev/) is an effort to centralize them.
-- Keyword search on Github:
+- Keyword search on GitHub:
     - [`jsonnet-libs`](https://github.com/search?q=jsonnet-libs)
         Organisations often share their libraries in such a repository.
     - [`libsonnet`](https://github.com/search?q=libsonnet)
@@ -39,8 +39,8 @@ Git repositories and are wholeheartedly open source.
 
 ### jsonnet-bundler
 
-Now that we can find libraries, we need a way to install and use them. Jsonnet libraries
-are distributed as source code, which makes it a relatively simple process.
+Now that we can find libraries, we need a way to "install" them. Jsonnet libraries are
+distributed as source code, making it a relatively simple process.
 
 The de facto package manager for Jsonnet is
 [jsonnet-bundler](https://github.com/jsonnet-bundler/jsonnet-bundler/), we'll use it to
@@ -116,7 +116,7 @@ Jsonnet-bundler vendors libraries from Git repositories and tracks them in
 
 
 `$ jb install github.com/jsonnet-libs/xtd` adds a new entry to the `dependencies` in
-`jsonnetfile.json`, the entry refers to the git source on Github and the `master` branch
+`jsonnetfile.json`, the entry refers to the git source on GitHub and the `master` branch
 for its tracking `version`.
 
 When updating libraries, it will use the tracking `version`, for example `$ jb update
@@ -124,7 +124,7 @@ github.com/jsonnet-libs/xtd` will pull in the git commit that `master` refers to
 
 > **Tracking version**
 >
-> The default tracking `version` used by jsonnet-bundler is `master`, new Github repos
+> The default tracking `version` used by jsonnet-bundler is `master`, new GitHub repos
 > default to the `main` tag. To override this, add `@main` to the URI:
 >
 > `$ jb install github.com/jsonnet-libs/xtd@main`
@@ -205,7 +205,7 @@ vendor/
 
 
 Add a `.gitignore` file with `jsonnetfile.lock.json` and `vendor/` so they are not
-accidentally committed
+accidentally committed.
 
 ### Usage
 
@@ -220,10 +220,9 @@ xtd.ascii.isNumber('2')
 ```
 
 
-Using the long path is the recommended way on how to import vendored dependencies. It
-builds on the assumption that the `vendor/` directory is in the
-[`JSONNET_PATH`](#jsonnet_path) so that dependencies don't have to be vendored relative to
-the library.
+Using the long path is the recommended way to import vendored dependencies. It builds on
+the assumption that the `vendor/` directory is in the [`JSONNET_PATH`](#jsonnet_path) so
+that dependencies don't have to be vendored relative to the library.
 
 The long path provides a sufficiently unique path to prevent naming conflicts in most
 cases, the edge cases are covered in [Common use cases](#common-use-cases) below.
@@ -246,11 +245,11 @@ with a short handle like this. Many libraries still follow this practice.
 
 > **Legacy Imports**
 >
-> Originally `jb` vendored libraries as `vendor/<name>`, in large code bases this can
+> Originally `jb` vendored libraries as `vendor/<name>`, but in large code bases this can
 > cause naming conflicts. To resolve this, `jb` started vendoring on the full repository
-> path `github.com/<org>/<repo>/<path/to/lib>/name`. However many libraries have
-> references to the short path, for that `"legacyImports": true` tells `jb` to also create
-> a symlink to this full path on short path `vendor/<name>` to keep this working.
+> path `github.com/<org>/<repo>/<path/to/lib>/name`. Many libraries have references to the
+> short path, and for that `"legacyImports": true` tells `jb` to also create a symlink to
+> this full path on the short path `vendor/<name>` to keep this working.
 
 
 ### `JSONNET_PATH`
@@ -433,7 +432,7 @@ isn't a standard feature of jsonnet-bundler so we have to manually update
 Now by calling `jb install` without additional parameters, jsonnet-bundler will replace
 this library.
 
-> This is an example on how jsonnet-bundler claims ownership over the `vendor/` directory.
+> This is an example of how jsonnet-bundler claims ownership over the `vendor/` directory.
 > It will install all libraries to match `jsonnetfile.json` complemented by
 > `jsonnetfile.lock.json` and it will remove everything else.
 
@@ -471,11 +470,11 @@ istiolib.networking.v1beta1.virtualService.new('test')
 ```
 
 
-The added advantage of this approach is the ability add local overrides for the library in
+The added advantage of this approach is the ability to add local overrides for the library in
 `lib/istiolib.libsonnet`. It is also doesn't depend on the `jsonnet-bundler` behavior.
 
-Note the location of this library, `lib/` is another directory is commonly added to
-[`JSONNET_PATH`](#jsonnet_path) as to where libraries can `import` dependencies from.
+Note the location of this library, `lib/`, is another directory is commonly added to
+[`JSONNET_PATH`](#jsonnet_path) from where libraries can `import` dependencies.
 
 
 ## Conclusion
