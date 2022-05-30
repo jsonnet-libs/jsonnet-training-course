@@ -1,5 +1,20 @@
 ## TODO notes
 
+TODO: Answer questions tl;dr, make reference to longer descriptions)
+
+Why?
+
+- Why jsonnet? What benefit do we gain from it?
+- Why is it worth the inconvenience of people having to learn a new language/paradigm?
+- Why we use jsonnet (vs other solutions/tools)?
+- TODO: Create longer retrospective design doc
+
+How?
+
+- What are the lessons we’ve learned after using jsonnet for years?
+- What are some GrafanaLabs jsonnet idioms that we try to use?
+- Tools/tricks when writing/debugging jsonnet?
+
 ref: [brainstorm doc](https://docs.google.com/document/d/1zDFaASBuDdsuxEXXc1E1UGhsYvWnYqc3m8QBNzM9hTU/edit#)
 
 TODO:
