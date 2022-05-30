@@ -9,7 +9,7 @@ topic for training sessions by new hires at Grafana Labs.
 
 While a training session can cover the basics or highlights in ~30min, there is much more
 to it. We usually point out to the excellent tutorials on
-[jsonnet.org](https://jsonnet.org/learning/tutorial.html) to get started, this explains
+[jsonnet.org](https://jsonnet.org/learning/tutorial.html) to get started, these explain
 very well how Jsonnet works but not necessarily how to work with Jsonnet. This course
 attempts to cover the idioms we've been adopting over years of discovering.
 
