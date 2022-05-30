@@ -1,11 +1,11 @@
 # Jsonnet Training Course
 
-## What are the lessons we’ve learned after using jsonnet for years?
+## What are the lessons we've learned after using jsonnet for years?
 
 Grafana Labs uses a mixture of Terraform (HCL) and Jsonnet to configure the Cloud
 infrastructure and applications on Kubernetes. While new hires are often familiar with
-Terraform, they might never have heard of Jsonnet. This made it the top voted topic for
-training sessions by new hires at Grafana Labs.
+Terraform, they might never have heard of Jsonnet. This made that question the top voted
+topic for training sessions by new hires at Grafana Labs.
 
 While a training session can cover the basics or highlights in ~30min, there is much more
 to it. We usually point out to the excellent tutorials on

@@ -1,4 +1,4 @@
-## What are the lessons we’ve learned after using jsonnet for years?
+## What are the lessons we've learned after using jsonnet for years?
 
 Grafana Labs uses a mixture of Terraform (HCL) and Jsonnet to configure the Cloud
 infrastructure and applications on Kubernetes. While new hires are often familiar with
