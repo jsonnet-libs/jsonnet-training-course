@@ -7,7 +7,7 @@
 Build requirements:
 
 - jsonnet
-- md2html (from md4c)
+- md2html (from [md4c](https://github.com/mity/md4c))
 - bash
 
 To build both the markdown as well as the html version:

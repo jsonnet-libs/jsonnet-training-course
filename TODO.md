@@ -19,7 +19,7 @@ ref: [internal brainstorm doc](https://docs.google.com/document/d/1zDFaASBuDdsux
 
 Ideas:
 - Consider Jsonnet introduction lesson
-- IDE configuration, guest lessons/breakouts (vim, emacs, neovim, VSCode,  IntelliJ)
+- [IDE configuration](https://docs.google.com/spreadsheets/d/10pTqNvOC-0pDhgP3dYwjM6ywWVEyO0wnfl__ewfQa2Y/edit), guest lessons/breakouts (vim, emacs, neovim, VSCode,  IntelliJ)
 - Consider Terminology list
 - Provide good-read list
 - CD process (kube-manifests, jsonnet-libs/k8s github workflow)
