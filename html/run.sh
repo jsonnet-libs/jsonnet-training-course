@@ -2,15 +2,17 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+[[ -n $(which md2html) ]] || {
+    echo You need md2html from https://github.com/mity/md4c
+    exit 1
+}
+
 OUTPUT="$1"
 
 DIRNAME="$(dirname "$0")"
 
 TEMPDIR=$(mktemp -d)
-function finish {
-    rm -rf "$TEMPDIR"
-}
-trap finish EXIT
+trap "rm -rf $TEMPDIR" EXIT
 
 jsonnet --tla-code nav=true -J . -m "$TEMPDIR" -S main.jsonnet
 

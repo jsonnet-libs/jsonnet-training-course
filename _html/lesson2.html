@@ -31,11 +31,11 @@ is no central entity in control. Even though this gives the authors a great deal
 autonomy, it makes it harder to find libraries. The majority of libraries can be found in
 Git repositories and are wholeheartedly open source.</p>
 <ul>
-<li>Github Topic <a href="https://github.com/topics/jsonnet-lib"><code>jsonnet-lib</code></a> lists the libraries
+<li>GitHub Topic <a href="https://github.com/topics/jsonnet-lib"><code>jsonnet-lib</code></a> lists the libraries
 that are tagged with <code>jsonnet-lib</code>. Cultivating this tag is encouraged.</li>
 <li>In the observability space, there is a sub-ecosystem of &quot;mixins&quot;. The <a href="https://monitoring.mixins.dev/">Monitoring
 Mixins project</a> is an effort to centralize them.</li>
-<li>Keyword search on Github:<ul>
+<li>Keyword search on GitHub:<ul>
 <li><a href="https://github.com/search?q=jsonnet-libs"><code>jsonnet-libs</code></a>
 Organisations often share their libraries in such a repository.</li>
 <li><a href="https://github.com/search?q=libsonnet"><code>libsonnet</code></a>
@@ -53,8 +53,8 @@ application, look for a <code>jsonnetfile.json</code> in their repository.</li>
 </ul>
 <hr>
 <h3>jsonnet-bundler</h3>
-<p>Now that we can find libraries, we need a way to install and use them. Jsonnet libraries
-are distributed as source code, which makes it a relatively simple process.</p>
+<p>Now that we can find libraries, we need a way to &quot;install&quot; them. Jsonnet libraries are
+distributed as source code, making it a relatively simple process.</p>
 <p>The de facto package manager for Jsonnet is
 <a href="https://github.com/jsonnet-bundler/jsonnet-bundler/">jsonnet-bundler</a>, we'll use it to
 fetch libraries and managed dependencies. Have a look at the project README to install it.</p>
@@ -106,12 +106,12 @@ hood and how it manipulates these files.</p>
 // example2/jsonnetfile.json
 </code></pre>
 <p><code>$ jb install github.com/jsonnet-libs/xtd</code> adds a new entry to the <code>dependencies</code> in
-<code>jsonnetfile.json</code>, the entry refers to the git source on Github and the <code>master</code> branch
+<code>jsonnetfile.json</code>, the entry refers to the git source on GitHub and the <code>master</code> branch
 for its tracking <code>version</code>.</p>
 <p>When updating libraries, it will use the tracking <code>version</code>, for example <code>$ jb update github.com/jsonnet-libs/xtd</code> will pull in the git commit that <code>master</code> refers to.</p>
 <blockquote>
 <p><strong>Tracking version</strong></p>
-<p>The default tracking <code>version</code> used by jsonnet-bundler is <code>master</code>, new Github repos
+<p>The default tracking <code>version</code> used by jsonnet-bundler is <code>master</code>, new GitHub repos
 default to the <code>main</code> tag. To override this, add <code>@main</code> to the URI:</p>
 <p><code>$ jb install github.com/jsonnet-libs/xtd@main</code></p>
 </blockquote>
@@ -175,7 +175,7 @@ vendor/
 // example3/.gitignore
 </code></pre>
 <p>Add a <code>.gitignore</code> file with <code>jsonnetfile.lock.json</code> and <code>vendor/</code> so they are not
-accidentally committed</p>
+accidentally committed.</p>
 <h3>Usage</h3>
 <p>As shown before, to use a library it needs to be imported:</p>
 <pre><code class="language-jsonnet">local xtd = import 'github.com/jsonnet-libs/xtd/main.libsonnet';
@@ -184,10 +184,9 @@ xtd.ascii.isNumber('2')
 
 // example5/usage1.jsonnet
 </code></pre>
-<p>Using the long path is the recommended way on how to import vendored dependencies. It
-builds on the assumption that the <code>vendor/</code> directory is in the
-<a href="#jsonnet_path"><code>JSONNET_PATH</code></a> so that dependencies don't have to be vendored relative to
-the library.</p>
+<p>Using the long path is the recommended way to import vendored dependencies. It builds on
+the assumption that the <code>vendor/</code> directory is in the <a href="#jsonnet_path"><code>JSONNET_PATH</code></a> so
+that dependencies don't have to be vendored relative to the library.</p>
 <p>The long path provides a sufficiently unique path to prevent naming conflicts in most
 cases, the edge cases are covered in <a href="#common-use-cases">Common use cases</a> below.</p>
 <hr>
@@ -202,11 +201,11 @@ with a short handle like this. Many libraries still follow this practice.</p>
 <hr>
 <blockquote>
 <p><strong>Legacy Imports</strong></p>
-<p>Originally <code>jb</code> vendored libraries as <code>vendor/&lt;name&gt;</code>, in large code bases this can
+<p>Originally <code>jb</code> vendored libraries as <code>vendor/&lt;name&gt;</code>, but in large code bases this can
 cause naming conflicts. To resolve this, <code>jb</code> started vendoring on the full repository
-path <code>github.com/&lt;org&gt;/&lt;repo&gt;/&lt;path/to/lib&gt;/name</code>. However many libraries have
-references to the short path, for that <code>&quot;legacyImports&quot;: true</code> tells <code>jb</code> to also create
-a symlink to this full path on short path <code>vendor/&lt;name&gt;</code> to keep this working.</p>
+path <code>github.com/&lt;org&gt;/&lt;repo&gt;/&lt;path/to/lib&gt;/name</code>. Many libraries have references to the
+short path, and for that <code>&quot;legacyImports&quot;: true</code> tells <code>jb</code> to also create a symlink to
+this full path on the short path <code>vendor/&lt;name&gt;</code> to keep this working.</p>
 </blockquote>
 <h3><code>JSONNET_PATH</code></h3>
 <p><code>JSONNET_PATH</code> is a list of directories that <code>jsonnet</code> will attempt to resolve imports
@@ -345,7 +344,7 @@ isn't a standard feature of jsonnet-bundler so we have to manually update
 <p>Now by calling <code>jb install</code> without additional parameters, jsonnet-bundler will replace
 this library.</p>
 <blockquote>
-<p>This is an example on how jsonnet-bundler claims ownership over the <code>vendor/</code> directory.
+<p>This is an example of how jsonnet-bundler claims ownership over the <code>vendor/</code> directory.
 It will install all libraries to match <code>jsonnetfile.json</code> complemented by
 <code>jsonnetfile.lock.json</code> and it will remove everything else.</p>
 </blockquote>
@@ -370,10 +369,10 @@ istiolib.networking.v1beta1.virtualService.new('test')
 
 // example5/usage4.jsonnet
 </code></pre>
-<p>The added advantage of this approach is the ability add local overrides for the library in
+<p>The added advantage of this approach is the ability to add local overrides for the library in
 <code>lib/istiolib.libsonnet</code>. It is also doesn't depend on the <code>jsonnet-bundler</code> behavior.</p>
-<p>Note the location of this library, <code>lib/</code> is another directory is commonly added to
-<a href="#jsonnet_path"><code>JSONNET_PATH</code></a> as to where libraries can <code>import</code> dependencies from.</p>
+<p>Note the location of this library, <code>lib/</code>, is another directory is commonly added to
+<a href="#jsonnet_path"><code>JSONNET_PATH</code></a> from where libraries can <code>import</code> dependencies.</p>
 <h2>Conclusion</h2>
 <p>Finding libraries and package managemet can be cumbersome, nonetheless
 jsonnet-bundler makes it a bit easier to work with the distributed ecosystem.
