@@ -29,9 +29,9 @@ laying down the base for configuration management with Jsonnet. In addition to t
 there are a few other advantages.
 
 The most common tool to manage Kubernetes manifests today is Helm, so why not use that?
-Helm chose some unhelpful approaches, by templating the YAML they only allow for one
+By templating the YAML, Helm only allows for one
 level of abstraction (values.yaml), anything beyond that requires a change request
-upstream or more commonly a fork. This causes a massive asymmetry between authoring and
+upstream or more commonly a fork. This causes an asymmetry between authoring and
 using Helm charts.
 
 Jsonnet on the other hand allows for an infinite number of abstractions, the initial
@@ -48,8 +48,8 @@ change to the library.
 ## What benefit do we gain from it?
 
 Jsonnet is a language about data. By managing configuration with Jsonnet, it essentially
-turns into a massive programmable database. The infinite number of abstractions allows to
-create layers, a Deployment is part of an application, which can be included in a cell
+turns into a massive programmable database. The infinite number of abstractions allows it to
+create layers. A Deployment is part of an application, which can be included in a cell
 (collection of loosely-coupled applications) that gets deployed to a cluster. By extending
 the cluster list, new cells can be created and applications automatically become available
 without the need to configure and deploy each application individually.
