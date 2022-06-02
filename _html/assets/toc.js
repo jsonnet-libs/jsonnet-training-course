@@ -35,14 +35,14 @@ window.addEventListener('load', e => {
         }
 
         if (level < lastLevel) {
-                console.log($heading.id)
             for (i=lastLevel; i>level; i--) {
+                //      ul         li         ul
                 ul = li.parentNode.parentNode.parentNode;
-                console.log(ul)
                 if (ul == null) {
                     ul = toc.querySelector('ul:last-child')
                     break
                 }
+                //      li                             ul         li
                 li = ul.querySelector('li:last-child').parentNode.parentNode;
             }
         }
@@ -56,7 +56,7 @@ window.addEventListener('load', e => {
         var h = $heading;
         a.innerHTML = $heading.innerHTML;
         a.querySelectorAll('a').forEach($child => {
-          a.removeChild($child);
+            a.removeChild($child);
         });
         li.appendChild(a);
         lastLevel = level;
