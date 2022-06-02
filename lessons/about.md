@@ -36,7 +36,7 @@ using Helm charts.
 
 Jsonnet on the other hand allows for an infinite number of abstractions, the initial
 author only needs to worry about their use case, so libraries can be kept quite concise.
-If a user wants to do something slightly different, they can simple concatenate the
+If a user wants to do something slightly different, they can simply concatenate the
 change to the library.
 
 > **Helm support in Tanka**
@@ -50,9 +50,9 @@ change to the library.
 Jsonnet is a language about data. By managing configuration with Jsonnet, it essentially
 turns into a massive programmable database. The infinite number of abstractions allows to
 create layers, a Deployment is part of an application, which can be included in a cell
-that gets deployed to a cluster. By extending the cluster list, new cells can be created
-and applications automatically become available without the need to configure and deploy
-each application individually.
+(collection of loosely-coupled applications) that gets deployed to a cluster. By extending
+the cluster list, new cells can be created and applications automatically become available
+without the need to configure and deploy each application individually.
 
 Each of these concepts has their own configuration attributes that could be managed by
 a different team. This means that, with a clean, well defined API between layers of
