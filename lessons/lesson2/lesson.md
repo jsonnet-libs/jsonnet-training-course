@@ -12,7 +12,7 @@ Git repositories and are wholeheartedly open source.
         Organisations often share their libraries in such a repository.
     - [`libsonnet`](https://github.com/search?q=libsonnet)
         Libraries are often suffixed with `-libsonnet`
-- Some applications offer jsonnet libraries to deploy, configure and/or monitor their
+- Some applications offer Jsonnet libraries to deploy, configure and/or monitor their
     application, look for a `jsonnetfile.json` in their repository.
 - A few community members maintain an 'awesome list':
     - https://github.com/MacroPower/awesome-jsonnet
@@ -192,7 +192,7 @@ not look in `vendor/`._
 ### Common use cases
 
 As package management is quite distributed and jsonnet-bundler is relatively simple, there
-are some use cases that don't get covered well. Fortunately jsonnet and jsonnet-bundler
+are some use cases that don't get covered well. Fortunately Jsonnet and jsonnet-bundler
 are quite flexible.
 
 #### Upstream has breaking changes
@@ -321,8 +321,8 @@ with the purpose of providing a shortcut.
 
 %(example5/usage4.jsonnet)s
 
-The added advantage of this approach is the ability to add local overrides for the library in
-`lib/istiolib.libsonnet`. It is also doesn't depend on the `jsonnet-bundler` behavior.
+The added advantage of this approach is the ability to add local overrides for the library
+in `lib/istiolib.libsonnet`. It is also doesn't depend on the `jsonnet-bundler` behavior.
 
 Note the location of this library, `lib/`, is another directory is commonly added to
 [`JSONNET_PATH`](#jsonnet_path) from where libraries can `import` dependencies.

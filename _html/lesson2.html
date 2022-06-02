@@ -13,6 +13,7 @@
 </head>
 <body>
 
+<main>
 <p><span class="nav previous"><a href="lesson1.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson3.html">next »</a></span></p>
 <h1>Understanding Package management</h1>
 <p>There are a ton of Jsonnet libraries out there, ranging from big generated libraries
@@ -42,7 +43,7 @@ Organisations often share their libraries in such a repository.</li>
 Libraries are often suffixed with <code>-libsonnet</code></li>
 </ul>
 </li>
-<li>Some applications offer jsonnet libraries to deploy, configure and/or monitor their
+<li>Some applications offer Jsonnet libraries to deploy, configure and/or monitor their
 application, look for a <code>jsonnetfile.json</code> in their repository.</li>
 <li>A few community members maintain an 'awesome list':<ul>
 <li><a href="https://github.com/MacroPower/awesome-jsonnet">https://github.com/MacroPower/awesome-jsonnet</a></li>
@@ -229,7 +230,7 @@ variable in our environment:</p>
 not look in <code>vendor/</code>.</em></p>
 <h3>Common use cases</h3>
 <p>As package management is quite distributed and jsonnet-bundler is relatively simple, there
-are some use cases that don't get covered well. Fortunately jsonnet and jsonnet-bundler
+are some use cases that don't get covered well. Fortunately Jsonnet and jsonnet-bundler
 are quite flexible.</p>
 <h4>Upstream has breaking changes</h4>
 <p>It may happen that the upstream tracking branch (eg. <code>master</code>) introduce breaking changes.
@@ -369,8 +370,8 @@ istiolib.networking.v1beta1.virtualService.new('test')
 
 // example5/usage4.jsonnet
 </code></pre>
-<p>The added advantage of this approach is the ability to add local overrides for the library in
-<code>lib/istiolib.libsonnet</code>. It is also doesn't depend on the <code>jsonnet-bundler</code> behavior.</p>
+<p>The added advantage of this approach is the ability to add local overrides for the library
+in <code>lib/istiolib.libsonnet</code>. It is also doesn't depend on the <code>jsonnet-bundler</code> behavior.</p>
 <p>Note the location of this library, <code>lib/</code>, is another directory is commonly added to
 <a href="#jsonnet_path"><code>JSONNET_PATH</code></a> from where libraries can <code>import</code> dependencies.</p>
 <h2>Conclusion</h2>
@@ -379,7 +380,14 @@ jsonnet-bundler makes it a bit easier to work with the distributed ecosystem.
 Additionally <code>JSONNET_PATH</code> offers a level of flexibility to work around the package
 management shortcomming.</p>
 <p><span class="nav previous"><a href="lesson1.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson3.html">next »</a></span></p>
+</main>
 
+<footer>
+    <p>
+        <a href="about.html">About</a>
+        | <a href="">Source (TODO: link to github)</a>
+    </p>
+</footer>
 </body>
 </html>
 

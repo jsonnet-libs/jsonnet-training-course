@@ -13,6 +13,7 @@
 </head>
 <body>
 
+<main>
 <p><span class="nav previous"><a href="lesson2.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson4.html">next »</a></span></p>
 <h1>Exercise: rewrite a library with <code>k8s-libsonnet</code></h1>
 <p>In the first lesson we've written a extensible library and in the second lesson we've
@@ -143,9 +144,11 @@ webserver.new('wonderful-webserver')
 // example2/example2.jsonnet
 </code></pre>
 <p>The library has grouped a number of functions under <code>k.core.v1.container</code>, we'll use the
-<code>new(name, image)</code> function here, this makes it concise. Additionally the <code>withImage()</code> function uses the function with the same name in the library.</p>
+<code>new(name, image)</code> function here, this makes it concise. Additionally the <code>withImage()</code>
+function uses the function with the same name in the library.</p>
 <hr>
-<p>And now for the <a href="https://jsonnet-libs.github.io/k8s-libsonnet/1.23/apps/v1/deployment/">deployment</a>:</p>
+<p>And now for the
+<a href="https://jsonnet-libs.github.io/k8s-libsonnet/1.23/apps/v1/deployment/">deployment</a>:</p>
 <pre><code class="language-jsonnet">local k = import 'k.libsonnet';
 
 local webserver = {
@@ -235,7 +238,14 @@ webserver.new('wonderful-webserver')
 <code>k.libsonnet</code> abstract, the user has the option to use an alternative version of the
 <code>k8s-libsonnet</code> library.</p>
 <p><span class="nav previous"><a href="lesson2.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson4.html">next »</a></span></p>
+</main>
 
+<footer>
+    <p>
+        <a href="about.html">About</a>
+        | <a href="">Source (TODO: link to github)</a>
+    </p>
+</footer>
 </body>
 </html>
 

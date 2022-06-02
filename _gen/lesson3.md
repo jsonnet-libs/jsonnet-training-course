@@ -155,11 +155,13 @@ webserver.new('wonderful-webserver')
 
 
 The library has grouped a number of functions under `k.core.v1.container`, we'll use the
-`new(name, image)` function here, this makes it concise. Additionally the `withImage()` function uses the function with the same name in the library.
+`new(name, image)` function here, this makes it concise. Additionally the `withImage()`
+function uses the function with the same name in the library.
 
 ---
 
-And now for the [deployment](https://jsonnet-libs.github.io/k8s-libsonnet/1.23/apps/v1/deployment/):
+And now for the
+[deployment](https://jsonnet-libs.github.io/k8s-libsonnet/1.23/apps/v1/deployment/):
 
 ```jsonnet
 local k = import 'k.libsonnet';

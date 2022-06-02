@@ -13,6 +13,7 @@
 </head>
 <body>
 
+<main>
 <p><span class="nav previous"><a href="lesson3.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
 <h1>Further developing libraries</h1>
 <p>When starting out with Jsonnet, it is very likely that you'll with existing code and
@@ -303,7 +304,8 @@ changes upstream.</p>
 └── lib
     └── webserver -&gt; ../../../lesson3/example2/lib/webserver
 </code></pre>
-<p>By relying on the import order, a symlink in <code>lib/</code> could be made. With <code>lib/</code> being matched before <code>vendor/</code>, it will be used first. This approach is unaffected by <code>jb install</code> and doesn't change <code>jsonnetfile.json</code>.</p>
+<p>By relying on the import order, a symlink in <code>lib/</code> could be made. With <code>lib/</code> being
+matched before <code>vendor/</code>, it will be used first. This approach is unaffected by <code>jb install</code> and doesn't change <code>jsonnetfile.json</code>.</p>
 <h2>Conclusion</h2>
 <p>Wrapping libraries locally by leveraging the extensible nature of Jsonnet can be very
 useful. It can alter default behavior that is more suitable for the project.</p>
@@ -311,7 +313,14 @@ useful. It can alter default behavior that is more suitable for the project.</p>
 techniques described require a bit of pragmatism to be useful. jsonnet-bundler could
 benefit from a feature to make this easier.</p>
 <p><span class="nav previous"><a href="lesson3.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+</main>
 
+<footer>
+    <p>
+        <a href="about.html">About</a>
+        | <a href="">Source (TODO: link to github)</a>
+    </p>
+</footer>
 </body>
 </html>
 

@@ -368,7 +368,9 @@ This installs a local library relative to the project root with a symlink. Chang
     └── webserver -> ../../../lesson3/example2/lib/webserver
 ```
 
-By relying on the import order, a symlink in `lib/` could be made. With `lib/` being matched before `vendor/`, it will be used first. This approach is unaffected by `jb install` and doesn't change `jsonnetfile.json`.
+By relying on the import order, a symlink in `lib/` could be made. With `lib/` being
+matched before `vendor/`, it will be used first. This approach is unaffected by `jb
+install` and doesn't change `jsonnetfile.json`.
 
 
 ## Conclusion

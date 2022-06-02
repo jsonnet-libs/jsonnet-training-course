@@ -15,8 +15,19 @@ local navMixin = function(pages, i)
   )
   + '\n';
 
+local about = (import 'lessons/about.jsonnet').render['about.md'];
+
 function(nav=false)
-  (import 'lessons/main.jsonnet').render
+  (import 'lessons/index.jsonnet').render
+  {
+    'about.md':
+      if nav
+      then
+        '<span class="nav index">[index](index.html)</span>\n'
+        + about
+        + '<span class="nav index">[index](index.html)</span>\n'
+      else about,
+  }
   + {
     [pages[i].filename]:
       if nav

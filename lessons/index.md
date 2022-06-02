@@ -1,20 +1,12 @@
-## What are the lessons we've learned after using jsonnet for years?
-
-Grafana Labs uses a mixture of Terraform (HCL) and Jsonnet to configure the Cloud
-infrastructure and applications on Kubernetes. While new hires are often familiar with
-Terraform, they might never have heard of Jsonnet. This made that question the top voted
-topic for training sessions by new hires at Grafana Labs.
-
-While a training session can cover the basics or highlights in ~30min, there is much more
-to it. We usually point out to the excellent tutorials on
-[jsonnet.org](https://jsonnet.org/learning/tutorial.html) to get started, these explain
-very well how Jsonnet works but not necessarily how to work with Jsonnet. This course
-attempts to cover the idioms we've been adopting over years of discovering.
+Excited as you might be after following the excellent tutorials on
+[jsonnet.org](https://jsonnet.org/learning/tutorial.html), it can still be daunting to
+actually use Jsonnet in the real world. This hands-on course attempts to cover common
+Jsonnet idioms that have been battle tested over several years.
 
 The examples and use cases in this course are from real world usage instead of working
 with arbitrary examples like cocktails or your favorite pets. The step by step examples
 show how to use Jsonnet effectively, at the same time explaining the why, covering
-pitfalls and other hurdles we might have come across.
+pitfalls and other hurdles we might come across.
 
 This course is a work in progress, the plan is to dive deeper into the Jsonnet ecosystem
 with more lessons, exercises and use cases. If you notice a mistake or want to share your

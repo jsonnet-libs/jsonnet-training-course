@@ -116,6 +116,11 @@ span.nav.next a {
     background: slategrey;
 }
 
+footer, footer a{
+    color: slategrey;
+    text-align: center;
+}
+
 @media only screen and (max-width: 720px) {
     body {
         width: auto;

@@ -34,8 +34,8 @@ Let's add another function to modify the image of the httpd container:
 
 `withImage` is an optional 'mixin' function to modify the `Deployment`, notice how the
 `new()` function did not have to change to make this possible. The function is intended to
-be concatenated to the `Deployment` object created by `new()`, it uses the `super` keyword to
-access the `container` attribute.
+be concatenated to the `Deployment` object created by `new()`, it uses the `super` keyword
+to access the `container` attribute.
 
 As the `container` attribute is an array, it is not intuitive to modify an single entry.
 We have to loop over the array, find the matching container and apply a patch. This is
@@ -98,7 +98,7 @@ interpreter and should be avoided.
 
 A common pattern involves libraries that use the `_config` and `_images` keys. This
 supposedly attempts to differentiate between 'public' and 'private' APIs on libraries.
-However the underscore prefix has no real meaning in jsonnet, at best it is a convention
+However the underscore prefix has no real meaning in Jsonnet, at best it is a convention
 with implied meaning.
 
 Applying the convention to above library would make it look like this:
@@ -155,7 +155,8 @@ This pattern makes it hard to determine which library is consuming which attribu
 of that libraries can influence each other unintentionally. 
 
 In this example:
-- `_config.httpd_replicas` is only consumed by `webserver2` while it seems to apply to both.
+- `_config.httpd_replicas` is only consumed by `webserver2` while it seems to apply to
+    both.
 - `_image.httpd` is set on both libraries, however `webserver2` overrides the image of
     `webserver1` as it was concatenated later.
 
