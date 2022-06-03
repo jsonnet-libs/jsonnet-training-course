@@ -20,6 +20,7 @@ FILES=$(find "$TEMPDIR" -type f -name \*.md)
 
 rm -rf "$OUTPUT"
 mkdir -p "$OUTPUT"
+touch "$OUTPUT"/.nojekyll
 cp -r "$DIRNAME"/assets "$OUTPUT"/assets
 
 for f in ${FILES[@]}; do
