@@ -1,5 +1,7 @@
 # Jsonnet Training Course
 
+[HTML version](https://jsonnet-libs.github.io/jsonnet-training-course/)
+
 [Markdown version](_gen/index.md)
 
 ## Building
