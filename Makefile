@@ -5,7 +5,7 @@ generate:
 	jsonnet -J . -m _gen -S main.jsonnet
 
 html:
-	@./html/run.sh _html
+	@./html/run.sh docs
 
 generate: lessons/lesson1/examples.jsonnet
 lessons/lesson1/examples.jsonnet:
