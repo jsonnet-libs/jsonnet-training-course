@@ -15,8 +15,6 @@ How? (kind of covered in index page and subsequent lessons)
 - What are some GrafanaLabs jsonnet idioms that we try to use?
 - Tools/tricks when writing/debugging jsonnet?
 
-ref: [internal brainstorm doc](https://docs.google.com/document/d/1zDFaASBuDdsuxEXXc1E1UGhsYvWnYqc3m8QBNzM9hTU/edit#)
-
 Ideas:
 - Consider Jsonnet introduction lesson
 - [IDE configuration](https://docs.google.com/spreadsheets/d/10pTqNvOC-0pDhgP3dYwjM6ywWVEyO0wnfl__ewfQa2Y/edit), guest lessons/breakouts (vim, emacs, neovim, VSCode,  IntelliJ)
