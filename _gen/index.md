@@ -12,7 +12,8 @@ pitfalls and other hurdles we might come across.
 
 This course is a work in progress, the plan is to dive deeper into the Jsonnet ecosystem
 with more lessons, exercises and use cases. If you notice a mistake or want to share your
-experience, reach out to us on [TODO: link to github repo]().
+experience, reach out to us on
+[Github](https://github.com/jsonnet-libs/jsonnet-training-course).
 
 ## Getting started
 
