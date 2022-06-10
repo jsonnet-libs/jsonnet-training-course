@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Documentation</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="md2html">
+<link rel="stylesheet" type="text/css" href="assets/style.css">
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script src="assets/prettyprint.js"></script>
+<script src="assets/anchorlinks.js"></script>
+<script src="assets/toc.js"></script>
+</head>
+<body>
+
+<main>
+<p><span class="nav previous"><a href="lesson4.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+<h1>Documentation</h1>
+<p>In most programming languages documentation is done with the use of docstrings in
+comments. However that is not possible with Jsonnet right now. To work around this, we
+can use <a href="https://github.com/jsonnet-libs/docsonnet">Docsonnet</a> and provide docstrings
+as Jsonnet code.</p>
+<h2>Objectives</h2>
+<ul>
+<li>Write docstrings for Docsonnet</li>
+<li>Generate markdown documentation</li>
+</ul>
+<h2>Lesson</h2>
+<p>We'll continue with the webserver library from the exercise.</p>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+
+{
+  new(name, replicas=1): {
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment:
+      k.apps.v1.deployment.new(
+        name,
+        replicas,
+        [self.container]
+      ),
+  },
+
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+}
+
+// example1/example1.jsonnet
+</code></pre>
+<p>This library provides a number of functions to create a webserver. In docsonnet lingo this
+is called a 'package'. Each function has a few arguments which usually have a fixed type,
+as Jsonnet itself is not a typed language we'll simply try to document the type.</p>
+<hr>
+<p>To get started, let's grab docsonnet's doc-util library. It provides a few functions to
+write consistent docstrings for the different objects in Jsonnet.</p>
+<p><code>$ jb install github.com/jsonnet-libs/docsonnet/doc-util</code></p>
+<p>Note that the <a href="https://github.com/jsonnet-libs/docsonnet/blob/master/doc-util/README.md">docs for
+doc-util</a> are
+also rendered by docsonnet.</p>
+<hr>
+<pre><code class="language-jsonnet">local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
+local k = import 'k.libsonnet';
+
+{
+  '#':: d.pkg(
+    name='webserver',
+    url='github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1',
+    help='`webserver` provides a basic webserver on Kubernetes',
+    filename=std.thisFile,
+  ),
+
+  new(name, replicas=1): {
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment:
+      k.apps.v1.deployment.new(
+        name,
+        replicas,
+        [self.container]
+      ),
+  },
+
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+}
+
+// example1/example2.jsonnet
+</code></pre>
+<p>The docsonnet puts a claim on keys that start with a hash <code>#</code>. It assumes that keys
+starting with a hash symbol is very uncommon, additionally it closely relates to how
+comments are written.</p>
+<p>The package definition is put in the <code>#</code> key without a value.</p>
+<p>The <code>url</code> argument is the part that can be used to install this library with
+jsonnet-bundler:</p>
+<p><code>$ jb install &lt;url&gt;</code></p>
+<p>In combination with the <code>url</code>, the <code>filename</code> refers to what should be imported, note the
+neat <code>std.thisFile</code> shortcut so we don't have to remember to change the filename here if
+we do so.</p>
+<p><code>import '&lt;url&gt;/&lt;filename&gt;'</code></p>
+<hr>
+<pre><code class="language-jsonnet">local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
+local k = import 'k.libsonnet';
+
+{
+  '#':: d.pkg(
+    name='webserver',
+    url='github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1',
+    help='`webserver` provides a basic webserver on Kubernetes',
+    filename=std.thisFile,
+  ),
+
+  '#new':: d.fn(
+    help=|||
+      `new` creates a Deployment object for Kubernetes
+
+      * `name` sets the name for the Deployment object
+      * `replicas` number of desired pods, defaults to 1
+    |||,
+    args=[
+      d.arg('name', d.T.string),
+      d.arg('replicas', d.T.number, 1),
+    ]
+  ),
+  new(name, replicas=1): {
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment:
+      k.apps.v1.deployment.new(
+        name,
+        replicas,
+        [self.container]
+      ),
+  },
+
+  '#withImage':: d.fn(
+    help='`withImage` modifies the image used for the httpd container',
+    args=[
+      d.arg('image', d.T.string),
+    ]
+  ),
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+}
+
+// example1/example3.jsonnet
+</code></pre>
+<p>Docstrings for other elements are put in the same key prefixed by a hash <code>#</code>, for example
+the docstring for <code>new()</code> will be in the <code>#new</code> key. Functions can be documented with
+<code>d.fn(help, args)</code>.</p>
+<p>As the <code>help</code> text is quite long for this example, we're using multi line strings with
+<code>|||</code>. This also improves the readability in the code. The <code>args</code> can be typed, constants
+for these are provided by <code>d.T.&lt;type&gt;</code> to increase consistency.</p>
+<hr>
+<p>For the sake of this lesson, let's add an object and a few constants:</p>
+<pre><code class="language-jsonnet">local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
+local k = import 'k.libsonnet';
+
+{
+  '#':: d.pkg(
+    name='webserver',
+    url='github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1',
+    help='`webserver` provides a basic webserver on Kubernetes',
+    filename=std.thisFile,
+  ),
+
+  '#images':: d.obj(
+    help=|||
+      `images` provides images for common webservers
+
+      Usage:
+
+      ```
+      webserver.new('my-nginx')
+      + webserver.withImage(webserver.images.nginx)
+      ```
+    |||
+  ),
+  images: {
+    '#apache':: d.val(d.T.string, 'Apache HTTP webserver'),
+    apache: 'httpd:2.4',
+    '#nginx':: d.val(d.T.string, 'Nginx HTTP webserver'),
+    nginx: 'nginx:1.22',
+  },
+
+  '#new':: d.fn(
+    help=|||
+      `new` creates a Deployment object for Kubernetes
+
+      * `name` sets the name for the Deployment object
+      * `replicas` number of desired pods, defaults to 1
+    |||,
+    args=[
+      d.arg('name', d.T.string),
+      d.arg('replicas', d.T.number, 1),
+    ]
+  ),
+  new(name, replicas=1): {
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment:
+      k.apps.v1.deployment.new(
+        name,
+        replicas,
+        [self.container]
+      ),
+  },
+
+  '#withImage':: d.fn(
+    help='`withImage` modifies the image used for the httpd container',
+    args=[
+      d.arg('image', d.T.string),
+    ]
+  ),
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+}
+
+// example1/example4.jsonnet
+</code></pre>
+<p>The <code>images</code> key holds an object with additional webserver images.</p>
+<p>Just like with functions, the docstring key gets prefixed by <code>#</code>. Objects can be
+documented with <code>d.obj(help)</code>.</p>
+<p>Constants can be documented with <code>d.val(type, help)</code>.</p>
+<hr>
+<h2>Conclusion</h2>
+<p>TODO</p>
+<p><span class="nav previous"><a href="lesson4.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+</main>
+
+<footer>
+    <p>
+        <a href="about.html">About</a>
+        | <a href="https://github.com/jsonnet-libs/jsonnet-training-course">Source</a>
+    </p>
+</footer>
+</body>
+</html>
+
