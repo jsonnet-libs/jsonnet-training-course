@@ -1,7 +1,7 @@
-The ecosystem for Jsonnet libraries has organically grown and is quite distributed, there
-is no central entity in control. Even though this gives the authors a great deal of
-autonomy, it makes it harder to find libraries. The majority of libraries can be found in
-Git repositories and are wholeheartedly open source.
+The ecosystem for Jsonnet libraries has organically grown, there is no central entity in
+control. Even though this gives the authors a great deal of autonomy, it makes it harder
+to find libraries. The majority of libraries are open source and can be found in Git
+repositories.
 
 - GitHub Topic [`jsonnet-lib`](https://github.com/topics/jsonnet-lib) lists the libraries
     that are tagged with `jsonnet-lib`. Cultivating this tag is encouraged.
