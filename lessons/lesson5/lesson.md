@@ -1,3 +1,5 @@
+### Writing docstrings
+
 We'll continue with the webserver library from the exercise.
 
 %(example1/example1.jsonnet)s
@@ -63,4 +65,50 @@ documented with `d.obj(help)`.
 
 Constants can be documented with `d.val(type, help)`.
 
+### Generating markdown docs
+
+The doc-util library has a built-in rendering:
+
+%(example1/example5.jsonnet)s
+
+The `render(obj)` function returns a format to output [multiple
+files](https://jsonnet.org/learning/getting_started.html#multi).
+
+```
+{
+  'README.md': "...",
+  'path/to/example.md': "...",
+}
+```
+
 ---
+
+Jsonnet can export those files:
+
+`$ jsonnet --string --create-output-dirs --multi docs/ example5.jsonnet`
+
+* `--string` because the Markdown output should be treated as a string instead of JSON.
+* `--create-output-dirs` ensure directories for `path/to/example.md` get created.
+* `--multi docs/` to set the output directory for multiple files to `docs/`.
+
+Or in short:
+
+`$ jsonnet -S -c -m docs/ example5.jsonnet`
+
+Note that this overwrites but does not remove existing files. 
+
+%(example1/Makefile)s
+
+A simple Makefile target can be quite useful to contain these incantations.
+
+---
+
+> This can also be done without the additional Jsonnet file by using `jsonnet --exec`:
+>
+> `$ jsonnet -S -c -m docs/ --exec "(import 'doc-util/main.libsonnet').render(import 'example4.jsonnet')"`
+
+---
+
+The output for the webserver library looks like this:
+
+%(example1/docs/README.md)s

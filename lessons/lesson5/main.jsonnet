@@ -1,7 +1,12 @@
 local c = import 'coursonnet.libsonnet';
 local lesson = c.lesson;
 
-local examples = import './examples.jsonnet';
+local examples =
+  (import './examples.jsonnet')
+  + [
+    c.example.new('example1/Makefile', importstr './example1/Makefile', {}, 'makefile'),
+    c.example.new('example1/docs/README.md', importstr './example1/docs/README.md', {}, 'markdown'),
+  ];
 
 lesson.new(
   'lesson5',

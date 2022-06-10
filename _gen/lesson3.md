@@ -15,7 +15,7 @@ we've learned and rewrite that library.
 
 In [Write an extensible library](lesson1.md), we created this library:
 
-```jsonnet
+~~~jsonnet
 local webserver = {
   new(name, replicas=1): {
     local base = self,
@@ -53,7 +53,7 @@ webserver.new('wonderful-webserver')
 + webserver.withImage('httpd:2.5')
 
 // example1.jsonnet
-```
+~~~
 
 
 This library is quite verbose as the author has to provide the `apiVersion`, `kind` and
@@ -83,11 +83,11 @@ Let's install `k8s-libsonnet` with jsonnet-bundler and import it:
 Note the alternative naming pattern ending on `1.23`, referencing the Kubernetes version
 this was generated for.
 
-```jsonnet
+~~~jsonnet
 (import 'github.com/jsonnet-libs/k8s-libsonnet/1.23/main.libsonnet')
 
 // example2/lib/k.libsonnet
-```
+~~~
 
 
 The most common convention to work with this is to provide `lib/k.libsonnet` as
@@ -95,13 +95,13 @@ a shortcut.
 
 ---
 
-```jsonnet
+~~~jsonnet
 local k = import 'k.libsonnet';
 
 k.core.v1.container.new('container-name', 'container-image')
 
 // example2/example1.jsonnet
-```
+~~~
 
 
 Many libraries have a line `local k = import 'k.libsonnet'` to refer to this
@@ -112,7 +112,7 @@ library.
 Let's rewrite the container following the
 [documentation](https://jsonnet-libs.github.io/k8s-libsonnet/1.23/core/v1/container/):
 
-```jsonnet
+~~~jsonnet
 local k = import 'k.libsonnet';
 
 local webserver = {
@@ -151,7 +151,7 @@ webserver.new('wonderful-webserver')
 + webserver.withImage('httpd:2.5')
 
 // example2/example2.jsonnet
-```
+~~~
 
 
 The library has grouped a number of functions under `k.core.v1.container`, we'll use the
@@ -163,7 +163,7 @@ function uses the function with the same name in the library.
 And now for the
 [deployment](https://jsonnet-libs.github.io/k8s-libsonnet/1.23/apps/v1/deployment/):
 
-```jsonnet
+~~~jsonnet
 local k = import 'k.libsonnet';
 
 local webserver = {
@@ -189,7 +189,7 @@ webserver.new('wonderful-webserver')
 + webserver.withImage('httpd:2.5')
 
 // example2/example3.jsonnet
-```
+~~~
 
 
 The `new(name, replicas, images)` function makes things even more concise. The `new()`
@@ -203,7 +203,7 @@ to `self.container` can now be made inside the same object.
 Having the library and execution together is not so useful, let's move it into a separate
 library and import it again.
 
-```jsonnet
+~~~jsonnet
 local k = import 'k.libsonnet';
 
 {
@@ -226,28 +226,28 @@ local k = import 'k.libsonnet';
 }
 
 // example2/lib/webserver/main.libsonnet
-```
+~~~
 
 
 This removes the `local webserver` and moves the contents to the root of the file.
 
 ---
 
-```jsonnet
+~~~jsonnet
 local webserver = import 'webserver/main.libsonnet';
 
 webserver.new('wonderful-webserver')
 + webserver.withImage('httpd:2.5')
 
 // example2/example4.jsonnet
-```
+~~~
 
 
 If we now `import` the library, we can access its functions just like before.
 
 ---
 
-```jsonnet
+~~~jsonnet
 local webserver = import 'webserver/main.libsonnet';
 
 {
@@ -263,7 +263,7 @@ local webserver = import 'webserver/main.libsonnet';
 }
 
 // example2/example5.jsonnet
-```
+~~~
 
 
 Or, if we want more instances, we can simply do so.

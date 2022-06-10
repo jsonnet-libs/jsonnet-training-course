@@ -13,9 +13,11 @@ as Jsonnet code.
 
 ## Lesson
 
+### Writing docstrings
+
 We'll continue with the webserver library from the exercise.
 
-```jsonnet
+~~~jsonnet
 local k = import 'k.libsonnet';
 
 {
@@ -38,7 +40,7 @@ local k = import 'k.libsonnet';
 }
 
 // example1/example1.jsonnet
-```
+~~~
 
 
 This library provides a number of functions to create a webserver. In docsonnet lingo this
@@ -58,7 +60,7 @@ also rendered by docsonnet.
 
 ---
 
-```jsonnet
+~~~jsonnet
 local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
 local k = import 'k.libsonnet';
 
@@ -89,7 +91,7 @@ local k = import 'k.libsonnet';
 }
 
 // example1/example2.jsonnet
-```
+~~~
 
 
 The docsonnet puts a claim on keys that start with a hash `#`. It assumes that keys
@@ -111,7 +113,7 @@ we do so.
 
 ---
 
-```jsonnet
+~~~jsonnet
 local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
 local k = import 'k.libsonnet';
 
@@ -160,7 +162,7 @@ local k = import 'k.libsonnet';
 }
 
 // example1/example3.jsonnet
-```
+~~~
 
 
 Docstrings for other elements are put in the same key prefixed by a hash `#`, for example
@@ -175,7 +177,7 @@ for these are provided by `d.T.<type>` to increase consistency.
 
 For the sake of this lesson, let's add an object and a few constants:
 
-```jsonnet
+~~~jsonnet
 local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
 local k = import 'k.libsonnet';
 
@@ -243,7 +245,7 @@ local k = import 'k.libsonnet';
 }
 
 // example1/example4.jsonnet
-```
+~~~
 
 
 The `images` key holds an object with additional webserver images.
@@ -253,7 +255,121 @@ documented with `d.obj(help)`.
 
 Constants can be documented with `d.val(type, help)`.
 
+### Generating markdown docs
+
+The doc-util library has a built-in rendering:
+
+~~~jsonnet
+local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
+
+d.render(import 'example4.jsonnet')
+
+// example1/example5.jsonnet
+~~~
+
+
+The `render(obj)` function returns a format to output [multiple
+files](https://jsonnet.org/learning/getting_started.html#multi).
+
+```
+{
+  'README.md': "...",
+  'path/to/example.md': "...",
+}
+```
+
 ---
+
+Jsonnet can export those files:
+
+`$ jsonnet --string --create-output-dirs --multi docs/ example5.jsonnet`
+
+* `--string` because the Markdown output should be treated as a string instead of JSON.
+* `--create-output-dirs` ensure directories for `path/to/example.md` get created.
+* `--multi docs/` to set the output directory for multiple files to `docs/`.
+
+Or in short:
+
+`$ jsonnet -S -c -m docs/ example5.jsonnet`
+
+Note that this overwrites but does not remove existing files. 
+
+~~~makefile
+.PHONY: docs
+docs:
+	rm -rf docs/ && \
+	jsonnet -S -c -m docs/ example5.jsonnet
+
+// example1/Makefile
+~~~
+
+
+A simple Makefile target can be quite useful to contain these incantations.
+
+---
+
+> This can also be done without the additional Jsonnet file by using `jsonnet --exec`:
+>
+> `$ jsonnet -S -c -m docs/ --exec "(import 'doc-util/main.libsonnet').render(import 'example4.jsonnet')"`
+
+---
+
+The output for the webserver library looks like this:
+
+~~~markdown
+# package webserver
+
+```jsonnet
+local webserver = import 'github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/';
+```
+
+`webserver` provides a basic webserver on Kubernetes
+## Index
+
+* [`fn new(name, replicas=1)`](#fn-new)
+* [`fn withImage(image)`](#fn-withimage)
+* [`obj images`](#obj-images)
+
+## Fields
+
+### fn new
+
+```ts
+new(name, replicas=1)
+```
+
+`new` creates a Deployment object for Kubernetes
+
+* `name` sets the name for the Deployment object
+* `replicas` number of desired pods, defaults to 1
+
+
+### fn withImage
+
+```ts
+withImage(image)
+```
+
+`withImage` modifies the image used for the httpd container
+
+### obj images
+
+`images` provides images for common webservers
+
+Usage:
+
+```
+webserver.new('my-nginx')
++ webserver.withImage(webserver.images.nginx)
+```
+
+
+* `images.apache` (`string`): `"httpd:2.4"` - Apache HTTP webserver
+* `images.nginx` (`string`): `"nginx:1.22"` - Nginx HTTP webserver
+
+// example1/docs/README.md
+~~~
+
 
 
 ## Conclusion
