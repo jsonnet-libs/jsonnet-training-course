@@ -136,12 +136,26 @@ footer, footer a{
     }
 }
 
-li.L0, li.L1, li.L2, li.L3,
-li.L5, li.L6, li.L7, li.L8 {
-    list-style-type: decimal !important;
-    line-height: normal;
-}
-
 li.L1, li.L3, li.L5, li.L7, li.L9 {
     background: ghostwhite !important;
+}
+
+ol.linenums {
+    list-style: none;
+    counter-reset: li;
+}
+
+ol.linenums li::before {
+    content: counter(li);
+    color: slategrey;
+    display: inline-block;
+    width: 1em;
+    margin-left: -2em;
+    padding-right: 0.5em;
+    text-align: right;
+}
+
+ol.linenums li {
+    counter-increment: li;
+    line-height: normal;
 }
