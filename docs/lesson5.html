@@ -277,11 +277,20 @@ docs:
 <p>The output for the webserver library looks like this:</p>
 <pre><code class="language-markdown"># package webserver
 
-```jsonnet
-local webserver = import 'github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/';
+`webserver` provides a basic webserver on Kubernetes
+
+## Install
+
+```
+jb install github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1@master
 ```
 
-`webserver` provides a basic webserver on Kubernetes
+## Usage
+
+```jsonnet
+local webserver = import &quot;github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/example4.jsonnet&quot;
+```
+
 ## Index
 
 * [`fn new(name, replicas=1)`](#fn-new)

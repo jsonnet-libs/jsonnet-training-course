@@ -319,11 +319,20 @@ The output for the webserver library looks like this:
 ~~~markdown
 # package webserver
 
-```jsonnet
-local webserver = import 'github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/';
+`webserver` provides a basic webserver on Kubernetes
+
+## Install
+
+```
+jb install github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1@master
 ```
 
-`webserver` provides a basic webserver on Kubernetes
+## Usage
+
+```jsonnet
+local webserver = import "github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/example4.jsonnet"
+```
+
 ## Index
 
 * [`fn new(name, replicas=1)`](#fn-new)
