@@ -1,4 +1,4 @@
 .PHONY: docs
 docs:
 	rm -rf docs/ && \
-	jsonnet -S -c -m docs/ example5.jsonnet
+	jsonnet -J ./vendor -S -c -m docs/ example5.jsonnet

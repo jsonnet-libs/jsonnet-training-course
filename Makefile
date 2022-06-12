@@ -35,6 +35,11 @@ lessons/lesson5/examples.jsonnet:
 		examples.jsonnet && \
 	echo "]" >> examples.jsonnet
 
+generate: lessons/lesson5/example1/docs/README.md
+lessons/lesson5/example1/docs/README.md:
+	@cd lessons/lesson5/example1 && \
+	make docs
+
 test: lessons/lesson1/examples.jsonnet
 	@jsonnet -J . lessons/lesson1/examples.jsonnet > /dev/null && \
 		echo "Success!"

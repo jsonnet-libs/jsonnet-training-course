@@ -263,7 +263,7 @@ files</a>.</p>
 <pre><code class="language-makefile">.PHONY: docs
 docs:
     rm -rf docs/ &amp;&amp; \
-    jsonnet -S -c -m docs/ example5.jsonnet
+    jsonnet -J ./vendor -S -c -m docs/ example5.jsonnet
 
 // example1/Makefile
 </code></pre>
