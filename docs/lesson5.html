@@ -51,9 +51,9 @@ as Jsonnet code.</p>
 
 // example1/example1.jsonnet
 </code></pre>
-<p>This library provides a number of functions to create a webserver. In docsonnet lingo this
-is called a 'package'. Each function has a few arguments which usually have a fixed type,
-as Jsonnet itself is not a typed language we'll simply try to document the type.</p>
+<p>This library provides a number of functions to create a webserver. In docsonnet lingo,
+this is called a 'package'. Each function has a few arguments which usually have a fixed
+type. As Jsonnet itself is not a typed language, we'll simply try to document the type.</p>
 <hr>
 <p>To get started, let's grab docsonnet's doc-util library. It provides a few functions to
 write consistent docstrings for the different objects in Jsonnet.</p>
@@ -94,7 +94,7 @@ local k = import 'k.libsonnet';
 // example1/example2.jsonnet
 </code></pre>
 <p>The docsonnet puts a claim on keys that start with a hash <code>#</code>. It assumes that keys
-starting with a hash symbol is very uncommon, additionally it closely relates to how
+starting with a hash symbol is very uncommon. Additionally, it closely relates to how
 comments are written.</p>
 <p>The package definition is put in the <code>#</code> key without a value.</p>
 <p>The <code>url</code> argument is the part that can be used to install this library with
@@ -102,7 +102,7 @@ jsonnet-bundler:</p>
 <p><code>$ jb install &lt;url&gt;</code></p>
 <p>In combination with the <code>url</code>, the <code>filename</code> refers to what should be imported, note the
 neat <code>std.thisFile</code> shortcut so we don't have to remember to change the filename here if
-we do so.</p>
+we ever rename the file.</p>
 <p><code>import '&lt;url&gt;/&lt;filename&gt;'</code></p>
 <hr>
 <pre><code class="language-jsonnet">local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
@@ -158,10 +158,10 @@ local k = import 'k.libsonnet';
 the docstring for <code>new()</code> will be in the <code>#new</code> key. Functions can be documented with
 <code>d.fn(help, args)</code>.</p>
 <p>As the <code>help</code> text is quite long for this example, we're using multi line strings with
-<code>|||</code>. This also improves the readability in the code. The <code>args</code> can be typed, constants
+<code>|||</code>. This also improves the readability in the code. The <code>args</code> can be typed, values
 for these are provided by <code>d.T.&lt;type&gt;</code> to increase consistency.</p>
 <hr>
-<p>For the sake of this lesson, let's add a new <code>images</code> object with a few constants:</p>
+<p>For the sake of this lesson, let's add a new <code>images</code> object with a few attributes:</p>
 <pre><code class="language-jsonnet">local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
 local k = import 'k.libsonnet';
 
@@ -290,7 +290,7 @@ local k = import 'k.libsonnet';
 </code></pre>
 <p>Just like with functions, the key for the docstring gets prefixed by <code>#</code>. Objects can be
 documented with <code>d.obj(help)</code>.</p>
-<p>The constants in this object can be documented with <code>d.val(type, help)</code>.</p>
+<p>The attributes in this object can be documented with <code>d.val(type, help)</code>.</p>
 <h3>Generating markdown docs</h3>
 <p>The doc-util library has a built-in rendering:</p>
 <pre><code class="language-jsonnet">local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';

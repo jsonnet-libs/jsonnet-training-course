@@ -43,9 +43,9 @@ local k = import 'k.libsonnet';
 ~~~
 
 
-This library provides a number of functions to create a webserver. In docsonnet lingo this
-is called a 'package'. Each function has a few arguments which usually have a fixed type,
-as Jsonnet itself is not a typed language we'll simply try to document the type.
+This library provides a number of functions to create a webserver. In docsonnet lingo,
+this is called a 'package'. Each function has a few arguments which usually have a fixed
+type. As Jsonnet itself is not a typed language, we'll simply try to document the type.
 
 ---
 
@@ -95,7 +95,7 @@ local k = import 'k.libsonnet';
 
 
 The docsonnet puts a claim on keys that start with a hash `#`. It assumes that keys
-starting with a hash symbol is very uncommon, additionally it closely relates to how
+starting with a hash symbol is very uncommon. Additionally, it closely relates to how
 comments are written.
 
 The package definition is put in the `#` key without a value.
@@ -107,7 +107,7 @@ jsonnet-bundler:
 
 In combination with the `url`, the `filename` refers to what should be imported, note the
 neat `std.thisFile` shortcut so we don't have to remember to change the filename here if
-we do so.
+we ever rename the file.
 
 `import '<url>/<filename>'`
 
@@ -170,12 +170,12 @@ the docstring for `new()` will be in the `#new` key. Functions can be documented
 `d.fn(help, args)`.
 
 As the `help` text is quite long for this example, we're using multi line strings with
-`|||`. This also improves the readability in the code. The `args` can be typed, constants
+`|||`. This also improves the readability in the code. The `args` can be typed, values
 for these are provided by `d.T.<type>` to increase consistency.
 
 ---
 
-For the sake of this lesson, let's add a new `images` object with a few constants:
+For the sake of this lesson, let's add a new `images` object with a few attributes:
 
 ~~~jsonnet
 local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
@@ -316,7 +316,7 @@ local k = import 'k.libsonnet';
 Just like with functions, the key for the docstring gets prefixed by `#`. Objects can be
 documented with `d.obj(help)`.
 
-The constants in this object can be documented with `d.val(type, help)`.
+The attributes in this object can be documented with `d.val(type, help)`.
 
 ### Generating markdown docs
 
