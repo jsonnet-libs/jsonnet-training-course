@@ -1,4 +1,4 @@
-# Documentation
+# Providing documentation with Docsonnet
 
 In most programming languages documentation is done with the use of docstrings in
 comments. However that is not possible with Jsonnet right now. To work around this, we
