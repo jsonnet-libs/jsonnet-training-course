@@ -4,9 +4,9 @@ We'll continue with the webserver library from the exercise.
 
 %(example1/example1.jsonnet)s
 
-This library provides a number of functions to create a webserver. In docsonnet lingo this
-is called a 'package'. Each function has a few arguments which usually have a fixed type,
-as Jsonnet itself is not a typed language we'll simply try to document the type.
+This library provides a number of functions to create a webserver. In docsonnet lingo, this
+is called a 'package'. Each function has a few arguments which usually have a fixed type.
+As Jsonnet itself is not a typed language, we'll simply try to document the type.
 
 ---
 
@@ -24,7 +24,7 @@ also rendered by docsonnet.
 %(example1/example2.jsonnet)s
 
 The docsonnet puts a claim on keys that start with a hash `#`. It assumes that keys
-starting with a hash symbol is very uncommon, additionally it closely relates to how
+starting with a hash symbol is very uncommon. Additionally, it closely relates to how
 comments are written.
 
 The package definition is put in the `#` key without a value.
@@ -36,7 +36,7 @@ jsonnet-bundler:
 
 In combination with the `url`, the `filename` refers to what should be imported, note the
 neat `std.thisFile` shortcut so we don't have to remember to change the filename here if
-we do so.
+we ever rename the file.
 
 `import '<url>/<filename>'`
 
@@ -54,7 +54,7 @@ for these are provided by `d.T.<type>` to increase consistency.
 
 ---
 
-For the sake of this lesson, let's add a new `images` object with a few constants:
+For the sake of this lesson, let's add a new `images` object with a few attributes:
 
 %(example1/example4.jsonnet)s
 
@@ -71,7 +71,7 @@ It can be used in combination with `withImage`:
 Just like with functions, the key for the docstring gets prefixed by `#`. Objects can be
 documented with `d.obj(help)`.
 
-The constants in this object can be documented with `d.val(type, help)`.
+The attributes in this object can be documented with `d.val(type, help)`.
 
 ### Generating markdown docs
 
