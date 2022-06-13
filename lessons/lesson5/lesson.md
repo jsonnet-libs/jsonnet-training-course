@@ -4,9 +4,9 @@ We'll continue with the webserver library from the exercise.
 
 %(example1/example1.jsonnet)s
 
-This library provides a number of functions to create a webserver. In docsonnet lingo, this
-is called a 'package'. Each function has a few arguments which usually have a fixed type.
-As Jsonnet itself is not a typed language, we'll simply try to document the type.
+This library provides a number of functions to create a webserver. In docsonnet lingo,
+this is called a 'package'. Each function has a few arguments which usually have a fixed
+type. As Jsonnet itself is not a typed language, we'll simply try to document the type.
 
 ---
 
@@ -49,7 +49,7 @@ the docstring for `new()` will be in the `#new` key. Functions can be documented
 `d.fn(help, args)`.
 
 As the `help` text is quite long for this example, we're using multi line strings with
-`|||`. This also improves the readability in the code. The `args` can be typed, constants
+`|||`. This also improves the readability in the code. The `args` can be typed, values
 for these are provided by `d.T.<type>` to increase consistency.
 
 ---
