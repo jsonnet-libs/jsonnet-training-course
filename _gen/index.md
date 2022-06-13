@@ -34,5 +34,6 @@ For package management we'll use jsonnet-bundler, please
 1. [Understanding Package management](lesson2.md)
 1. [Exercise: rewrite a library with `k8s-libsonnet`](lesson3.md)
 1. [Further developing libraries](lesson4.md)
+1. [Providing documentation with Docsonnet](lesson5.md)
 
 

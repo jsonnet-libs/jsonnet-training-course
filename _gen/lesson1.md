@@ -19,7 +19,7 @@ deploy a webserver on Kubernetes.
 
 Let's start with a simple `Deployment` of a webserver:
 
-```jsonnet
+~~~jsonnet
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -42,7 +42,7 @@ Let's start with a simple `Deployment` of a webserver:
 }
 
 // example1.jsonnet
-```
+~~~
 <small>[Try `example1.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=ewogIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICBraW5kOiAnRGVwbG95bWVudCcsCiAgbWV0YWRhdGE6IHsKICAgIG5hbWU6ICd3ZWJzZXJ2ZXInLAogIH0sCiAgc3BlYzogewogICAgcmVwbGljYXM6IDEsCiAgICB0ZW1wbGF0ZTogewogICAgICBzcGVjOiB7CiAgICAgICAgY29udGFpbmVyczogWwogICAgICAgICAgewogICAgICAgICAgICBuYW1lOiAnaHR0cGQnLAogICAgICAgICAgICBpbWFnZTogJ2h0dHBkOjIuNCcsCiAgICAgICAgICB9LAogICAgICAgIF0sCiAgICAgIH0sCiAgICB9LAogIH0sCn0K)</small>
 
 A `Deployment` needs a number of configuration options, most importantly a unique `name`
@@ -57,7 +57,7 @@ with `metadata.name` and `spec.template.spec.containers[0].name`.
 Let's wrap this into a small `webserver` library and parameterize the name because
 'webserver' may be a bit too generic:
 
-```jsonnet
+~~~jsonnet
 local webserver = {
   new(name, replicas=1): {
     apiVersion: 'apps/v1',
@@ -84,7 +84,7 @@ local webserver = {
 webserver.new('wonderful-webserver')
 
 // example2.jsonnet
-```
+~~~
 <small>[Try `example2.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIG5ldyhuYW1lLCByZXBsaWNhcz0xKTogewogICAgYXBpVmVyc2lvbjogJ2FwcHMvdjEnLAogICAga2luZDogJ0RlcGxveW1lbnQnLAogICAgbWV0YWRhdGE6IHsKICAgICAgbmFtZTogbmFtZSwKICAgIH0sCiAgICBzcGVjOiB7CiAgICAgIHJlcGxpY2FzOiByZXBsaWNhcywKICAgICAgdGVtcGxhdGU6IHsKICAgICAgICBzcGVjOiB7CiAgICAgICAgICBjb250YWluZXJzOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICBuYW1lOiAnaHR0cGQnLAogICAgICAgICAgICAgIGltYWdlOiAnaHR0cGQ6Mi40JywKICAgICAgICAgICAgfSwKICAgICAgICAgIF0sCiAgICAgICAgfSwKICAgICAgfSwKICAgIH0sCiAgfSwKfTsKCndlYnNlcnZlci5uZXcoJ3dvbmRlcmZ1bC13ZWJzZXJ2ZXInKQo=)</small>
 
 The `local` keyword makes this part of the code only available within this file, it is
@@ -99,7 +99,7 @@ respectively.
 
 Let's add another function to modify the image of the httpd container:
 
-```jsonnet
+~~~jsonnet
 local webserver = {
   new(name, replicas=1): {
     apiVersion: 'apps/v1',
@@ -143,7 +143,7 @@ webserver.new('wonderful-webserver')
 + webserver.withImage('httpd:2.5')
 
 // example3.jsonnet
-```
+~~~
 <small>[Try `example3.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIG5ldyhuYW1lLCByZXBsaWNhcz0xKTogewogICAgYXBpVmVyc2lvbjogJ2FwcHMvdjEnLAogICAga2luZDogJ0RlcGxveW1lbnQnLAogICAgbWV0YWRhdGE6IHsKICAgICAgbmFtZTogbmFtZSwKICAgIH0sCiAgICBzcGVjOiB7CiAgICAgIHJlcGxpY2FzOiByZXBsaWNhcywKICAgICAgdGVtcGxhdGU6IHsKICAgICAgICBzcGVjOiB7CiAgICAgICAgICBjb250YWluZXJzOiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICBuYW1lOiAnaHR0cGQnLAogICAgICAgICAgICAgIGltYWdlOiAnaHR0cGQ6Mi40JywKICAgICAgICAgICAgfSwKICAgICAgICAgIF0sCiAgICAgICAgfSwKICAgICAgfSwKICAgIH0sCiAgfSwKCiAgd2l0aEltYWdlKGltYWdlKTogewogICAgbG9jYWwgY29udGFpbmVycyA9IHN1cGVyLnNwZWMudGVtcGxhdGUuc3BlYy5jb250YWluZXJzLAogICAgc3BlYys6IHsKICAgICAgdGVtcGxhdGUrOiB7CiAgICAgICAgc3BlYys6IHsKICAgICAgICAgIGNvbnRhaW5lcnM6IFsKICAgICAgICAgICAgaWYgY29udGFpbmVyLm5hbWUgPT0gJ2h0dHBkJwogICAgICAgICAgICB0aGVuIGNvbnRhaW5lciB7IGltYWdlOiBpbWFnZSB9CiAgICAgICAgICAgIGVsc2UgY29udGFpbmVyCiAgICAgICAgICAgIGZvciBjb250YWluZXIgaW4gY29udGFpbmVycwogICAgICAgICAgXSwKICAgICAgICB9LAogICAgICB9LAogICAgfSwKICB9LAp9OwoKd2Vic2VydmVyLm5ldygnd29uZGVyZnVsLXdlYnNlcnZlcicpCisgd2Vic2VydmVyLndpdGhJbWFnZSgnaHR0cGQ6Mi41JykK)</small>
 
 `withImage` is an optional 'mixin' function to modify the `Deployment`, notice how the
@@ -160,7 +160,7 @@ quite verbose and hard to read.
 
 Let's make the container a bit more accessible by moving it out of the `Deployment`:
 
-```jsonnet
+~~~jsonnet
 local webserver = {
   new(name, replicas=1): {
     local base = self,
@@ -198,7 +198,7 @@ webserver.new('wonderful-webserver')
 + webserver.withImage('httpd:2.5')
 
 // example4.jsonnet
-```
+~~~
 <small>[Try `example4.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIG5ldyhuYW1lLCByZXBsaWNhcz0xKTogewogICAgbG9jYWwgYmFzZSA9IHNlbGYsCgogICAgY29udGFpbmVyOjogewogICAgICBuYW1lOiAnaHR0cGQnLAogICAgICBpbWFnZTogJ2h0dHBkOjIuNCcsCiAgICB9LAoKICAgIGRlcGxveW1lbnQ6IHsKICAgICAgYXBpVmVyc2lvbjogJ2FwcHMvdjEnLAogICAgICBraW5kOiAnRGVwbG95bWVudCcsCiAgICAgIG1ldGFkYXRhOiB7CiAgICAgICAgbmFtZTogbmFtZSwKICAgICAgfSwKICAgICAgc3BlYzogewogICAgICAgIHJlcGxpY2FzOiByZXBsaWNhcywKICAgICAgICB0ZW1wbGF0ZTogewogICAgICAgICAgc3BlYzogewogICAgICAgICAgICBjb250YWluZXJzOiBbCiAgICAgICAgICAgICAgYmFzZS5jb250YWluZXIsCiAgICAgICAgICAgIF0sCiAgICAgICAgICB9LAogICAgICAgIH0sCiAgICAgIH0sCiAgICB9LAogIH0sCgogIHdpdGhJbWFnZShpbWFnZSk6IHsKICAgIGNvbnRhaW5lcis6IHsgaW1hZ2U6IGltYWdlIH0sCiAgfSwKfTsKCndlYnNlcnZlci5uZXcoJ3dvbmRlcmZ1bC13ZWJzZXJ2ZXInKQorIHdlYnNlcnZlci53aXRoSW1hZ2UoJ2h0dHBkOjIuNScpCg==)</small>
 
 This makes the code a lot more succinct, no more loops and conditionals needed. The code
@@ -218,7 +218,7 @@ as `self` is late-bound any changes to `container` will be reflected in `deploym
 To expose the webserver, a port is configured below. Now imagine that you are not the
 author of this library and want to change the `ports` attribute.
 
-```jsonnet
+~~~jsonnet
 local webserver = {
   new(name, replicas=1): {
     local base = self,
@@ -266,7 +266,7 @@ webserver.new('wonderful-webserver')
 }
 
 // example6.jsonnet
-```
+~~~
 <small>[Try `example6.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIG5ldyhuYW1lLCByZXBsaWNhcz0xKTogewogICAgbG9jYWwgYmFzZSA9IHNlbGYsCgogICAgY29udGFpbmVyOjogewogICAgICBuYW1lOiAnaHR0cGQnLAogICAgICBpbWFnZTogJ2h0dHBkOjIuNCcsCiAgICAgIHBvcnRzOiBbewogICAgICAgIGNvbnRhaW5lclBvcnQ6IDgwLAogICAgICB9XSwKICAgIH0sCgogICAgZGVwbG95bWVudDogewogICAgICBhcGlWZXJzaW9uOiAnYXBwcy92MScsCiAgICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgICAgbWV0YWRhdGE6IHsKICAgICAgICBuYW1lOiBuYW1lLAogICAgICB9LAogICAgICBzcGVjOiB7CiAgICAgICAgcmVwbGljYXM6IHJlcGxpY2FzLAogICAgICAgIHRlbXBsYXRlOiB7CiAgICAgICAgICBzcGVjOiB7CiAgICAgICAgICAgIGNvbnRhaW5lcnM6IFsKICAgICAgICAgICAgICBiYXNlLmNvbnRhaW5lciwKICAgICAgICAgICAgXSwKICAgICAgICAgIH0sCiAgICAgICAgfSwKICAgICAgfSwKICAgIH0sCiAgfSwKCiAgd2l0aEltYWdlKGltYWdlKTogewogICAgY29udGFpbmVyKzogeyBpbWFnZTogaW1hZ2UgfSwKICB9LAp9OwoKd2Vic2VydmVyLm5ldygnd29uZGVyZnVsLXdlYnNlcnZlcicpCisgd2Vic2VydmVyLndpdGhJbWFnZSgnaHR0cGQ6Mi41JykKKyB7CiAgY29udGFpbmVyKzogewogICAgcG9ydHM6IFt7CiAgICAgIGNvbnRhaW5lclBvcnQ6IDgwODAsCiAgICB9XSwKICB9LAp9Cg==)</small>
 
 The author has not provided a function for that however, unlike Helm charts, it is not
@@ -288,7 +288,7 @@ library code terse and maintainable without sacrificing extensibility.
 
 Avoid the 'builder' pattern:
 
-```jsonnet
+~~~jsonnet
 local webserver = {
   new(name, replicas=1): {
     local base = self,
@@ -325,7 +325,7 @@ local webserver = {
 webserver.new('wonderful-webserver').withImage('httpd:2.5')
 
 // pitfall1.jsonnet
-```
+~~~
 <small>[Try `pitfall1.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIG5ldyhuYW1lLCByZXBsaWNhcz0xKTogewogICAgbG9jYWwgYmFzZSA9IHNlbGYsCgogICAgY29udGFpbmVyOjogewogICAgICBuYW1lOiAnaHR0cGQnLAogICAgICBpbWFnZTogJ2h0dHBkOjIuNCcsCiAgICB9LAoKICAgIGRlcGxveW1lbnQ6IHsKICAgICAgYXBpVmVyc2lvbjogJ2FwcHMvdjEnLAogICAgICBraW5kOiAnRGVwbG95bWVudCcsCiAgICAgIG1ldGFkYXRhOiB7CiAgICAgICAgbmFtZTogbmFtZSwKICAgICAgfSwKICAgICAgc3BlYzogewogICAgICAgIHJlcGxpY2FzOiByZXBsaWNhcywKICAgICAgICB0ZW1wbGF0ZTogewogICAgICAgICAgc3BlYzogewogICAgICAgICAgICBjb250YWluZXJzOiBbCiAgICAgICAgICAgICAgYmFzZS5jb250YWluZXIsCiAgICAgICAgICAgIF0sCiAgICAgICAgICB9LAogICAgICAgIH0sCiAgICAgIH0sCiAgICB9LAoKICAgIHdpdGhJbWFnZShpbWFnZSk6OiBzZWxmICsgewogICAgICBjb250YWluZXIrOiB7IGltYWdlOiBpbWFnZSB9LAogICAgfSwKICB9LAp9OwoKd2Vic2VydmVyLm5ldygnd29uZGVyZnVsLXdlYnNlcnZlcicpLndpdGhJbWFnZSgnaHR0cGQ6Mi41JykK)</small>
 
 Notice the odd `withImage():: self + {}` structure within `new()`.
@@ -343,7 +343,7 @@ with implied meaning.
 
 Applying the convention to above library would make it look like this:
 
-```jsonnet
+~~~jsonnet
 local webserver = {
   local base = self,
 
@@ -390,7 +390,7 @@ webserver {
 }
 
 // pitfall2.jsonnet
-```
+~~~
 <small>[Try `pitfall2.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIGxvY2FsIGJhc2UgPSBzZWxmLAoKICBfY29uZmlnOjogewogICAgbmFtZTogZXJyb3IgJ3Byb3ZpZGUgbmFtZScsCiAgICByZXBsaWNhczogMSwKICB9LAoKICBfaW1hZ2VzOjogewogICAgaHR0cGQ6ICdodHRwZDoyLjQnLAogIH0sCgogIGNvbnRhaW5lcjo6IHsKICAgIG5hbWU6ICdodHRwZCcsCiAgICBpbWFnZTogYmFzZS5faW1hZ2VzLmh0dHBkLAogIH0sCgogIGRlcGxveW1lbnQ6IHsKICAgIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgIG1ldGFkYXRhOiB7CiAgICAgIG5hbWU6IGJhc2UuX2NvbmZpZy5uYW1lLAogICAgfSwKICAgIHNwZWM6IHsKICAgICAgcmVwbGljYXM6IGJhc2UuX2NvbmZpZy5yZXBsaWNhcywKICAgICAgdGVtcGxhdGU6IHsKICAgICAgICBzcGVjOiB7CiAgICAgICAgICBjb250YWluZXJzOiBbCiAgICAgICAgICAgIGJhc2UuY29udGFpbmVyLAogICAgICAgICAgXSwKICAgICAgICB9LAogICAgICB9LAogICAgfSwKICB9LAp9OwoKd2Vic2VydmVyIHsKICBfY29uZmlnKzogewogICAgbmFtZTogJ3dvbmRlcmZ1bC13ZWJzZXJ2ZXInLAogIH0sCiAgX2ltYWdlcys6IHsKICAgIGh0dHBkOiAnaHR0cGQ6Mi41JywKICB9LAp9Cg==)</small>
 
 This convention attempts to provide a 'stable' API through the `_config` and `_images`
@@ -408,7 +408,7 @@ either way.
 This pattern also has an impact on extensibility. When introducing a new attribute, the
 author needs to take into account that users might not want the same default.
 
-```jsonnet
+~~~jsonnet
 local webserver = {
   local base = self,
 
@@ -461,7 +461,7 @@ webserver {
 }
 
 // pitfall3.jsonnet
-```
+~~~
 <small>[Try `pitfall3.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIGxvY2FsIGJhc2UgPSBzZWxmLAoKICBfY29uZmlnOjogewogICAgbmFtZTogZXJyb3IgJ3Byb3ZpZGUgbmFtZScsCiAgICByZXBsaWNhczogMSwKICAgIGltYWdlUHVsbFBvbGljeTogbnVsbCwKICB9LAoKICBfaW1hZ2VzOjogewogICAgaHR0cGQ6ICdodHRwZDoyLjQnLAogIH0sCgogIGNvbnRhaW5lcjo6IHsKICAgIG5hbWU6ICdodHRwZCcsCiAgICBpbWFnZTogYmFzZS5faW1hZ2VzLmh0dHBkLAogIH0gKyAoCiAgICBpZiBiYXNlLl9jb25maWcuaW1hZ2VQdWxsUG9saWN5ICE9IG51bGwKICAgIHRoZW4geyBpbWFnZVB1bGxQb2xpY3k6IGJhc2UuX2NvbmZpZy5pbWFnZVB1bGxQb2xpY3kgfQogICAgZWxzZSB7fQogICksCgogIGRlcGxveW1lbnQ6IHsKICAgIGFwaVZlcnNpb246ICdhcHBzL3YxJywKICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgIG1ldGFkYXRhOiB7CiAgICAgIG5hbWU6IGJhc2UuX2NvbmZpZy5uYW1lLAogICAgfSwKICAgIHNwZWM6IHsKICAgICAgcmVwbGljYXM6IGJhc2UuX2NvbmZpZy5yZXBsaWNhcywKICAgICAgdGVtcGxhdGU6IHsKICAgICAgICBzcGVjOiB7CiAgICAgICAgICBjb250YWluZXJzOiBbCiAgICAgICAgICAgIGJhc2UuY29udGFpbmVyLAogICAgICAgICAgXSwKICAgICAgICB9LAogICAgICB9LAogICAgfSwKICB9LAp9OwoKd2Vic2VydmVyIHsKICBfY29uZmlnKzogewogICAgbmFtZTogJ3dvbmRlcmZ1bC13ZWJzZXJ2ZXInLAogICAgaW1hZ2VQdWxsUG9saWN5OiAnQWx3YXlzJywKICB9LAogIF9pbWFnZXMrOiB7CiAgICBodHRwZDogJ2h0dHBkOjIuNScsCiAgfSwKfQo=)</small>
 
 This can be accomplished with imperative statements, however these pile up over time and
@@ -474,7 +474,7 @@ be provided.
 
 In the object-oriented library this can be done with a new function:
 
-```jsonnet
+~~~jsonnet
 local webserver = {
   new(name, replicas=1): {
     local base = self,
@@ -520,7 +520,7 @@ webserver.new('wonderful-webserver')
 + webserver.withImagePullPolicy()
 
 // example7.jsonnet
-```
+~~~
 <small>[Try `example7.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyID0gewogIG5ldyhuYW1lLCByZXBsaWNhcz0xKTogewogICAgbG9jYWwgYmFzZSA9IHNlbGYsCgogICAgY29udGFpbmVyOjogewogICAgICBuYW1lOiAnaHR0cGQnLAogICAgICBpbWFnZTogJ2h0dHBkOjIuNCcsCiAgICAgIHBvcnRzOiBbewogICAgICAgIGNvbnRhaW5lclBvcnQ6IDgwLAogICAgICB9XSwKICAgIH0sCgogICAgZGVwbG95bWVudDogewogICAgICBhcGlWZXJzaW9uOiAnYXBwcy92MScsCiAgICAgIGtpbmQ6ICdEZXBsb3ltZW50JywKICAgICAgbWV0YWRhdGE6IHsKICAgICAgICBuYW1lOiBuYW1lLAogICAgICB9LAogICAgICBzcGVjOiB7CiAgICAgICAgcmVwbGljYXM6IHJlcGxpY2FzLAogICAgICAgIHRlbXBsYXRlOiB7CiAgICAgICAgICBzcGVjOiB7CiAgICAgICAgICAgIGNvbnRhaW5lcnM6IFsKICAgICAgICAgICAgICBiYXNlLmNvbnRhaW5lciwKICAgICAgICAgICAgXSwKICAgICAgICAgIH0sCiAgICAgICAgfSwKICAgICAgfSwKICAgIH0sCiAgfSwKCiAgd2l0aEltYWdlKGltYWdlKTogewogICAgY29udGFpbmVyKzogeyBpbWFnZTogaW1hZ2UgfSwKICB9LAoKICB3aXRoSW1hZ2VQdWxsUG9saWN5KHBvbGljeT0nQWx3YXlzJyk6IHsKICAgIGNvbnRhaW5lcis6IHsgaW1hZ2VQdWxsUG9saWN5OiBwb2xpY3kgfSwKICB9LAp9OwoKd2Vic2VydmVyLm5ldygnd29uZGVyZnVsLXdlYnNlcnZlcicpCisgd2Vic2VydmVyLndpdGhJbWFnZSgnaHR0cGQ6Mi41JykKKyB3ZWJzZXJ2ZXIud2l0aEltYWdlUHVsbFBvbGljeSgpCg==)</small>
 
 The `withImagePullPolicy()` function provides a more declarative approach to configure
@@ -538,7 +538,7 @@ arguments provides a default value `Always` to get the user going.
 As you might have noticed, the `$` keyword is not used in any of these examples. In many
 libraries it is used to refer to variables that still need to be set.
 
-```jsonnet
+~~~jsonnet
 local webserver1 = {
   _images:: {
     httpd: 'httpd:2.4',
@@ -594,7 +594,7 @@ webserver1 + webserver2 + {
 }
 
 // pitfall4.jsonnet
-```
+~~~
 <small>[Try `pitfall4.jsonnet` in Jsonnet Playground](https://jsonnet-libs.github.io/playground/?code=bG9jYWwgd2Vic2VydmVyMSA9IHsKICBfaW1hZ2VzOjogewogICAgaHR0cGQ6ICdodHRwZDoyLjQnLAogIH0sCiAgd2Vic2VydmVyMTogewogICAgYXBpVmVyc2lvbjogJ2FwcHMvdjEnLAogICAga2luZDogJ0RlcGxveW1lbnQnLAogICAgbWV0YWRhdGE6IHsKICAgICAgbmFtZTogJ3dlYnNlcnZlcjEnLAogICAgfSwKICAgIHNwZWM6IHsKICAgICAgcmVwbGljYXM6IDEsCiAgICAgIHRlbXBsYXRlOiB7CiAgICAgICAgc3BlYzogewogICAgICAgICAgY29udGFpbmVyczogW3sKICAgICAgICAgICAgbmFtZTogJ2h0dHBkJywKICAgICAgICAgICAgaW1hZ2U6ICQuX2ltYWdlcy5odHRwZCwKICAgICAgICAgIH1dLAogICAgICAgIH0sCiAgICAgIH0sCiAgICB9LAogIH0sCn07Cgpsb2NhbCB3ZWJzZXJ2ZXIyID0gewogIF9pbWFnZXM6OiB7CiAgICBodHRwZDogJ2h0dHBkOjIuNScsCiAgfSwKICB3ZWJzZXJ2ZXIyOiB7CiAgICBhcGlWZXJzaW9uOiAnYXBwcy92MScsCiAgICBraW5kOiAnRGVwbG95bWVudCcsCiAgICBtZXRhZGF0YTogewogICAgICBuYW1lOiAnd2Vic2VydmVyMicsCiAgICB9LAogICAgc3BlYzogewogICAgICByZXBsaWNhczogJC5fY29uZmlnLmh0dHBkX3JlcGxpY2FzLAogICAgICB0ZW1wbGF0ZTogewogICAgICAgIHNwZWM6IHsKICAgICAgICAgIGNvbnRhaW5lcnM6IFt7CiAgICAgICAgICAgIG5hbWU6ICdodHRwZCcsCiAgICAgICAgICAgIGltYWdlOiAkLl9pbWFnZXMuaHR0cGQsCiAgICAgICAgICB9XSwKICAgICAgICB9LAogICAgICB9LAogICAgfSwKICB9LAp9OwoKd2Vic2VydmVyMSArIHdlYnNlcnZlcjIgKyB7CiAgX2NvbmZpZzo6IHsKICAgIGh0dHBkX3JlcGxpY2FzOiAxLAogIH0sCn0K)</small>
 
 This pattern makes it hard to determine which library is consuming which attribute. On top

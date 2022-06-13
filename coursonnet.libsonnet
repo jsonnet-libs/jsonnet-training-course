@@ -80,10 +80,10 @@
 
       code:
         |||
-          ```%(type)s
+          ~~~%(type)s
           %(string)s
           // %(filename)s
-          ```
+          ~~~
         ||| % self,
 
       render: self.code,

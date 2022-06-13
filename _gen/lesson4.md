@@ -30,7 +30,7 @@ And install
 
 `$ jb install github.com/Duologic/privatebin-libsonnet`
 
-```jsonnet
+~~~jsonnet
 local privatebin = import 'github.com/Duologic/privatebin-libsonnet/main.libsonnet';
 
 {
@@ -38,14 +38,14 @@ local privatebin = import 'github.com/Duologic/privatebin-libsonnet/main.libsonn
 }
 
 // example1/example1.jsonnet
-```
+~~~
 
 
 This is relatively simple web application that exposes itself on port `8080`.
 
 ---
 
-```jsonnet
+~~~jsonnet
 local k = import 'ksonnet-util/kausal.libsonnet';
 
 {
@@ -76,7 +76,7 @@ local k = import 'ksonnet-util/kausal.libsonnet';
 }
 
 // example1/vendor/github.com/Duologic/privatebin-libsonnet/main.libsonnet
-```
+~~~
 
 
 `privatebin-libsonnet` is relatively simple, it already exposes the `container` separate
@@ -105,7 +105,7 @@ each team should be able to change the port to their liking.
 
 Create a local library in `lib/privatebin/`:
 
-```jsonnet
+~~~jsonnet
 local privatebin = import 'github.com/Duologic/privatebin-libsonnet/main.libsonnet';
 local k = import 'k.libsonnet';
 
@@ -123,7 +123,7 @@ privatebin
 }
 
 // example1/lib/privatebin/main.libsonnet
-```
+~~~
 
 
 Here we import the vendored library and extend it. We are extending the privatebin
@@ -138,7 +138,7 @@ documentation for the details on each.
 
 ---
 
-```jsonnet
+~~~jsonnet
 local privatebin = import 'privatebin/main.libsonnet';
 
 {
@@ -148,7 +148,7 @@ local privatebin = import 'privatebin/main.libsonnet';
 }
 
 // example1/example2.jsonnet
-```
+~~~
 
 
 To use the new library, we need to change the import to match `privatebin/main.libsonnet`,
@@ -164,7 +164,7 @@ conflicts.
 
 Let's add a suffix to prevent the naming conflict:
 
-```jsonnet
+~~~jsonnet
 local privatebin = import 'github.com/Duologic/privatebin-libsonnet/main.libsonnet';
 local k = import 'k.libsonnet';
 
@@ -185,7 +185,7 @@ privatebin
 }
 
 // example2/lib/privatebin/main.libsonnet
-```
+~~~
 
 
 Here we call `super.new()`, this means it will use the `new()` function defined in
@@ -198,7 +198,7 @@ The deployment/service will now be suffixed with `-privatebin`, ie. `backend-pri
 Wrapping libraries is a powerful concept, it can be used to manipulate or even replace
 whole systems that are used across a code base.
 
-```jsonnet
+~~~jsonnet
 local pentagon = import 'github.com/grafana/jsonnet-libs/pentagon/pentagon.libsonnet';
 
 pentagon
@@ -215,10 +215,10 @@ pentagon
 }
 
 // usecase-pentagon/lib/pentagon/example1.libsonnet
-```
+~~~
 
 
-```jsonnet
+~~~jsonnet
 local pentagon = import 'pentagon/example1.libsonnet';
 
 {
@@ -234,7 +234,7 @@ local pentagon = import 'pentagon/example1.libsonnet';
 }
 
 // usecase-pentagon/example1.jsonnet
-```
+~~~
 
 
 For synchronizing secrets between Vault and Kubernetes, Grafana Labs used a fork of
@@ -252,7 +252,7 @@ deployment per cluster, a secretStore per namespace and many externalSecret obje
 
 ---
 
-```jsonnet
+~~~jsonnet
 local externalSecrets = import 'external-secrets-libsonnet/main.libsonnet';
 local pentagon = import 'github.com/grafana/jsonnet-libs/pentagon/pentagon.libsonnet';
 
@@ -289,7 +289,7 @@ pentagon
 }
 
 // usecase-pentagon/lib/pentagon/example2.libsonnet
-```
+~~~
 
 
 The operator deployment and secretStore objects are managed centrally, only thing left to
@@ -326,7 +326,7 @@ changes upstream.
 
 `$ jb install ../../lesson3/example2/lib/webserver`
 
-```json
+~~~json
 {
   "version": 1,
   "dependencies": [
@@ -343,7 +343,7 @@ changes upstream.
 }
 
 // example3/jsonnetfile.json
-```
+~~~
 
 
 ```

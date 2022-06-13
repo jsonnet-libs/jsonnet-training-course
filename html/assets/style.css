@@ -31,6 +31,7 @@ blockquote {
     margin-right: 0;
     display: flow-root;
     font-size: 1rem;
+    border-left: 1em solid gold;
 }
 
 p {
@@ -85,6 +86,7 @@ pre {
     margin-right: 1em;
     width: min(50%, 70ch);
     overflow-x: scroll;
+    border: 1px solid slategrey !important;
 }
 
 nav#toc {
@@ -135,8 +137,26 @@ footer, footer a{
     }
 }
 
-li.L0, li.L1, li.L2, li.L3,
-li.L5, li.L6, li.L7, li.L8 {
-    list-style-type: decimal !important;
+li.L1, li.L3, li.L5, li.L7, li.L9 {
+    background: ghostwhite !important;
+}
+
+ol.linenums {
+    list-style: none;
+    counter-reset: li;
+}
+
+ol.linenums li::before {
+    content: counter(li);
+    color: slategrey;
+    display: inline-block;
+    width: 1em;
+    margin-left: -2em;
+    padding-right: 0.5em;
+    text-align: right;
+}
+
+ol.linenums li {
+    counter-increment: li;
     line-height: normal;
 }

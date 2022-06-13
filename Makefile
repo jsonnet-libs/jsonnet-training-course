@@ -22,6 +22,24 @@ lessons/lesson1/examples.jsonnet:
 		examples.jsonnet && \
 	echo "]" >> examples.jsonnet
 
+generate: lessons/lesson5/examples.jsonnet
+lessons/lesson5/examples.jsonnet:
+	@echo "Generating lessons/lesson5/examples.jsonnet..."
+	@cd lessons/lesson5 && \
+	echo "local example = (import 'coursonnet.libsonnet').example;" > \
+		examples.jsonnet && \
+	echo "[" >> examples.jsonnet && \
+	find ./example1 -type f -name example\*.jsonnet | \
+		sort | \
+		xargs --replace echo "  example.new('{}'[2:], importstr '{}', import '{}')," >> \
+		examples.jsonnet && \
+	echo "]" >> examples.jsonnet
+
+generate: lessons/lesson5/example1/docs/README.md
+lessons/lesson5/example1/docs/README.md:
+	@cd lessons/lesson5/example1 && \
+	make docs
+
 test: lessons/lesson1/examples.jsonnet
 	@jsonnet -J . lessons/lesson1/examples.jsonnet > /dev/null && \
 		echo "Success!"

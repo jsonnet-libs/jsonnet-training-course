@@ -26,6 +26,9 @@ cp -r "$DIRNAME"/assets "$OUTPUT"/assets
 for f in ${FILES[@]}; do
     FILENAME=$(basename "$f")
     TITLE=$(grep '^# ' "$f"| head -1 | sed 's;^# ;;g')
+    if [[ "$TITLE" != "Jsonnet Training Course" ]]; then
+        TITLE="$TITLE - Jsonnet Training Course"
+    fi
     BODY=$(md2html --github "$f")
     jsonnet -S -A "title=$TITLE" -A "body=$BODY" "$DIRNAME"/html.jsonnet > "$OUTPUT/${FILENAME%.md}.html"
 done

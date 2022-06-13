@@ -56,13 +56,13 @@ Then "install" a library, [`xtd`](https://github.com/jsonnet-libs/xtd) for examp
 
 To use it, `import` the main file:
 
-```jsonnet
+~~~jsonnet
 local xtd = import 'github.com/jsonnet-libs/xtd/main.libsonnet';
 
 xtd.ascii.isNumber('2')
 
 // example5/usage1.jsonnet
-```
+~~~
 
 
 And finally execute it with:
@@ -79,7 +79,7 @@ hood and how it manipulates these files.
 Jsonnet-bundler vendors libraries from Git repositories and tracks them in
 `jsonnetfile.json`and its corresponding lockfile `jsonnetfile.lock.json`.
 
-```json
+~~~json
 {
   "version": 1,
   "dependencies": [],
@@ -87,14 +87,14 @@ Jsonnet-bundler vendors libraries from Git repositories and tracks them in
 }
 
 // example1/jsonnetfile.json
-```
+~~~
 
 
 `$ jb init` creates a virtually empty `jsonnetfile.json`.
 
 ---
 
-```json
+~~~json
 {
   "version": 1,
   "dependencies": [
@@ -112,7 +112,7 @@ Jsonnet-bundler vendors libraries from Git repositories and tracks them in
 }
 
 // example2/jsonnetfile.json
-```
+~~~
 
 
 `$ jb install github.com/jsonnet-libs/xtd` adds a new entry to the `dependencies` in
@@ -132,7 +132,7 @@ github.com/jsonnet-libs/xtd` will pull in the git commit that `master` refers to
 
 ---
 
-```json
+~~~json
 {
   "version": 1,
   "dependencies": [
@@ -151,7 +151,7 @@ github.com/jsonnet-libs/xtd` will pull in the git commit that `master` refers to
 }
 
 // example2/jsonnetfile.lock.json
-```
+~~~
 
 
 A new file `jsonnetfile.lock.json` is created, this contains the actual `version` that
@@ -196,12 +196,12 @@ It is often not necessary and even undesirable to distribute `jsonnetfile.lock.j
 pin a specific version (for example when [upstream has breaking
 changes](#upstream-has-breaking-changes)).
 
-```gitignore
+~~~gitignore
 jsonnetfile.lock.json
 vendor/
 
 // example3/.gitignore
-```
+~~~
 
 
 Add a `.gitignore` file with `jsonnetfile.lock.json` and `vendor/` so they are not
@@ -211,13 +211,13 @@ accidentally committed.
 
 As shown before, to use a library it needs to be imported:
 
-```jsonnet
+~~~jsonnet
 local xtd = import 'github.com/jsonnet-libs/xtd/main.libsonnet';
 
 xtd.ascii.isNumber('2')
 
 // example5/usage1.jsonnet
-```
+~~~
 
 
 Using the long path is the recommended way to import vendored dependencies. It builds on
@@ -229,13 +229,13 @@ cases, the edge cases are covered in [Common use cases](#common-use-cases) below
 
 ---
 
-```jsonnet
+~~~jsonnet
 local xtd = import 'xtd/main.libsonnet';
 
 xtd.ascii.isNumber('2')
 
 // example5/usage2.jsonnet
-```
+~~~
 
 
 If `legacyImports` was `true` on install, then the symlink allows to import the library
@@ -293,7 +293,7 @@ A first response may be to ship the `jsonnetfile.lock.json` alongside the librar
 this also pins the version of all other libraries, which is often undesirable. It would be
 better to pin the version in `jsonnetfile.json`.
 
-```json
+~~~json
 {
   "version": 1,
   "dependencies": [
@@ -311,7 +311,7 @@ better to pin the version in `jsonnetfile.json`.
 }
 
 // example3/jsonnetfile.json
-```
+~~~
 
 
 This can be done by setting tracking `version` on a dependency, you can use `jb install`
@@ -383,7 +383,7 @@ makes it easily distinguishable.
 
 ---
 
-```json
+~~~json
 {
   "version": 1,
   "dependencies": [
@@ -402,7 +402,7 @@ makes it easily distinguishable.
 }
 
 // example4/jsonnetfile.json
-```
+~~~
 
 
 Note the `name` attribute on the `dependencies` entry, it has the value of `--legacy-name`
@@ -438,13 +438,13 @@ this library.
 
 ---
 
-```jsonnet
+~~~jsonnet
 local istiolib = import 'istio-lib/main.libsonnet';
 
 istiolib.networking.v1beta1.virtualService.new('test')
 
 // example5/usage3.jsonnet
-```
+~~~
 
 
 When using `--legacy-name istio-lib`, the import can look like this.
@@ -454,20 +454,20 @@ When using `--legacy-name istio-lib`, the import can look like this.
 Another pattern to naming a dependency with jsonnet-bundler is to create a local library
 with the purpose of providing a shortcut.
 
-```jsonnet
+~~~jsonnet
 (import 'github.com/jsonnet-libs/istio-libsonnet/1.13/main.libsonnet')
 
 // example5/lib/istiolib.libsonnet
-```
+~~~
 
 
-```jsonnet
+~~~jsonnet
 local istiolib = import 'istiolib.libsonnet';
 
 istiolib.networking.v1beta1.virtualService.new('test')
 
 // example5/usage4.jsonnet
-```
+~~~
 
 
 The added advantage of this approach is the ability to add local overrides for the library
