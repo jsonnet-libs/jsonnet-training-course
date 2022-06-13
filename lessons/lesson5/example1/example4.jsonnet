@@ -9,22 +9,8 @@ local k = import 'k.libsonnet';
     filename=std.thisFile,
   ),
 
-  '#images':: d.obj(
-    help=|||
-      `images` provides images for common webservers
-
-      Usage:
-
-      ```
-      webserver.new('my-nginx')
-      + webserver.withImage(webserver.images.nginx)
-      ```
-    |||
-  ),
   images: {
-    '#apache':: d.val(d.T.string, 'Apache HTTP webserver'),
     apache: 'httpd:2.4',
-    '#nginx':: d.val(d.T.string, 'Nginx HTTP webserver'),
     nginx: 'nginx:1.22',
   },
 

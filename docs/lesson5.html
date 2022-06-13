@@ -161,7 +161,65 @@ the docstring for <code>new()</code> will be in the <code>#new</code> key. Funct
 <code>|||</code>. This also improves the readability in the code. The <code>args</code> can be typed, constants
 for these are provided by <code>d.T.&lt;type&gt;</code> to increase consistency.</p>
 <hr>
-<p>For the sake of this lesson, let's add an object and a few constants:</p>
+<p>For the sake of this lesson, let's add a new <code>images</code> object with a few constants:</p>
+<pre><code class="language-jsonnet">local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
+local k = import 'k.libsonnet';
+
+{
+  '#':: d.pkg(
+    name='webserver',
+    url='github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1',
+    help='`webserver` provides a basic webserver on Kubernetes',
+    filename=std.thisFile,
+  ),
+
+  images: {
+    apache: 'httpd:2.4',
+    nginx: 'nginx:1.22',
+  },
+
+  '#new':: d.fn(
+    help=|||
+      `new` creates a Deployment object for Kubernetes
+
+      * `name` sets the name for the Deployment object
+      * `replicas` number of desired pods, defaults to 1
+    |||,
+    args=[
+      d.arg('name', d.T.string),
+      d.arg('replicas', d.T.number, 1),
+    ]
+  ),
+  new(name, replicas=1): {
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment:
+      k.apps.v1.deployment.new(
+        name,
+        replicas,
+        [self.container]
+      ),
+  },
+
+  '#withImage':: d.fn(
+    help='`withImage` modifies the image used for the httpd container',
+    args=[
+      d.arg('image', d.T.string),
+    ]
+  ),
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+}
+
+// example1/example4.jsonnet
+</code></pre>
+<p>The <code>images</code> key holds an object with additional webserver images.</p>
+<p>It can be used in combination with <code>withImage</code>:</p>
+<p><code>webserver.withImage(webserver.images.nginx)</code></p>
+<hr>
 <pre><code class="language-jsonnet">local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
 local k = import 'k.libsonnet';
 
@@ -228,22 +286,22 @@ local k = import 'k.libsonnet';
   },
 }
 
-// example1/example4.jsonnet
+// example1/example5.jsonnet
 </code></pre>
-<p>The <code>images</code> key holds an object with additional webserver images.</p>
-<p>Just like with functions, the docstring key gets prefixed by <code>#</code>. Objects can be
+<p>Just like with functions, the key for the docstring gets prefixed by <code>#</code>. Objects can be
 documented with <code>d.obj(help)</code>.</p>
-<p>Constants can be documented with <code>d.val(type, help)</code>.</p>
+<p>The constants in this object can be documented with <code>d.val(type, help)</code>.</p>
 <h3>Generating markdown docs</h3>
 <p>The doc-util library has a built-in rendering:</p>
 <pre><code class="language-jsonnet">local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
 
-d.render(import 'example4.jsonnet')
+d.render(import 'example5.jsonnet')
 
-// example1/example5.jsonnet
+// example1/example7.jsonnet
 </code></pre>
 <p>The <code>render(obj)</code> function returns a format to output <a href="https://jsonnet.org/learning/getting_started.html#multi">multiple
 files</a>.</p>
+<hr>
 <pre><code>{
   'README.md': &quot;...&quot;,
   'path/to/example.md': &quot;...&quot;,
@@ -251,19 +309,19 @@ files</a>.</p>
 </code></pre>
 <hr>
 <p>Jsonnet can export those files:</p>
-<p><code>$ jsonnet --string --create-output-dirs --multi docs/ example5.jsonnet</code></p>
+<p><code>$ jsonnet --string --create-output-dirs --multi docs/ example7.jsonnet</code></p>
 <ul>
 <li><code>--string</code> because the Markdown output should be treated as a string instead of JSON.</li>
 <li><code>--create-output-dirs</code> ensure directories for <code>path/to/example.md</code> get created.</li>
 <li><code>--multi docs/</code> to set the output directory for multiple files to <code>docs/</code>.</li>
 </ul>
 <p>Or in short:</p>
-<p><code>$ jsonnet -S -c -m docs/ example5.jsonnet</code></p>
+<p><code>$ jsonnet -S -c -m docs/ example7.jsonnet</code></p>
 <p>Note that this overwrites but does not remove existing files.</p>
 <pre><code class="language-makefile">.PHONY: docs
 docs:
     rm -rf docs/ &amp;&amp; \
-    jsonnet -J ./vendor -S -c -m docs/ example5.jsonnet
+    jsonnet -J ./vendor -S -c -m docs/ example7.jsonnet
 
 // example1/Makefile
 </code></pre>
@@ -271,10 +329,10 @@ docs:
 <hr>
 <blockquote>
 <p>This can also be done without the additional Jsonnet file by using <code>jsonnet --exec</code>:</p>
-<p><code>$ jsonnet -S -c -m docs/ --exec &quot;(import 'doc-util/main.libsonnet').render(import 'example4.jsonnet')&quot;</code></p>
+<p><code>$ jsonnet -S -c -m docs/ --exec &quot;(import 'doc-util/main.libsonnet').render(import 'example7.jsonnet')&quot;</code></p>
 </blockquote>
 <hr>
-<p>The output for the webserver library looks like this:</p>
+<p>The documentation for the webserver library will look like this:</p>
 <pre><code class="language-markdown"># package webserver
 
 `webserver` provides a basic webserver on Kubernetes
@@ -288,7 +346,7 @@ jb install github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/examp
 ## Usage
 
 ```jsonnet
-local webserver = import &quot;github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/example4.jsonnet&quot;
+local webserver = import &quot;github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/example5.jsonnet&quot;
 ```
 
 ## Index

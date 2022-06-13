@@ -54,25 +54,35 @@ for these are provided by `d.T.<type>` to increase consistency.
 
 ---
 
-For the sake of this lesson, let's add an object and a few constants:
+For the sake of this lesson, let's add a new `images` object with a few constants:
 
 %(example1/example4.jsonnet)s
 
 The `images` key holds an object with additional webserver images.
 
-Just like with functions, the docstring key gets prefixed by `#`. Objects can be
+It can be used in combination with `withImage`:
+
+`webserver.withImage(webserver.images.nginx)`
+
+---
+
+%(example1/example5.jsonnet)s
+
+Just like with functions, the key for the docstring gets prefixed by `#`. Objects can be
 documented with `d.obj(help)`.
 
-Constants can be documented with `d.val(type, help)`.
+The constants in this object can be documented with `d.val(type, help)`.
 
 ### Generating markdown docs
 
 The doc-util library has a built-in rendering:
 
-%(example1/example5.jsonnet)s
+%(example1/example7.jsonnet)s
 
 The `render(obj)` function returns a format to output [multiple
 files](https://jsonnet.org/learning/getting_started.html#multi).
+
+---
 
 ```
 {
@@ -85,7 +95,7 @@ files](https://jsonnet.org/learning/getting_started.html#multi).
 
 Jsonnet can export those files:
 
-`$ jsonnet --string --create-output-dirs --multi docs/ example5.jsonnet`
+`$ jsonnet --string --create-output-dirs --multi docs/ example7.jsonnet`
 
 * `--string` because the Markdown output should be treated as a string instead of JSON.
 * `--create-output-dirs` ensure directories for `path/to/example.md` get created.
@@ -93,7 +103,7 @@ Jsonnet can export those files:
 
 Or in short:
 
-`$ jsonnet -S -c -m docs/ example5.jsonnet`
+`$ jsonnet -S -c -m docs/ example7.jsonnet`
 
 Note that this overwrites but does not remove existing files. 
 
@@ -105,10 +115,10 @@ A simple Makefile target can be quite useful to contain these incantations.
 
 > This can also be done without the additional Jsonnet file by using `jsonnet --exec`:
 >
-> `$ jsonnet -S -c -m docs/ --exec "(import 'doc-util/main.libsonnet').render(import 'example4.jsonnet')"`
+> `$ jsonnet -S -c -m docs/ --exec "(import 'doc-util/main.libsonnet').render(import 'example7.jsonnet')"`
 
 ---
 
-The output for the webserver library looks like this:
+The documentation for the webserver library will look like this:
 
 %(example1/docs/README.md)s

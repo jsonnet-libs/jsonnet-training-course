@@ -11,7 +11,7 @@ jb install github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/examp
 ## Usage
 
 ```jsonnet
-local webserver = import "github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/example4.jsonnet"
+local webserver = import "github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/example5.jsonnet"
 ```
 
 ## Index

@@ -175,7 +175,72 @@ for these are provided by `d.T.<type>` to increase consistency.
 
 ---
 
-For the sake of this lesson, let's add an object and a few constants:
+For the sake of this lesson, let's add a new `images` object with a few constants:
+
+~~~jsonnet
+local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
+local k = import 'k.libsonnet';
+
+{
+  '#':: d.pkg(
+    name='webserver',
+    url='github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1',
+    help='`webserver` provides a basic webserver on Kubernetes',
+    filename=std.thisFile,
+  ),
+
+  images: {
+    apache: 'httpd:2.4',
+    nginx: 'nginx:1.22',
+  },
+
+  '#new':: d.fn(
+    help=|||
+      `new` creates a Deployment object for Kubernetes
+
+      * `name` sets the name for the Deployment object
+      * `replicas` number of desired pods, defaults to 1
+    |||,
+    args=[
+      d.arg('name', d.T.string),
+      d.arg('replicas', d.T.number, 1),
+    ]
+  ),
+  new(name, replicas=1): {
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment:
+      k.apps.v1.deployment.new(
+        name,
+        replicas,
+        [self.container]
+      ),
+  },
+
+  '#withImage':: d.fn(
+    help='`withImage` modifies the image used for the httpd container',
+    args=[
+      d.arg('image', d.T.string),
+    ]
+  ),
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+}
+
+// example1/example4.jsonnet
+~~~
+
+
+The `images` key holds an object with additional webserver images.
+
+It can be used in combination with `withImage`:
+
+`webserver.withImage(webserver.images.nginx)`
+
+---
 
 ~~~jsonnet
 local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
@@ -244,16 +309,14 @@ local k = import 'k.libsonnet';
   },
 }
 
-// example1/example4.jsonnet
+// example1/example5.jsonnet
 ~~~
 
 
-The `images` key holds an object with additional webserver images.
-
-Just like with functions, the docstring key gets prefixed by `#`. Objects can be
+Just like with functions, the key for the docstring gets prefixed by `#`. Objects can be
 documented with `d.obj(help)`.
 
-Constants can be documented with `d.val(type, help)`.
+The constants in this object can be documented with `d.val(type, help)`.
 
 ### Generating markdown docs
 
@@ -262,14 +325,16 @@ The doc-util library has a built-in rendering:
 ~~~jsonnet
 local d = import 'github.com/jsonnet-libs/docsonnet/doc-util/main.libsonnet';
 
-d.render(import 'example4.jsonnet')
+d.render(import 'example5.jsonnet')
 
-// example1/example5.jsonnet
+// example1/example7.jsonnet
 ~~~
 
 
 The `render(obj)` function returns a format to output [multiple
 files](https://jsonnet.org/learning/getting_started.html#multi).
+
+---
 
 ```
 {
@@ -282,7 +347,7 @@ files](https://jsonnet.org/learning/getting_started.html#multi).
 
 Jsonnet can export those files:
 
-`$ jsonnet --string --create-output-dirs --multi docs/ example5.jsonnet`
+`$ jsonnet --string --create-output-dirs --multi docs/ example7.jsonnet`
 
 * `--string` because the Markdown output should be treated as a string instead of JSON.
 * `--create-output-dirs` ensure directories for `path/to/example.md` get created.
@@ -290,7 +355,7 @@ Jsonnet can export those files:
 
 Or in short:
 
-`$ jsonnet -S -c -m docs/ example5.jsonnet`
+`$ jsonnet -S -c -m docs/ example7.jsonnet`
 
 Note that this overwrites but does not remove existing files. 
 
@@ -298,7 +363,7 @@ Note that this overwrites but does not remove existing files.
 .PHONY: docs
 docs:
 	rm -rf docs/ && \
-	jsonnet -J ./vendor -S -c -m docs/ example5.jsonnet
+	jsonnet -J ./vendor -S -c -m docs/ example7.jsonnet
 
 // example1/Makefile
 ~~~
@@ -310,11 +375,11 @@ A simple Makefile target can be quite useful to contain these incantations.
 
 > This can also be done without the additional Jsonnet file by using `jsonnet --exec`:
 >
-> `$ jsonnet -S -c -m docs/ --exec "(import 'doc-util/main.libsonnet').render(import 'example4.jsonnet')"`
+> `$ jsonnet -S -c -m docs/ --exec "(import 'doc-util/main.libsonnet').render(import 'example7.jsonnet')"`
 
 ---
 
-The output for the webserver library looks like this:
+The documentation for the webserver library will look like this:
 
 ~~~markdown
 # package webserver
@@ -330,7 +395,7 @@ jb install github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/examp
 ## Usage
 
 ```jsonnet
-local webserver = import "github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/example4.jsonnet"
+local webserver = import "github.com/jsonnet-libs/jsonnet-training-course/lessons/lesson5/example1/example5.jsonnet"
 ```
 
 ## Index
