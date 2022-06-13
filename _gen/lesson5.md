@@ -448,6 +448,11 @@ webserver.new('my-nginx')
 
 ## Conclusion
 
-TODO
+Providing documentation can be very helpful to communicate the library's intended
+use. The argument types give an indication about the expected values and the help
+text can contain code samples to get meaningful results quickly.
+
+Rendering documentation can be done directly with Jsonnet without additional
+programs, altough the incantations may feel like magic at first.
 
 
