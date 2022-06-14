@@ -1,9 +1,8 @@
 # Providing documentation with Docsonnet
 
-In most programming languages documentation is done with the use of docstrings in
-comments. However that is not possible with Jsonnet right now. To work around this, we
-can use [Docsonnet](https://github.com/jsonnet-libs/docsonnet) and provide docstrings
-as Jsonnet code.
+[Docsonnet](https://github.com/jsonnet-libs/docsonnet) provides a way to consistently
+add docstrings to Jsonnet code. As Docsonnet docstrings are written as Jsonnet
+attributes, it can also natively render user-friendly documentation in Markdown.
 
 
 ## Objectives
