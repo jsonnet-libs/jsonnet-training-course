@@ -62,6 +62,10 @@ lessons/lesson6/examples.jsonnet:
 		sort | \
 		xargs --replace echo "  example.new('{}'[2:], importstr '{}', import '{}')," >> \
 		examples.jsonnet && \
+	ls ./example1/base.json | \
+		sort | \
+		xargs --replace echo "  example.new('{}'[2:], importstr '{}', import '{}')," >> \
+		examples.jsonnet && \
 	ls ./example1/*.jsonnet.output | grep '\(example\|pitfall\)*.jsonnet.output' | \
 		sort | \
 		xargs --replace echo "  example.new('{}'[2:], importstr '{}', {filename:'{}'})," >> \

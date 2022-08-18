@@ -4,4 +4,5 @@
   (import './lesson3/main.jsonnet'),
   (import './lesson4/main.jsonnet'),
   (import './lesson5/main.jsonnet'),
+  (import './lesson6/main.jsonnet'),
 ]

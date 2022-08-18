@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Unit testing - Jsonnet Training Course</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="md2html">
+<link rel="stylesheet" type="text/css" href="assets/style.css">
+<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+<script src="assets/prettyprint.js"></script>
+<script src="assets/anchorlinks.js"></script>
+<script src="assets/toc.js"></script>
+</head>
+<body>
+
+<main>
+<p><span class="nav previous"><a href="lesson5.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+<h1>Unit testing</h1>
+<p>TODO</p>
+<h2>Objectives</h2>
+<ul>
+<li>Basic usage</li>
+<li>Advanced usage</li>
+<li>Pitfalls</li>
+</ul>
+<h2>Lesson</h2>
+<p>Let's unit test the webserver library from the first exercise.</p>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+
+{
+  new(name, replicas=1): {
+    container::
+      k.core.v1.container.new('httpd', 'httpd:2.4'),
+
+    deployment:
+      k.apps.v1.deployment.new(
+        name,
+        replicas,
+        [self.container]
+      ),
+  },
+
+  withImage(image): {
+    container+:
+      k.core.v1.container.withImage(image),
+  },
+}
+
+// example1/lib/webserver/main.libsonnet
+</code></pre>
+<p>This library provides a number of functions to create a webserver. Each function
+eventually renders a bit of JSON. The <code>withImages()</code> function is supposed to be mixed in
+with the <code>new()</code>. While doing maintenance on this library or adding new features,
+a number of things could go wrong. A few unit tests can catch unintended changes early.</p>
+<hr>
+<pre><code class="language-jsonnet">{
+   &quot;deployment&quot;: {
+      &quot;apiVersion&quot;: &quot;apps/v1&quot;,
+      &quot;kind&quot;: &quot;Deployment&quot;,
+      &quot;metadata&quot;: {
+         &quot;name&quot;: &quot;webserver1&quot;
+      },
+      &quot;spec&quot;: {
+         &quot;replicas&quot;: 1,
+         &quot;selector&quot;: {
+            &quot;matchLabels&quot;: {
+               &quot;name&quot;: &quot;webserver1&quot;
+            }
+         },
+         &quot;template&quot;: {
+            &quot;metadata&quot;: {
+               &quot;labels&quot;: {
+                  &quot;name&quot;: &quot;webserver1&quot;
+               }
+            },
+            &quot;spec&quot;: {
+               &quot;containers&quot;: [
+                  {
+                     &quot;image&quot;: &quot;httpd:2.4&quot;,
+                     &quot;name&quot;: &quot;httpd&quot;
+                  }
+               ]
+            }
+         }
+      }
+   }
+}
+
+// example1/base.json
+</code></pre>
+<p>The output of the webserver deployment will look like this. Note that it doesn't include
+the hidden <code>container</code> field. This rendered representation will be used as the base for
+the unit tests.</p>
+<h3>Initializing Testonnet</h3>
+<p>For the unit tests, the <a href="https://github.com/jsonnet-libs/testonnet">Testonnet</a> library
+provides a few primitives to get us started.</p>
+<p><code>$ jb install github.com/jsonnet-libs/testonnet</code></p>
+<p>Check out the <a href="https://github.com/jsonnet-libs/testonnet/blob/master/docs/README.md">docs</a> for Testonnet.</p>
+<hr>
+<pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/main.libsonnet';
+
+test.new(std.thisFile)
+
+// example1/example1.jsonnet
+</code></pre>
+<p>A test suite is initialized by calling <code>new(name)</code>. The <code>name</code> will be printed during
+execution to help us find failing test cases.</p>
+<p>When a test case fails, Testonnet will use <code>error</code> to ensure a non-zero exit code. This
+has the side effect that the corresponding stack trace will be from the Testonnet
+library, rather than the failing test. When using <code>std.thisFile</code> in the <code>name</code>, it will
+be easier to find the failing test case.</p>
+<hr>
+<pre><code class="language-jsonnet">TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example1.jsonnet
+{
+   &quot;verify&quot;: &quot;Passed 0 test cases&quot;
+}
+
+// example1/example1.jsonnet.output
+</code></pre>
+<p>Running the test suite can be done with this:</p>
+<p><code>$ jsonnet -J vendor -J lib example1.jsonnet</code></p>
+<p>The output will either show the failing test cases or count the successful test.</p>
+<hr>
+<h3>Testing <code>new()</code></h3>
+<pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/main.libsonnet';
+
+local base = import 'base.json';
+
+test.new(std.thisFile)
++ test.case.new(
+  'Basic',
+  test.expect.eq(
+    webserver.new('webserver1'),
+    base
+  )
+)
+
+// example1/example2.jsonnet
+</code></pre>
+<pre><code class="language-jsonnet">TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example2.jsonnet
+{
+   &quot;verify&quot;: &quot;Passed 1 test cases&quot;
+}
+
+// example1/example2.jsonnet.output
+</code></pre>
+<p><code>test.case.new(name, test)</code> adds a new test case to the suite. The <code>name</code> can be an
+arbitrary string, <code>test</code> is an object that can created with <code>test.expect</code>. In this
+example <code>test.expect.eq</code> compares 2 objects with the expectation that they are equal.</p>
+<p>The output from <code>webserver.new()</code> is compared to the rendered representation. Running the
+test suite returns a successful test.</p>
+<hr>
+<pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/main.libsonnet';
+
+local webserverName = 'webserver1';
+local base = import 'base.json';
+
+test.new(std.thisFile)
++ test.case.new(
+  'Basic',
+  test.expect.eq(
+    webserver.new(webserverName),
+    base
+  )
+)
++ test.case.new(
+  'Change default replicas',
+  test.expect.eq(
+    webserver.new(webserverName, 2),
+    base { deployment+: { spec+: { replicas: 2 } } }
+  )
+)
+
+// example1/example3.jsonnet
+</code></pre>
+<pre><code class="language-jsonnet">TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example3.jsonnet
+{
+   &quot;verify&quot;: &quot;Passed 2 test cases&quot;
+}
+
+// example1/example3.jsonnet.output
+</code></pre>
+<p>The <code>new()</code> function allows us to modify the <code>replicas</code> on the deployment. The left side
+of the comparison will represent that.</p>
+<p>On the right side <code>base</code> is added with only the <code>replicas</code> attribute modified.</p>
+<p>This test ensures only the replicas are changed, it also reinforces the values tested in
+the 'Basic' test.</p>
+<h3>Testing <code>withImages()</code></h3>
+<pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/main.libsonnet';
+
+local webserverName = 'webserver1';
+local base = import 'base.json';
+
+local mapContainerWithName(name, obj) =
+  {
+    local containers = super.spec.template.spec.containers,
+    spec+: { template+: { spec+: { containers: [
+      if c.name == name
+      then c + obj
+      else c
+      for c in containers
+    ] } } },
+  };
+
+test.new(std.thisFile)
++ test.case.new(
+  'Basic',
+  test.expect.eq(
+    webserver.new(webserverName),
+    base
+  )
+)
++ test.case.new(
+  'Change default replicas',
+  test.expect.eq(
+    webserver.new(webserverName, 2),
+    base { deployment+: { spec+: { replicas: 2 } } }
+  )
+)
++ test.case.new(
+  'Set alternative image',
+  test.expect.eq(
+    webserver.new(webserverName)
+    + webserver.withImage('httpd:2.5'),
+    base { deployment+: mapContainerWithName('httpd', { image: 'httpd:2.5' }) }
+  )
+)
+
+// example1/example4.jsonnet
+</code></pre>
+<pre><code class="language-jsonnet">TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example4.jsonnet
+{
+   &quot;verify&quot;: &quot;Passed 3 test cases&quot;
+}
+
+// example1/example4.jsonnet.output
+</code></pre>
+<p>Testing <code>withImages()</code> is a bit more complex. In the library this function modifies the
+hidden <code>container::</code> field, which eventually gets added to the deployment in <code>new()</code>
+through late-initialization.</p>
+<p>On the left side again <code>new()</code> is called, this time <code>withImages()</code> is concatenated to get
+a deployment with an alternative image.</p>
+<p>On the right hand the container with name <code>httpd</code> in the deployment needs to be modified
+with the new image name, using the <code>mapContainerWithName</code> helper function to keep the
+test cases readable.</p>
+<h2>Conclusion</h2>
+<p>TODO</p>
+<p><span class="nav previous"><a href="lesson5.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+</main>
+
+<footer>
+    <p>
+        <a href="about.html">About</a>
+        | <a href="https://github.com/jsonnet-libs/jsonnet-training-course">Source</a>
+    </p>
+</footer>
+</body>
+</html>
+

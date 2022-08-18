@@ -14,7 +14,7 @@
 <body>
 
 <main>
-<p><span class="nav previous"><a href="lesson4.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+<p><span class="nav previous"><a href="lesson4.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson6.html">next »</a></span></p>
 <h1>Providing documentation with Docsonnet</h1>
 <p><a href="https://github.com/jsonnet-libs/docsonnet">Docsonnet</a> provides a way to consistently
 add docstrings to Jsonnet code. As Docsonnet docstrings are written as Jsonnet
@@ -319,7 +319,7 @@ files</a>.</p>
 <p>Note that this overwrites but does not remove existing files.</p>
 <pre><code class="language-makefile">.PHONY: docs
 docs:
-    rm -rf docs/ &amp;&amp; \
+    @rm -rf docs/ &amp;&amp; \
     jsonnet -J ./vendor -S -c -m docs/ example7.jsonnet
 
 // example1/Makefile
@@ -399,7 +399,7 @@ use. The argument types give an indication about the expected values and the hel
 text can contain code samples to get meaningful results quickly.</p>
 <p>Rendering documentation can be done directly with Jsonnet without additional
 programs, altough the incantations may feel like magic at first.</p>
-<p><span class="nav previous"><a href="lesson4.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>
+<p><span class="nav previous"><a href="lesson4.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span> <span class="nav next"><a href="lesson6.html">next »</a></span></p>
 </main>
 
 <footer>

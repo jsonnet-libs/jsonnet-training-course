@@ -14,6 +14,7 @@ local example = (import 'coursonnet.libsonnet').example;
   example.new('./example1/lib/webserver/wrong1.libsonnet'[2:], importstr './example1/lib/webserver/wrong1.libsonnet', import './example1/lib/webserver/wrong1.libsonnet'),
   example.new('./example1/lib/webserver/wrong2.libsonnet'[2:], importstr './example1/lib/webserver/wrong2.libsonnet', import './example1/lib/webserver/wrong2.libsonnet'),
   example.new('./example1/lib/webserver/wrong3.libsonnet'[2:], importstr './example1/lib/webserver/wrong3.libsonnet', import './example1/lib/webserver/wrong3.libsonnet'),
+  example.new('./example1/base.json'[2:], importstr './example1/base.json', import './example1/base.json'),
   example.new('./example1/example1.jsonnet.output'[2:], importstr './example1/example1.jsonnet.output', {filename:'./example1/example1.jsonnet.output'}),
   example.new('./example1/example2.jsonnet.output'[2:], importstr './example1/example2.jsonnet.output', {filename:'./example1/example2.jsonnet.output'}),
   example.new('./example1/example3.jsonnet.output'[2:], importstr './example1/example3.jsonnet.output', {filename:'./example1/example3.jsonnet.output'}),
