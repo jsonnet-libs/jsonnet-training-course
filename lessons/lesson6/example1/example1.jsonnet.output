@@ -1,0 +1,4 @@
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example1.jsonnet
+{
+   "verify": "Passed 0 test cases"
+}

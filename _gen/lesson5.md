@@ -361,7 +361,7 @@ Note that this overwrites but does not remove existing files.
 ~~~makefile
 .PHONY: docs
 docs:
-	rm -rf docs/ && \
+	@rm -rf docs/ && \
 	jsonnet -J ./vendor -S -c -m docs/ example7.jsonnet
 
 // example1/Makefile

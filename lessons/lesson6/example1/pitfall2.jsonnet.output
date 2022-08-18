@@ -1,0 +1,4 @@
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite pitfall2.jsonnet
+{
+   "verify": "Passed 2 test cases"
+}
