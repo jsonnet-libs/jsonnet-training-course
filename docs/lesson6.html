@@ -579,7 +579,7 @@ local main = import 'main.libsonnet';
 main {
   withImagePullPolicy(policy): {
     container+:
-      k.core.v1.container.withName(super.name + policy)
+      k.core.v1.container.withName(super.container.name + policy)
       + k.core.v1.container.withImagePullPolicy(policy),
   },
 }
@@ -588,8 +588,70 @@ main {
 </code></pre>
 <p>For example, here <code>withImagePullPolicy()</code> function also changes <code>name</code> on the
 <code>container</code> while this was explicitly tested on the 'simple' use case.</p>
-<p>To cover that, the unit tests for 'simple' need to be repeated for the 'imagePull' use
-case, resulting in an exponential growth of test case as the library gets extended.</p>
+<hr>
+<pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/wrong2.libsonnet';
+
+local simple = webserver.new('webserver1');
+local imagePull =
+  webserver.new('webserver1')
+  + webserver.withImagePullPolicy('Always');
+
+test.new(std.thisFile)
++ test.case.new(
+  'Validate name',
+  test.expect.eq(
+    simple.deployment.metadata.name,
+    'webserver1',
+  )
+)
++ test.case.new(
+  'Validate image name',
+  test.expect.eq(
+    simple.deployment.spec.template.spec.containers[0].name,
+    'httpd',
+  )
+)
++ test.case.new(
+  'Validate imagePullPolicy',
+  test.expect.eq(
+    imagePull.deployment.spec.template.spec.containers[0].imagePullPolicy,
+    'Always',
+  )
+)
++ test.case.new(
+  'Validate name',
+  test.expect.eq(
+    imagePull.deployment.metadata.name,
+    'webserver1',
+  )
+)
++ test.case.new(
+  'Validate image name',
+  test.expect.eq(
+    imagePull.deployment.spec.template.spec.containers[0].name,
+    'httpd',
+  )
+)
+
+// example1/pitfall2.jsonnet
+</code></pre>
+<p>To cover for the name (and other tests), the unit tests for 'simple' need to be repeated
+for the 'imagePull' use case, resulting in an exponential growth of test case as the
+library gets extended.</p>
+<hr>
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor pitfall2.jsonnet
+RUNTIME ERROR: Failed 1/5 test cases:
+Validate image name: Expected httpdAlways to be httpd
+    vendor/testonnet/main.libsonnet:(78:11)-(84:13)	thunk from &lt;object &lt;anonymous&gt;&gt;
+    vendor/testonnet/main.libsonnet:(74:7)-(87:8)	object &lt;anonymous&gt;
+    Field &quot;verify&quot;	
+    During manifestation	
+
+
+// example1/pitfall2.jsonnet.output
+</code></pre>
+<p>Adding the test shows the expected failure.</p>
 <h4>Testing hidden attributes</h4>
 <pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
 local webserver = import 'webserver/wrong3.libsonnet';
@@ -618,15 +680,15 @@ test.new(std.thisFile)
   )
 )
 
-// example1/pitfall2.jsonnet
+// example1/pitfall3.jsonnet
 </code></pre>
-<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor pitfall2.jsonnet
-TRACE: vendor/testonnet/main.libsonnet:74 Testing suite pitfall2.jsonnet
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor pitfall3.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite pitfall3.jsonnet
 {
    &quot;verify&quot;: &quot;Passed 2 test cases&quot;
 }
 
-// example1/pitfall2.jsonnet.output
+// example1/pitfall3.jsonnet.output
 </code></pre>
 <p>While a unit test can access and validate the content of a hidden attribute, it is likely
 not useful. From a testing perspective, the hidden attributes should be considered
@@ -640,7 +702,7 @@ local main = import 'main.libsonnet';
 main {
   withImagePullPolicy(policy): {
     container+:
-      k.core.v1.container.withName(super.name + policy)
+      k.core.v1.container.withName(super.container.name + policy)
       + k.core.v1.container.withImagePullPolicy(policy),
   },
 }

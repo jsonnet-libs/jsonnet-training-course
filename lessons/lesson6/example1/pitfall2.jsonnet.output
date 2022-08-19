@@ -1,5 +1,8 @@
 # jsonnet -J lib -J vendor pitfall2.jsonnet
-TRACE: vendor/testonnet/main.libsonnet:74 Testing suite pitfall2.jsonnet
-{
-   "verify": "Passed 2 test cases"
-}
+RUNTIME ERROR: Failed 1/5 test cases:
+Validate image name: Expected httpdAlways to be httpd
+	vendor/testonnet/main.libsonnet:(78:11)-(84:13)	thunk from <object <anonymous>>
+	vendor/testonnet/main.libsonnet:(74:7)-(87:8)	object <anonymous>
+	Field "verify"	
+	During manifestation	
+

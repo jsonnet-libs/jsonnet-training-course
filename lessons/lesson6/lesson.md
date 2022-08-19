@@ -177,13 +177,24 @@ attributes.
 For example, here `withImagePullPolicy()` function also changes `name` on the
 `container` while this was explicitly tested on the 'simple' use case.
 
-To cover that, the unit tests for 'simple' need to be repeated for the 'imagePull' use
-case, resulting in an exponential growth of test case as the library gets extended.
+---
+
+%(example1/pitfall2.jsonnet)s
+
+To cover for the name (and other tests), the unit tests for 'simple' need to be repeated
+for the 'imagePull' use case, resulting in an exponential growth of test case as the
+library gets extended.
+
+---
+
+%(example1/pitfall2.jsonnet.output)s
+
+Adding the test shows the expected failure.
 
 #### Testing hidden attributes
 
-%(example1/pitfall2.jsonnet)s
-%(example1/pitfall2.jsonnet.output)s
+%(example1/pitfall3.jsonnet)s
+%(example1/pitfall3.jsonnet.output)s
 
 While a unit test can access and validate the content of a hidden attribute, it is likely
 not useful. From a testing perspective, the hidden attributes should be considered

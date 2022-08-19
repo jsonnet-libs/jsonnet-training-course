@@ -1,26 +1,44 @@
 local test = import 'testonnet/main.libsonnet';
-local webserver = import 'webserver/wrong3.libsonnet';
+local webserver = import 'webserver/wrong2.libsonnet';
 
-local webserverName = 'webserver1';
-local base = import 'base.json';
+local simple = webserver.new('webserver1');
+local imagePull =
+  webserver.new('webserver1')
+  + webserver.withImagePullPolicy('Always');
 
 test.new(std.thisFile)
 + test.case.new(
-  'Basic',
+  'Validate name',
   test.expect.eq(
-    webserver.new(webserverName),
-    base
+    simple.deployment.metadata.name,
+    'webserver1',
   )
 )
 + test.case.new(
-  'Set alternative image',
+  'Validate image name',
   test.expect.eq(
-    (webserver.new(webserverName)
-     + webserver.withImagePullPolicy('Always')).container,
-    {
-      name: 'httpd',
-      image: 'httpd:2.4',
-      imagePullPolicy: 'Always',
-    }
+    simple.deployment.spec.template.spec.containers[0].name,
+    'httpd',
+  )
+)
++ test.case.new(
+  'Validate imagePullPolicy',
+  test.expect.eq(
+    imagePull.deployment.spec.template.spec.containers[0].imagePullPolicy,
+    'Always',
+  )
+)
++ test.case.new(
+  'Validate name',
+  test.expect.eq(
+    imagePull.deployment.metadata.name,
+    'webserver1',
+  )
+)
++ test.case.new(
+  'Validate image name',
+  test.expect.eq(
+    imagePull.deployment.spec.template.spec.containers[0].name,
+    'httpd',
   )
 )

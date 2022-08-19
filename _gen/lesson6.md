@@ -676,7 +676,7 @@ local main = import 'main.libsonnet';
 main {
   withImagePullPolicy(policy): {
     container+:
-      k.core.v1.container.withName(super.name + policy)
+      k.core.v1.container.withName(super.container.name + policy)
       + k.core.v1.container.withImagePullPolicy(policy),
   },
 }
@@ -688,8 +688,79 @@ main {
 For example, here `withImagePullPolicy()` function also changes `name` on the
 `container` while this was explicitly tested on the 'simple' use case.
 
-To cover that, the unit tests for 'simple' need to be repeated for the 'imagePull' use
-case, resulting in an exponential growth of test case as the library gets extended.
+---
+
+~~~jsonnet
+local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/wrong2.libsonnet';
+
+local simple = webserver.new('webserver1');
+local imagePull =
+  webserver.new('webserver1')
+  + webserver.withImagePullPolicy('Always');
+
+test.new(std.thisFile)
++ test.case.new(
+  'Validate name',
+  test.expect.eq(
+    simple.deployment.metadata.name,
+    'webserver1',
+  )
+)
++ test.case.new(
+  'Validate image name',
+  test.expect.eq(
+    simple.deployment.spec.template.spec.containers[0].name,
+    'httpd',
+  )
+)
++ test.case.new(
+  'Validate imagePullPolicy',
+  test.expect.eq(
+    imagePull.deployment.spec.template.spec.containers[0].imagePullPolicy,
+    'Always',
+  )
+)
++ test.case.new(
+  'Validate name',
+  test.expect.eq(
+    imagePull.deployment.metadata.name,
+    'webserver1',
+  )
+)
++ test.case.new(
+  'Validate image name',
+  test.expect.eq(
+    imagePull.deployment.spec.template.spec.containers[0].name,
+    'httpd',
+  )
+)
+
+// example1/pitfall2.jsonnet
+~~~
+
+
+To cover for the name (and other tests), the unit tests for 'simple' need to be repeated
+for the 'imagePull' use case, resulting in an exponential growth of test case as the
+library gets extended.
+
+---
+
+~~~jsonnet
+# jsonnet -J lib -J vendor pitfall2.jsonnet
+RUNTIME ERROR: Failed 1/5 test cases:
+Validate image name: Expected httpdAlways to be httpd
+	vendor/testonnet/main.libsonnet:(78:11)-(84:13)	thunk from <object <anonymous>>
+	vendor/testonnet/main.libsonnet:(74:7)-(87:8)	object <anonymous>
+	Field "verify"	
+	During manifestation	
+
+
+// example1/pitfall2.jsonnet.output
+~~~
+
+
+Adding the test shows the expected failure.
 
 #### Testing hidden attributes
 
@@ -721,17 +792,17 @@ test.new(std.thisFile)
   )
 )
 
-// example1/pitfall2.jsonnet
+// example1/pitfall3.jsonnet
 ~~~
 
 ~~~jsonnet
-# jsonnet -J lib -J vendor pitfall2.jsonnet
-TRACE: vendor/testonnet/main.libsonnet:74 Testing suite pitfall2.jsonnet
+# jsonnet -J lib -J vendor pitfall3.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite pitfall3.jsonnet
 {
    "verify": "Passed 2 test cases"
 }
 
-// example1/pitfall2.jsonnet.output
+// example1/pitfall3.jsonnet.output
 ~~~
 
 
@@ -751,7 +822,7 @@ local main = import 'main.libsonnet';
 main {
   withImagePullPolicy(policy): {
     container+:
-      k.core.v1.container.withName(super.name + policy)
+      k.core.v1.container.withName(super.container.name + policy)
       + k.core.v1.container.withImagePullPolicy(policy),
   },
 }
