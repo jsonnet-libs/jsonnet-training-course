@@ -48,7 +48,9 @@ The output will either show the failing test cases or count the successful test.
 
 ---
 
-### Testing `new()`
+### Testing the webserver library
+
+#### `new()`
 
 %(example1/example2.jsonnet)s
 %(example1/example2.jsonnet.output)s
@@ -73,7 +75,7 @@ On the right side `base` is added with only the `replicas` attribute modified.
 This test ensures only the replicas are changed, it also reinforces the values tested in
 the 'Basic' test.
 
-### Testing `withImages()`
+#### `withImages()`
 
 %(example1/example4.jsonnet)s
 %(example1/example4.jsonnet.output)s
@@ -92,22 +94,27 @@ test cases readable.
 Note that `mapContainerWithName` also preserves any other containers that may exist in
 the deployment, future-proofing the unit tests.
 
-### Adding a new feature
+### Test-driven development
 
-For the sake of this exercise, let's add a feature that can set the `imagePullPolicy`
-attribute on the container.
-
-%(example1/lib/webserver/wrong1.libsonnet)s
-
-This file extends the library referenced as `main`. The `withImagePullPolicy()` function
-is intended to be concatenated to the output of `new()`.
-
----
+Let's write a test for a new function `webserver.withImagePullPolicy(policy)`, which can
+then be added as a feature to the library.
 
 %(example1/example5.jsonnet)s
 
-The test for this is very similar to 'Set alternative image', again using the
-`mapWithContainerName` helper to maintain readability.
+The new test 'Set imagePullPolicy' is very similar to 'Set alternative image'.
+
+To use the same `base`, `new()` is concatenated with
+`withImagePullPolicy('Always')` on the left.
+
+On the right it uses the `mapWithContainerName` helper to set `imagePullPolicy` on the
+`httpd` container.
+
+---
+
+%(example1/lib/webserver/wrong1.libsonnet)s
+
+Extending the library (referenced as `main`) with the `withImagePullPolicy()` function is
+quite straightforward.
 
 ---
 

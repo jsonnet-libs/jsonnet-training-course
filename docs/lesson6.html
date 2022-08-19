@@ -19,9 +19,9 @@
 <p>TODO</p>
 <h2>Objectives</h2>
 <ul>
-<li>Basic usage</li>
-<li>Advanced usage</li>
-<li>Pitfalls</li>
+<li>Write unit tests in Jsonnet</li>
+<li>Do test-driven development</li>
+<li>Know how to avoid pitfalls</li>
 </ul>
 <h2>Lesson</h2>
 <p>Let's unit test the webserver library from the first exercise.</p>
@@ -123,7 +123,8 @@ TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example1.jsonnet
 <p><code>$ jsonnet -J vendor -J lib example1.jsonnet</code></p>
 <p>The output will either show the failing test cases or count the successful test.</p>
 <hr>
-<h3>Testing <code>new()</code></h3>
+<h3>Testing the webserver library</h3>
+<h4><code>new()</code></h4>
 <pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
 local webserver = import 'webserver/main.libsonnet';
 
@@ -191,7 +192,7 @@ of the comparison will represent that.</p>
 <p>On the right side <code>base</code> is added with only the <code>replicas</code> attribute modified.</p>
 <p>This test ensures only the replicas are changed, it also reinforces the values tested in
 the 'Basic' test.</p>
-<h3>Testing <code>withImages()</code></h3>
+<h4><code>withImages()</code></h4>
 <pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
 local webserver = import 'webserver/main.libsonnet';
 
@@ -253,24 +254,9 @@ with the new image name, using the <code>mapContainerWithName</code> helper func
 test cases readable.</p>
 <p>Note that <code>mapContainerWithName</code> also preserves any other containers that may exist in
 the deployment, future-proofing the unit tests.</p>
-<h3>Adding a new feature</h3>
-<p>For the sake of this exercise, let's add a feature that can set the <code>imagePullPolicy</code>
-attribute on the container.</p>
-<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
-local main = import 'main.libsonnet';
-
-main {
-  withImagePullPolicy(policy): {
-    container:
-      k.core.v1.container.withImagePullPolicy(policy),
-  },
-}
-
-// example1/lib/webserver/wrong1.libsonnet
-</code></pre>
-<p>This file extends the library referenced as <code>main</code>. The <code>withImagePullPolicy()</code> function
-is intended to be concatenated to the output of <code>new()</code>.</p>
-<hr>
+<h3>Test-driven development</h3>
+<p>Let's write a test for a new function <code>webserver.withImagePullPolicy(policy)</code>, which can
+then be added as a feature to the library.</p>
 <pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
 local webserver = import 'webserver/wrong1.libsonnet';
 
@@ -323,8 +309,26 @@ test.new(std.thisFile)
 
 // example1/example5.jsonnet
 </code></pre>
-<p>The test for this is very similar to 'Set alternative image', again using the
-<code>mapWithContainerName</code> helper to maintain readability.</p>
+<p>The new test 'Set imagePullPolicy' is very similar to 'Set alternative image'.</p>
+<p>To use the same <code>base</code>, <code>new()</code> is concatenated with
+<code>withImagePullPolicy('Always')</code> on the left.</p>
+<p>On the right it uses the <code>mapWithContainerName</code> helper to set <code>imagePullPolicy</code> on the
+<code>httpd</code> container.</p>
+<hr>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+local main = import 'main.libsonnet';
+
+main {
+  withImagePullPolicy(policy): {
+    container:
+      k.core.v1.container.withImagePullPolicy(policy),
+  },
+}
+
+// example1/lib/webserver/wrong1.libsonnet
+</code></pre>
+<p>Extending the library (referenced as <code>main</code>) with the <code>withImagePullPolicy()</code> function is
+quite straightforward.</p>
 <hr>
 <pre><code class="language-jsonnet"># jsonnet -J lib -J vendor example5.jsonnet
 RUNTIME ERROR: Failed 1/4 test cases:
