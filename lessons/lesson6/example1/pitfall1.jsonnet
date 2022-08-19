@@ -15,16 +15,16 @@ test.new(std.thisFile)
   )
 )
 + test.case.new(
+  'Validate image name',
+  test.expect.eq(
+    simple.deployment.spec.template.spec.containers[0].name,
+    'httpd',
+  )
+)
++ test.case.new(
   'Validate imagePullPolicy',
   test.expect.eq(
     imagePull.deployment.spec.template.spec.containers[0].imagePullPolicy,
     'Always',
-  )
-)
-+ test.case.new(
-  'Validate name for imagePull',
-  test.expect.eq(
-    imagePull.deployment.metadata.name,
-    'webserver1',
   )
 )

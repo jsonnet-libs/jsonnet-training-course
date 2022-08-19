@@ -89,4 +89,112 @@ On the right hand the container with name `httpd` in the deployment needs to be 
 with the new image name, using the `mapContainerWithName` helper function to keep the
 test cases readable.
 
+Note that `mapContainerWithName` also preserves any other containers that may exist in
+the deployment, future-proofing the unit tests.
 
+### Adding a new feature
+
+For the sake of this exercise, let's add a feature that can set the `imagePullPolicy`
+attribute on the container.
+
+%(example1/lib/webserver/wrong1.libsonnet)s
+
+This file extends the library referenced as `main`. The `withImagePullPolicy()` function
+is intended to be concatenated to the output of `new()`.
+
+---
+
+%(example1/example5.jsonnet)s
+
+The test for this is very similar to 'Set alternative image', again using the
+`mapWithContainerName` helper to maintain readability.
+
+---
+
+%(example1/example5.jsonnet.output)s
+
+Oh no, running the test shows a failure, how did that happen? The difference between
+expected and actual result can be found in the output...
+
+Turns out that the `test.expect.eq` function output is quite inconvenient, let's improve
+that.
+
+---
+
+%(example1/example6.jsonnet)s
+
+To replace `test.expect.eq`, a new 'test' function needs to be created. This can be done
+with `test.expect.new(satisfy, message)`.
+
+The `satisfy` function should return a boolean with `actual` and `expected` as arguments.
+
+The `message` function returns a string and also accepts the `actual` and `expected`
+results as arguments, these can be used to display the results in the error message.
+
+---
+
+%(example1/example6.jsonnet.output)s
+
+The output is now a bit more convenient. It turns out that the `container` is being
+replaced completely instead of having `imagePullPolicy` set.
+
+---
+
+%(example1/lib/webserver/wrong1.libsonnet)s
+
+Can you spot the mistake?
+
+---
+
+%(example1/lib/webserver/correct.libsonnet)s
+
+Turns out a `+` was forgotten on `container+:`.
+
+---
+
+%(example1/example7.jsonnet.output)s
+
+With that fixed, the test suite succeeds.
+
+### Pitfalls
+
+Just like with any test framework, a unit test can be written in such a way that they
+succeed while not actually validating the unit.
+
+#### Testing individual attributes
+
+%(example1/pitfall1.jsonnet)s
+%(example1/pitfall1.jsonnet.output)s
+
+While the unit tests here are valid on their own, they only validate individual
+attributes. They won't catch any changes `withImagePullPolicy()` might make to other
+attributes.
+
+---
+
+%(example1/lib/webserver/wrong2.libsonnet)s
+
+For example, here `withImagePullPolicy()` function also changes `name` on the
+`container` while this was explicitly tested on the 'simple' use case.
+
+To cover that, the unit tests for 'simple' need to be repeated for the 'imagePull' use
+case, resulting in an exponential growth of test case as the library gets extended.
+
+#### Testing hidden attributes
+
+%(example1/pitfall2.jsonnet)s
+%(example1/pitfall2.jsonnet.output)s
+
+While a unit test can access and validate the content of a hidden attribute, it is likely
+not useful. From a testing perspective, the hidden attributes should be considered
+'internals' to the function.
+
+As Jsonnet does late-initialization before returning a JSON, validating the output should
+also be done on all visible attributes it might affect.
+
+---
+
+%(example1/lib/webserver/wrong2.libsonnet)s
+
+For example, here the `withImagePullPolicy()` function makes the `container` visible in
+the output, changing the intended behavior of `new()`.

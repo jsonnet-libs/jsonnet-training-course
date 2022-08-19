@@ -111,7 +111,8 @@ has the side effect that the corresponding stack trace will be from the Testonne
 library, rather than the failing test. When using <code>std.thisFile</code> in the <code>name</code>, it will
 be easier to find the failing test case.</p>
 <hr>
-<pre><code class="language-jsonnet">TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example1.jsonnet
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor example1.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example1.jsonnet
 {
    &quot;verify&quot;: &quot;Passed 0 test cases&quot;
 }
@@ -139,7 +140,8 @@ test.new(std.thisFile)
 
 // example1/example2.jsonnet
 </code></pre>
-<pre><code class="language-jsonnet">TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example2.jsonnet
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor example2.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example2.jsonnet
 {
    &quot;verify&quot;: &quot;Passed 1 test cases&quot;
 }
@@ -176,7 +178,8 @@ test.new(std.thisFile)
 
 // example1/example3.jsonnet
 </code></pre>
-<pre><code class="language-jsonnet">TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example3.jsonnet
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor example3.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example3.jsonnet
 {
    &quot;verify&quot;: &quot;Passed 2 test cases&quot;
 }
@@ -232,7 +235,8 @@ test.new(std.thisFile)
 
 // example1/example4.jsonnet
 </code></pre>
-<pre><code class="language-jsonnet">TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example4.jsonnet
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor example4.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example4.jsonnet
 {
    &quot;verify&quot;: &quot;Passed 3 test cases&quot;
 }
@@ -247,6 +251,404 @@ a deployment with an alternative image.</p>
 <p>On the right hand the container with name <code>httpd</code> in the deployment needs to be modified
 with the new image name, using the <code>mapContainerWithName</code> helper function to keep the
 test cases readable.</p>
+<p>Note that <code>mapContainerWithName</code> also preserves any other containers that may exist in
+the deployment, future-proofing the unit tests.</p>
+<h3>Adding a new feature</h3>
+<p>For the sake of this exercise, let's add a feature that can set the <code>imagePullPolicy</code>
+attribute on the container.</p>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+local main = import 'main.libsonnet';
+
+main {
+  withImagePullPolicy(policy): {
+    container:
+      k.core.v1.container.withImagePullPolicy(policy),
+  },
+}
+
+// example1/lib/webserver/wrong1.libsonnet
+</code></pre>
+<p>This file extends the library referenced as <code>main</code>. The <code>withImagePullPolicy()</code> function
+is intended to be concatenated to the output of <code>new()</code>.</p>
+<hr>
+<pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/wrong1.libsonnet';
+
+local webserverName = 'webserver1';
+local base = import 'base.json';
+
+local mapContainerWithName(name, obj) =
+  {
+    local containers = super.spec.template.spec.containers,
+    spec+: { template+: { spec+: { containers: [
+      if c.name == name
+      then c + obj
+      else c
+      for c in containers
+    ] } } },
+  };
+
+
+test.new(std.thisFile)
++ test.case.new(
+  'Basic',
+  test.expect.eq(
+    webserver.new(webserverName),
+    base
+  )
+)
++ test.case.new(
+  'Change default replicas',
+  test.expect.eq(
+    webserver.new(webserverName, 2),
+    base { deployment+: { spec+: { replicas: 2 } } }
+  )
+)
++ test.case.new(
+  'Set alternative image',
+  test.expect.eq(
+    webserver.new(webserverName)
+    + webserver.withImage('httpd:2.5'),
+    base { deployment+: mapContainerWithName('httpd', { image: 'httpd:2.5' }) }
+  )
+)
++ test.case.new(
+  'Set imagePullPolicy',
+  test.expect.eq(
+    webserver.new(webserverName)
+    + webserver.withImagePullPolicy('Always'),
+    base { deployment+: mapContainerWithName('httpd', { imagePullPolicy: 'Always' }) }
+  )
+)
+
+// example1/example5.jsonnet
+</code></pre>
+<p>The test for this is very similar to 'Set alternative image', again using the
+<code>mapWithContainerName</code> helper to maintain readability.</p>
+<hr>
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor example5.jsonnet
+RUNTIME ERROR: Failed 1/4 test cases:
+Set imagePullPolicy: Expected {&quot;deployment&quot;: {&quot;apiVersion&quot;: &quot;apps/v1&quot;, &quot;kind&quot;: &quot;Deployment&quot;, &quot;metadata&quot;: {&quot;name&quot;: &quot;webserver1&quot;}, &quot;spec&quot;: {&quot;replicas&quot;: 1, &quot;selector&quot;: {&quot;matchLabels&quot;: {&quot;name&quot;: &quot;webserver1&quot;}}, &quot;template&quot;: {&quot;metadata&quot;: {&quot;labels&quot;: {&quot;name&quot;: &quot;webserver1&quot;}}, &quot;spec&quot;: {&quot;containers&quot;: [{&quot;imagePullPolicy&quot;: &quot;Always&quot;}]}}}}} to be {&quot;deployment&quot;: {&quot;apiVersion&quot;: &quot;apps/v1&quot;, &quot;kind&quot;: &quot;Deployment&quot;, &quot;metadata&quot;: {&quot;name&quot;: &quot;webserver1&quot;}, &quot;spec&quot;: {&quot;replicas&quot;: 1, &quot;selector&quot;: {&quot;matchLabels&quot;: {&quot;name&quot;: &quot;webserver1&quot;}}, &quot;template&quot;: {&quot;metadata&quot;: {&quot;labels&quot;: {&quot;name&quot;: &quot;webserver1&quot;}}, &quot;spec&quot;: {&quot;containers&quot;: [{&quot;image&quot;: &quot;httpd:2.4&quot;, &quot;imagePullPolicy&quot;: &quot;Always&quot;, &quot;name&quot;: &quot;httpd&quot;}]}}}}}
+    vendor/testonnet/main.libsonnet:(78:11)-(84:13)	thunk from &lt;object &lt;anonymous&gt;&gt;
+    vendor/testonnet/main.libsonnet:(74:7)-(87:8)	object &lt;anonymous&gt;
+    Field &quot;verify&quot;	
+    During manifestation	
+
+
+// example1/example5.jsonnet.output
+</code></pre>
+<p>Oh no, running the test shows a failure, how did that happen? The difference between
+expected and actual result can be found in the output...</p>
+<p>Turns out that the <code>test.expect.eq</code> function output is quite inconvenient, let's improve
+that.</p>
+<hr>
+<pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/wrong1.libsonnet';
+
+local webserverName = 'webserver1';
+local base = import 'base.json';
+
+local mapContainerWithName(name, obj) =
+  {
+    local containers = super.spec.template.spec.containers,
+    spec+: { template+: { spec+: { containers: [
+      if c.name == name
+      then c + obj
+      else c
+      for c in containers
+    ] } } },
+  };
+
+local eqJson = test.expect.new(
+  function(actual, expected) actual == expected,
+  function(actual, expected)
+    'Actual:\n'
+    + std.manifestJson(actual)
+    + '\nExpected:\n'
+    + std.manifestJson(expected),
+);
+
+test.new(std.thisFile)
++ test.case.new(
+  'Basic',
+  eqJson(
+    webserver.new(webserverName),
+    base
+  )
+)
++ test.case.new(
+  'Change default replicas',
+  eqJson(
+    webserver.new(webserverName, 2),
+    base { deployment+: { spec+: { replicas: 2 } } }
+  )
+)
++ test.case.new(
+  'Set alternative image',
+  eqJson(
+    webserver.new(webserverName)
+    + webserver.withImage('httpd:2.5'),
+    base { deployment+: mapContainerWithName('httpd', { image: 'httpd:2.5' }) }
+  )
+)
++ test.case.new(
+  'Set imagePullPolicy',
+  eqJson(
+    webserver.new(webserverName)
+    + webserver.withImagePullPolicy('Always'),
+    base { deployment+: mapContainerWithName('httpd', { imagePullPolicy: 'Always' }) }
+  )
+)
+
+// example1/example6.jsonnet
+</code></pre>
+<p>To replace <code>test.expect.eq</code>, a new 'test' function needs to be created. This can be done
+with <code>test.expect.new(satisfy, message)</code>.</p>
+<p>The <code>satisfy</code> function should return a boolean with <code>actual</code> and <code>expected</code> as arguments.</p>
+<p>The <code>message</code> function returns a string and also accepts the <code>actual</code> and <code>expected</code>
+results as arguments, these can be used to display the results in the error message.</p>
+<hr>
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor example6.jsonnet
+RUNTIME ERROR: Failed 1/4 test cases:
+Set imagePullPolicy: Actual:
+{
+    &quot;deployment&quot;: {
+        &quot;apiVersion&quot;: &quot;apps/v1&quot;,
+        &quot;kind&quot;: &quot;Deployment&quot;,
+        &quot;metadata&quot;: {
+            &quot;name&quot;: &quot;webserver1&quot;
+        },
+        &quot;spec&quot;: {
+            &quot;replicas&quot;: 1,
+            &quot;selector&quot;: {
+                &quot;matchLabels&quot;: {
+                    &quot;name&quot;: &quot;webserver1&quot;
+                }
+            },
+            &quot;template&quot;: {
+                &quot;metadata&quot;: {
+                    &quot;labels&quot;: {
+                        &quot;name&quot;: &quot;webserver1&quot;
+                    }
+                },
+                &quot;spec&quot;: {
+                    &quot;containers&quot;: [
+                        {
+                            &quot;imagePullPolicy&quot;: &quot;Always&quot;
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
+Expected:
+{
+    &quot;deployment&quot;: {
+        &quot;apiVersion&quot;: &quot;apps/v1&quot;,
+        &quot;kind&quot;: &quot;Deployment&quot;,
+        &quot;metadata&quot;: {
+            &quot;name&quot;: &quot;webserver1&quot;
+        },
+        &quot;spec&quot;: {
+            &quot;replicas&quot;: 1,
+            &quot;selector&quot;: {
+                &quot;matchLabels&quot;: {
+                    &quot;name&quot;: &quot;webserver1&quot;
+                }
+            },
+            &quot;template&quot;: {
+                &quot;metadata&quot;: {
+                    &quot;labels&quot;: {
+                        &quot;name&quot;: &quot;webserver1&quot;
+                    }
+                },
+                &quot;spec&quot;: {
+                    &quot;containers&quot;: [
+                        {
+                            &quot;image&quot;: &quot;httpd:2.4&quot;,
+                            &quot;imagePullPolicy&quot;: &quot;Always&quot;,
+                            &quot;name&quot;: &quot;httpd&quot;
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
+    vendor/testonnet/main.libsonnet:(78:11)-(84:13)	thunk from &lt;object &lt;anonymous&gt;&gt;
+    vendor/testonnet/main.libsonnet:(74:7)-(87:8)	object &lt;anonymous&gt;
+    Field &quot;verify&quot;	
+    During manifestation	
+
+
+// example1/example6.jsonnet.output
+</code></pre>
+<p>The output is now a bit more convenient. It turns out that the <code>container</code> is being
+replaced completely instead of having <code>imagePullPolicy</code> set.</p>
+<hr>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+local main = import 'main.libsonnet';
+
+main {
+  withImagePullPolicy(policy): {
+    container:
+      k.core.v1.container.withImagePullPolicy(policy),
+  },
+}
+
+// example1/lib/webserver/wrong1.libsonnet
+</code></pre>
+<p>Can you spot the mistake?</p>
+<hr>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+local main = import 'main.libsonnet';
+
+main {
+  withImagePullPolicy(policy): {
+    container+:
+      k.core.v1.container.withImagePullPolicy(policy),
+  },
+}
+
+// example1/lib/webserver/correct.libsonnet
+</code></pre>
+<p>Turns out a <code>+</code> was forgotten on <code>container+:</code>.</p>
+<hr>
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor example7.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example7.jsonnet
+{
+   &quot;verify&quot;: &quot;Passed 4 test cases&quot;
+}
+
+// example1/example7.jsonnet.output
+</code></pre>
+<p>With that fixed, the test suite succeeds.</p>
+<h3>Pitfalls</h3>
+<p>Just like with any test framework, a unit test can be written in such a way that they
+succeed while not actually validating the unit.</p>
+<h4>Testing individual attributes</h4>
+<pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/wrong2.libsonnet';
+
+local simple = webserver.new('webserver1');
+local imagePull =
+  webserver.new('webserver1')
+  + webserver.withImagePullPolicy('Always');
+
+test.new(std.thisFile)
++ test.case.new(
+  'Validate name',
+  test.expect.eq(
+    simple.deployment.metadata.name,
+    'webserver1',
+  )
+)
++ test.case.new(
+  'Validate image name',
+  test.expect.eq(
+    simple.deployment.spec.template.spec.containers[0].name,
+    'httpd',
+  )
+)
++ test.case.new(
+  'Validate imagePullPolicy',
+  test.expect.eq(
+    imagePull.deployment.spec.template.spec.containers[0].imagePullPolicy,
+    'Always',
+  )
+)
+
+// example1/pitfall1.jsonnet
+</code></pre>
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor pitfall1.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite pitfall1.jsonnet
+{
+   &quot;verify&quot;: &quot;Passed 3 test cases&quot;
+}
+
+// example1/pitfall1.jsonnet.output
+</code></pre>
+<p>While the unit tests here are valid on their own, they only validate individual
+attributes. They won't catch any changes <code>withImagePullPolicy()</code> might make to other
+attributes.</p>
+<hr>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+local main = import 'main.libsonnet';
+
+main {
+  withImagePullPolicy(policy): {
+    container+:
+      k.core.v1.container.withName(super.name + policy)
+      + k.core.v1.container.withImagePullPolicy(policy),
+  },
+}
+
+// example1/lib/webserver/wrong2.libsonnet
+</code></pre>
+<p>For example, here <code>withImagePullPolicy()</code> function also changes <code>name</code> on the
+<code>container</code> while this was explicitly tested on the 'simple' use case.</p>
+<p>To cover that, the unit tests for 'simple' need to be repeated for the 'imagePull' use
+case, resulting in an exponential growth of test case as the library gets extended.</p>
+<h4>Testing hidden attributes</h4>
+<pre><code class="language-jsonnet">local test = import 'testonnet/main.libsonnet';
+local webserver = import 'webserver/wrong3.libsonnet';
+
+local webserverName = 'webserver1';
+local base = import 'base.json';
+
+test.new(std.thisFile)
++ test.case.new(
+  'Basic',
+  test.expect.eq(
+    webserver.new(webserverName),
+    base
+  )
+)
++ test.case.new(
+  'Set alternative image',
+  test.expect.eq(
+    (webserver.new(webserverName)
+     + webserver.withImagePullPolicy('Always')).container,
+    {
+      name: 'httpd',
+      image: 'httpd:2.4',
+      imagePullPolicy: 'Always',
+    }
+  )
+)
+
+// example1/pitfall2.jsonnet
+</code></pre>
+<pre><code class="language-jsonnet"># jsonnet -J lib -J vendor pitfall2.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite pitfall2.jsonnet
+{
+   &quot;verify&quot;: &quot;Passed 2 test cases&quot;
+}
+
+// example1/pitfall2.jsonnet.output
+</code></pre>
+<p>While a unit test can access and validate the content of a hidden attribute, it is likely
+not useful. From a testing perspective, the hidden attributes should be considered
+'internals' to the function.</p>
+<p>As Jsonnet does late-initialization before returning a JSON, validating the output should
+also be done on all visible attributes it might affect.</p>
+<hr>
+<pre><code class="language-jsonnet">local k = import 'k.libsonnet';
+local main = import 'main.libsonnet';
+
+main {
+  withImagePullPolicy(policy): {
+    container+:
+      k.core.v1.container.withName(super.name + policy)
+      + k.core.v1.container.withImagePullPolicy(policy),
+  },
+}
+
+// example1/lib/webserver/wrong2.libsonnet
+</code></pre>
+<p>For example, here the <code>withImagePullPolicy()</code> function makes the <code>container</code> visible in
+the output, changing the intended behavior of <code>new()</code>.</p>
 <h2>Conclusion</h2>
 <p>TODO</p>
 <p><span class="nav previous"><a href="lesson5.html">« previous</a></span> <span class="nav index"><a href="index.html">index</a></span></p>

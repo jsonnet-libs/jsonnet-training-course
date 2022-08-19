@@ -45,7 +45,8 @@ generate: lessons/lesson6/example1/pitfall*.jsonnet.output
 lessons/lesson6/example1/%.jsonnet.output:
 	@echo "Generating lessons/lesson6/example1/$*.jsonnet.output..."
 	@cd lessons/lesson6/example1 && \
-	jsonnet -J lib -J vendor $*.jsonnet 1>&2 &> $*.jsonnet.output || true
+	echo "# jsonnet -J lib -J vendor $*.jsonnet" > $*.jsonnet.output && \
+	jsonnet -J lib -J vendor $*.jsonnet 1>&2 &>> $*.jsonnet.output || true
 
 generate: lessons/lesson6/examples.jsonnet
 lessons/lesson6/examples.jsonnet:

@@ -18,9 +18,9 @@ local mapContainerWithName(name, obj) =
 local eqJson = test.expect.new(
   function(actual, expected) actual == expected,
   function(actual, expected)
-    'Expected \n'
+    'Actual:\n'
     + std.manifestJson(actual)
-    + '\nto be\n'
+    + '\nExpected:\n'
     + std.manifestJson(expected),
 );
 

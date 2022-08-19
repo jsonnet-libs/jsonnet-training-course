@@ -3,7 +3,8 @@ local main = import 'main.libsonnet';
 
 main {
   withImagePullPolicy(policy): {
-    container+:::
-      k.core.v1.container.withImagePullPolicy(policy),
+    container+:
+      k.core.v1.container.withName(super.name + policy)
+      + k.core.v1.container.withImagePullPolicy(policy),
   },
 }

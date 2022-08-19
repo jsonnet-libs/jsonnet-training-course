@@ -1,5 +1,6 @@
+# jsonnet -J lib -J vendor example6.jsonnet
 RUNTIME ERROR: Failed 1/4 test cases:
-Set imagePullPolicy: Expected 
+Set imagePullPolicy: Actual:
 {
     "deployment": {
         "apiVersion": "apps/v1",
@@ -31,7 +32,7 @@ Set imagePullPolicy: Expected
         }
     }
 }
-to be
+Expected:
 {
     "deployment": {
         "apiVersion": "apps/v1",
