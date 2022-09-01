@@ -1,0 +1,5 @@
+# make test
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite main.libsonnet
+{
+   "verify": "Passed 4 test cases"
+}

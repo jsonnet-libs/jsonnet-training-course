@@ -87,6 +87,7 @@ pre {
     width: min(50%, 70ch);
     overflow-x: scroll;
     border: 1px solid slategrey !important;
+    clear: left;
 }
 
 nav#toc {

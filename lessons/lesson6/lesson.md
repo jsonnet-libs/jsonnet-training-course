@@ -163,6 +163,29 @@ Turns out a `+` was forgotten on `container+:`.
 
 With that fixed, the test suite succeeds.
 
+### Pulling it together
+
+```
+example2/lib/webserver/
+├── main.libsonnet
+├── Makefile
+└── test
+    ├── base.json
+    ├── jsonnetfile.json
+    ├── lib/k.libsonnet
+    └── main.libsonnet
+```
+
+With the test cases written, let's pull it all together in a `test/` subdirectory so that
+the test dependencies from `jsonnetfile.json` are not required to install the library.
+
+---
+
+%(example2/lib/webserver/Makefile)s
+%(example2/lib/webserver/make_test.output)s
+
+With a `test` target in a Makefile, running the test cases becomes trivial.
+
 ### Pitfalls
 
 Just like with any test framework, a unit test can be written in such a way that they

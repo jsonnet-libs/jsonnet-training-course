@@ -48,6 +48,12 @@ lessons/lesson6/example1/%.jsonnet.output:
 	echo "# jsonnet -J lib -J vendor $*.jsonnet" > $*.jsonnet.output && \
 	jsonnet -J lib -J vendor $*.jsonnet 1>&2 &>> $*.jsonnet.output || true
 
+generate: lessons/lesson6/example2/lib/webserver/make_test.output
+lessons/lesson6/example2/lib/webserver/make_test.output:
+	@cd lessons/lesson6/example2/lib/webserver && \
+		echo "# make test" > make_test.output && \
+		make --no-print-directory test 1>&2 &>> make_test.output
+
 generate: lessons/lesson6/examples.jsonnet
 lessons/lesson6/examples.jsonnet:
 	@echo "Generating lessons/lesson6/examples.jsonnet..."
@@ -68,6 +74,10 @@ lessons/lesson6/examples.jsonnet:
 		xargs --replace echo "  example.new('{}'[2:], importstr '{}', import '{}')," >> \
 		examples.jsonnet && \
 	ls ./example1/*.jsonnet.output | grep '\(example\|pitfall\)*.jsonnet.output' | \
+		sort | \
+		xargs --replace echo "  example.new('{}'[2:], importstr '{}', {filename:'{}'})," >> \
+		examples.jsonnet && \
+	find ./example2/lib/webserver -name 'vendor' -prune -o -type f -print | \
 		sort | \
 		xargs --replace echo "  example.new('{}'[2:], importstr '{}', {filename:'{}'})," >> \
 		examples.jsonnet && \

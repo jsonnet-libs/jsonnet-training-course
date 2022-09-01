@@ -530,6 +530,36 @@ TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example7.jsonnet
 // example1/example7.jsonnet.output
 </code></pre>
 <p>With that fixed, the test suite succeeds.</p>
+<h3>Pulling it together</h3>
+<pre><code>example2/lib/webserver/
+├── main.libsonnet
+├── Makefile
+└── test
+    ├── base.json
+    ├── jsonnetfile.json
+    ├── lib/k.libsonnet
+    └── main.libsonnet
+</code></pre>
+<p>With the test cases written, let's pull it all together in a <code>test/</code> subdirectory so that
+the test dependencies from <code>jsonnetfile.json</code> are not required to install the library.</p>
+<hr>
+<pre><code class="language-jsonnet">.PHONY: test
+test:
+    @cd test/ &amp;&amp; \
+        jb install &amp;&amp; \
+        jsonnet -J vendor -J lib main.libsonnet
+
+// example2/lib/webserver/Makefile
+</code></pre>
+<pre><code class="language-jsonnet"># make test
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite main.libsonnet
+{
+   &quot;verify&quot;: &quot;Passed 4 test cases&quot;
+}
+
+// example2/lib/webserver/make_test.output
+</code></pre>
+<p>With a <code>test</code> target in a Makefile, running the test cases becomes trivial.</p>
 <h3>Pitfalls</h3>
 <p>Just like with any test framework, a unit test can be written in such a way that they
 succeed while not actually validating the unit.</p>
