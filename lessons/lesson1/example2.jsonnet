@@ -22,7 +22,7 @@ local webserver = {
           containers: [
             {
               name: 'httpd',
-              image: 'httpd:2.4',
+              image: 'httpd:2.3',
             },
           ],
         },

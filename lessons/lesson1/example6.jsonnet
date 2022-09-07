@@ -9,21 +9,28 @@ local webserver = {
         containerPort: 80,
       }],
     },
-
-    deployment: {
-      apiVersion: 'apps/v1',
-      kind: 'Deployment',
-      metadata: {
-        name: name,
+    apiVersion: 'apps/v1',
+    kind: 'Deployment',
+    metadata: {
+      name: name,
+    },
+    spec: {
+      selector: {
+        matchLabels: {
+          component: 'server',
+        },
       },
-      spec: {
-        replicas: replicas,
-        template: {
-          spec: {
-            containers: [
-              base.container,
-            ],
+      replicas: replicas,
+      template: {
+        metadata: {
+          labels: {
+            component: 'server',
           },
+        },
+        spec: {
+          containers: [
+            base.container,
+          ],
         },
       },
     },
@@ -35,7 +42,7 @@ local webserver = {
 };
 
 webserver.new('wonderful-webserver')
-+ webserver.withImage('httpd:2.5')
++ webserver.withImage('httpd:2.4')
 + {
   container+: {
     ports: [{

@@ -6,13 +6,24 @@ local webserver = {
       name: name,
     },
     spec: {
+      selector: {
+        matchLabels: {
+          component: 'server',
+        },
+      },
       replicas: replicas,
       template: {
+        metadata: {
+            labels: {
+              component: 'server',
+            },
+        },
+
         spec: {
           containers: [
             {
               name: 'httpd',
-              image: 'httpd:2.4',
+              image: 'httpd:2.3',
             },
           ],
         },
@@ -38,4 +49,4 @@ local webserver = {
 };
 
 webserver.new('wonderful-webserver')
-+ webserver.withImage('httpd:2.5')
++ webserver.withImage('httpd:2.4')
