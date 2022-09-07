@@ -6,7 +6,17 @@
   },
   spec: {
     replicas: 1,
+    selector: {
+      matchLabels: {
+        component: 'server',
+      },
+    },
     template: {
+      metadata: {
+          labels: {
+            component: 'server',
+          },
+        },
       spec: {
         containers: [
           {

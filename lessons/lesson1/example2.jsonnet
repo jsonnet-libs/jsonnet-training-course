@@ -7,7 +7,17 @@ local webserver = {
     },
     spec: {
       replicas: replicas,
+      selector: {
+        matchLabels: {
+          component: 'server',
+        },
+      },
       template: {
+        metadata: {
+          labels: {
+            component: 'server',
+          },
+        },
         spec: {
           containers: [
             {
