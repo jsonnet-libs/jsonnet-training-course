@@ -30,9 +30,9 @@ For package management we'll use jsonnet-bundler, please
 > don't know how Kubernetes works, this isn't a requirement for understanding the Jsonnet
 > examples.
 
-1. [Introduction Exercise](lesson1.md)
+1. [Introduction exercise](lesson1.md)
 1. [Package management](lesson2.md)
-1. [Refactoring Exercise](lesson3.md)
+1. [Refactoring exercise](lesson3.md)
 1. [Wrapping libraries](lesson4.md)
 1. [Documentation](lesson5.md)
 1. [Unit testing](lesson6.md)

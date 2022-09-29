@@ -1,4 +1,4 @@
-# Introduction Exercise
+# Introduction exercise
 
 Jsonnet gives us a lot of freedom to organize our libraries, there is no right or
 wrong, however a well-organized library can get you a long way. While applying common
