@@ -1,0 +1,5 @@
+# jsonnet -J lib -J vendor example4.jsonnet
+TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example4.jsonnet
+{
+   "verify": "Passed 3 test cases"
+}

@@ -40,6 +40,49 @@ lessons/lesson5/example1/docs/README.md:
 	@cd lessons/lesson5/example1 && \
 	make docs
 
+generate: lessons/lesson6/example1/example*.jsonnet.output
+generate: lessons/lesson6/example1/pitfall*.jsonnet.output
+lessons/lesson6/example1/%.jsonnet.output:
+	@echo "Generating lessons/lesson6/example1/$*.jsonnet.output..."
+	@cd lessons/lesson6/example1 && \
+	echo "# jsonnet -J lib -J vendor $*.jsonnet" > $*.jsonnet.output && \
+	jsonnet -J lib -J vendor $*.jsonnet 1>&2 &>> $*.jsonnet.output || true
+
+generate: lessons/lesson6/example2/lib/webserver/make_test.output
+lessons/lesson6/example2/lib/webserver/make_test.output:
+	@cd lessons/lesson6/example2/lib/webserver && \
+		echo "# make test" > make_test.output && \
+		make --no-print-directory test 1>&2 &>> make_test.output
+
+generate: lessons/lesson6/examples.jsonnet
+lessons/lesson6/examples.jsonnet:
+	@echo "Generating lessons/lesson6/examples.jsonnet..."
+	@cd lessons/lesson6 && \
+	echo "local example = (import 'coursonnet.libsonnet').example;" > \
+		examples.jsonnet && \
+	echo "[" >> examples.jsonnet && \
+	ls ./example1/*.jsonnet | grep '\(example\|pitfall\)*.jsonnet' | \
+		sort | \
+		xargs --replace echo "  example.new('{}'[2:], importstr '{}', import '{}')," >> \
+		examples.jsonnet && \
+	ls ./example1/lib/webserver/*.libsonnet | \
+		sort | \
+		xargs --replace echo "  example.new('{}'[2:], importstr '{}', import '{}')," >> \
+		examples.jsonnet && \
+	ls ./example1/base.json | \
+		sort | \
+		xargs --replace echo "  example.new('{}'[2:], importstr '{}', import '{}')," >> \
+		examples.jsonnet && \
+	ls ./example1/*.jsonnet.output | grep '\(example\|pitfall\)*.jsonnet.output' | \
+		sort | \
+		xargs --replace echo "  example.new('{}'[2:], importstr '{}', {filename:'{}'})," >> \
+		examples.jsonnet && \
+	find ./example2/lib/webserver -name 'vendor' -prune -o -type f -print | \
+		sort | \
+		xargs --replace echo "  example.new('{}'[2:], importstr '{}', {filename:'{}'})," >> \
+		examples.jsonnet && \
+	echo "]" >> examples.jsonnet
+
 test: lessons/lesson1/examples.jsonnet
 	@jsonnet -J . lessons/lesson1/examples.jsonnet > /dev/null && \
 		echo "Success!"

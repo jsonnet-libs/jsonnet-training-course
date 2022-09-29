@@ -1,0 +1,32 @@
+{
+   "deployment": {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+         "name": "webserver1"
+      },
+      "spec": {
+         "replicas": 1,
+         "selector": {
+            "matchLabels": {
+               "name": "webserver1"
+            }
+         },
+         "template": {
+            "metadata": {
+               "labels": {
+                  "name": "webserver1"
+               }
+            },
+            "spec": {
+               "containers": [
+                  {
+                     "image": "httpd:2.4",
+                     "name": "httpd"
+                  }
+               ]
+            }
+         }
+      }
+   }
+}

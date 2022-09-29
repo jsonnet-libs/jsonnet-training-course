@@ -1,0 +1,8 @@
+# jsonnet -J lib -J vendor example5.jsonnet
+RUNTIME ERROR: Failed 1/4 test cases:
+Set imagePullPolicy: Expected {"deployment": {"apiVersion": "apps/v1", "kind": "Deployment", "metadata": {"name": "webserver1"}, "spec": {"replicas": 1, "selector": {"matchLabels": {"name": "webserver1"}}, "template": {"metadata": {"labels": {"name": "webserver1"}}, "spec": {"containers": [{"imagePullPolicy": "Always"}]}}}}} to be {"deployment": {"apiVersion": "apps/v1", "kind": "Deployment", "metadata": {"name": "webserver1"}, "spec": {"replicas": 1, "selector": {"matchLabels": {"name": "webserver1"}}, "template": {"metadata": {"labels": {"name": "webserver1"}}, "spec": {"containers": [{"image": "httpd:2.4", "imagePullPolicy": "Always", "name": "httpd"}]}}}}}
+	vendor/testonnet/main.libsonnet:(78:11)-(84:13)	thunk from <object <anonymous>>
+	vendor/testonnet/main.libsonnet:(74:7)-(87:8)	object <anonymous>
+	Field "verify"	
+	During manifestation	
+
