@@ -1,4 +1,4 @@
-# Providing documentation with Docsonnet
+# Documentation
 
 [Docsonnet](https://github.com/jsonnet-libs/docsonnet) provides a way to consistently
 add docstrings to Jsonnet code. As Docsonnet docstrings are written as Jsonnet

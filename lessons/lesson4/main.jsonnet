@@ -5,7 +5,7 @@ local examples = import './examples.jsonnet';
 
 lesson.new(
   'lesson4',
-  'Further developing libraries',
+  'Wrapping libraries',
   |||
     When starting out with Jsonnet, it is very likely that you'll with existing code and
     dependencies. Developing on these can seem confusing and tedious, however there are

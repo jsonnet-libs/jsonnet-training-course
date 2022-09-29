@@ -1,4 +1,4 @@
-# Exercise: rewrite a library with `k8s-libsonnet`
+# Refactoring exercise
 
 In the first lesson we've written a extensible library and in the second lesson we've
 covered package management with jsonnet-bundler. In this lesson we'll combine what
