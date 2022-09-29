@@ -55,6 +55,14 @@ eventually renders a bit of JSON. The <code>withImages()</code> function is supp
 with the <code>new()</code>. While doing maintenance on this library or adding new features,
 a number of things could go wrong. A few unit tests can catch unintended changes early.</p>
 <hr>
+<pre><code class="language-jsonnet">local webserver = import 'webserver/main.libsonnet';
+webserver.new('webserver1')
+
+// example1/example0.jsonnet
+</code></pre>
+<p>Let's generate a base from our library to build our tests on:</p>
+<p><code>jsonnet -J lib -J vendor -o base.json example0.jsonnet</code></p>
+<hr>
 <pre><code class="language-jsonnet">{
    &quot;deployment&quot;: {
       &quot;apiVersion&quot;: &quot;apps/v1&quot;,
@@ -189,9 +197,9 @@ TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example3.jsonnet
 
 // example1/example3.jsonnet.output
 </code></pre>
-<p>The <code>new()</code> function allows us to modify the <code>replicas</code> on the deployment. The left side
-of the comparison will represent that.</p>
-<p>On the right side <code>base</code> is added with only the <code>replicas</code> attribute modified.</p>
+<p>The <code>new()</code> function allows us to modify the <code>replicas</code> on the deployment, this will go
+into the 'actual' part of the test case.</p>
+<p>On the 'expected' part <code>base</code> is added with only the <code>replicas</code> attribute modified.</p>
 <p>This test ensures only the replicas are changed, it also reinforces the values tested in
 the 'Basic' test.</p>
 <h4><code>withImages()</code></h4>
@@ -249,11 +257,11 @@ TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example4.jsonnet
 <p>Testing <code>withImages()</code> is a bit more complex. In the library this function modifies the
 hidden <code>container::</code> field, which eventually gets added to the deployment in <code>new()</code>
 through late-initialization.</p>
-<p>On the left side again <code>new()</code> is called, this time <code>withImages()</code> is concatenated to get
-a deployment with an alternative image.</p>
-<p>On the right hand the container with name <code>httpd</code> in the deployment needs to be modified
-with the new image name, using the <code>mapContainerWithName</code> helper function to keep the
-test cases readable.</p>
+<p>Again <code>new()</code> is called to set the 'actual' part, this time <code>withImages()</code> is
+concatenated to get a deployment with an alternative image.</p>
+<p>On the 'expected' side the container with name <code>httpd</code> in the deployment needs to be
+modified with the new image name, using the <code>mapContainerWithName</code> helper function to
+keep the test cases readable.</p>
 <p>Note that <code>mapContainerWithName</code> also preserves any other containers that may exist in
 the deployment, future-proofing the unit tests.</p>
 <h3>Test-driven development</h3>
@@ -313,9 +321,9 @@ test.new(std.thisFile)
 </code></pre>
 <p>The new test 'Set imagePullPolicy' is very similar to 'Set alternative image'.</p>
 <p>To use the same <code>base</code>, <code>new()</code> is concatenated with
-<code>withImagePullPolicy('Always')</code> on the left.</p>
-<p>On the right it uses the <code>mapWithContainerName</code> helper to set <code>imagePullPolicy</code> on the
-<code>httpd</code> container.</p>
+<code>withImagePullPolicy('Always')</code> on 'actual'.</p>
+<p>On 'expected' it uses the <code>mapWithContainerName</code> helper to set <code>imagePullPolicy</code> on
+the <code>httpd</code> container.</p>
 <hr>
 <pre><code class="language-jsonnet">local k = import 'k.libsonnet';
 local main = import 'main.libsonnet';
@@ -737,13 +745,12 @@ local main = import 'main.libsonnet';
 
 main {
   withImagePullPolicy(policy): {
-    container+:
-      k.core.v1.container.withName(super.container.name + policy)
-      + k.core.v1.container.withImagePullPolicy(policy),
+    container+:::
+      k.core.v1.container.withImagePullPolicy(policy),
   },
 }
 
-// example1/lib/webserver/wrong2.libsonnet
+// example1/lib/webserver/wrong3.libsonnet
 </code></pre>
 <p>For example, here the <code>withImagePullPolicy()</code> function makes the <code>container</code> visible in
 the output, changing the intended behavior of <code>new()</code>.</p>

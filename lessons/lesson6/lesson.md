@@ -9,6 +9,14 @@ a number of things could go wrong. A few unit tests can catch unintended changes
 
 ---
 
+%(example1/example0.jsonnet)s
+
+Let's generate a base from our library to build our tests on:
+
+`jsonnet -J lib -J vendor -o base.json example0.jsonnet`
+
+---
+
 %(example1/base.json)s
 
 The output of the webserver deployment will look like this. Note that it doesn't include
@@ -235,7 +243,7 @@ also be done on all visible attributes it might affect.
 
 ---
 
-%(example1/lib/webserver/wrong2.libsonnet)s
+%(example1/lib/webserver/wrong3.libsonnet)s
 
 For example, here the `withImagePullPolicy()` function makes the `container` visible in
 the output, changing the intended behavior of `new()`.

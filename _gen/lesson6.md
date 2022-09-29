@@ -49,6 +49,20 @@ a number of things could go wrong. A few unit tests can catch unintended changes
 ---
 
 ~~~jsonnet
+local webserver = import 'webserver/main.libsonnet';
+webserver.new('webserver1')
+
+// example1/example0.jsonnet
+~~~
+
+
+Let's generate a base from our library to build our tests on:
+
+`jsonnet -J lib -J vendor -o base.json example0.jsonnet`
+
+---
+
+~~~jsonnet
 {
    "deployment": {
       "apiVersion": "apps/v1",
@@ -219,10 +233,10 @@ TRACE: vendor/testonnet/main.libsonnet:74 Testing suite example3.jsonnet
 ~~~
 
 
-The `new()` function allows us to modify the `replicas` on the deployment. The left side
-of the comparison will represent that.
+The `new()` function allows us to modify the `replicas` on the deployment, this will go
+into the 'actual' part of the test case.
 
-On the right side `base` is added with only the `replicas` attribute modified.
+On the 'expected' part `base` is added with only the `replicas` attribute modified.
 
 This test ensures only the replicas are changed, it also reinforces the values tested in
 the 'Basic' test.
@@ -289,12 +303,12 @@ Testing `withImages()` is a bit more complex. In the library this function modif
 hidden `container::` field, which eventually gets added to the deployment in `new()`
 through late-initialization.
 
-On the left side again `new()` is called, this time `withImages()` is concatenated to get
-a deployment with an alternative image.
+Again `new()` is called to set the 'actual' part, this time `withImages()` is
+concatenated to get a deployment with an alternative image.
 
-On the right hand the container with name `httpd` in the deployment needs to be modified
-with the new image name, using the `mapContainerWithName` helper function to keep the
-test cases readable.
+On the 'expected' side the container with name `httpd` in the deployment needs to be
+modified with the new image name, using the `mapContainerWithName` helper function to
+keep the test cases readable.
 
 Note that `mapContainerWithName` also preserves any other containers that may exist in
 the deployment, future-proofing the unit tests.
@@ -362,10 +376,10 @@ test.new(std.thisFile)
 The new test 'Set imagePullPolicy' is very similar to 'Set alternative image'.
 
 To use the same `base`, `new()` is concatenated with
-`withImagePullPolicy('Always')` on the left.
+`withImagePullPolicy('Always')` on 'actual'.
 
-On the right it uses the `mapWithContainerName` helper to set `imagePullPolicy` on the
-`httpd` container.
+On 'expected' it uses the `mapWithContainerName` helper to set `imagePullPolicy` on
+the `httpd` container.
 
 ---
 
@@ -871,13 +885,12 @@ local main = import 'main.libsonnet';
 
 main {
   withImagePullPolicy(policy): {
-    container+:
-      k.core.v1.container.withName(super.container.name + policy)
-      + k.core.v1.container.withImagePullPolicy(policy),
+    container+:::
+      k.core.v1.container.withImagePullPolicy(policy),
   },
 }
 
-// example1/lib/webserver/wrong2.libsonnet
+// example1/lib/webserver/wrong3.libsonnet
 ~~~
 
 
