@@ -7,12 +7,22 @@ local webserver = {
     },
     spec: {
       replicas: replicas,
+      selector: {
+        matchLabels: {
+          component: 'server',
+        },
+      },
       template: {
+        metadata: {
+          labels: {
+            component: 'server',
+          },
+        },
         spec: {
           containers: [
             {
               name: 'httpd',
-              image: 'httpd:2.4',
+              image: 'httpd:2.3',
             },
           ],
         },
