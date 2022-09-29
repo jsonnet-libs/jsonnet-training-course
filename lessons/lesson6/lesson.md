@@ -67,10 +67,10 @@ test suite returns a successful test.
 %(example1/example3.jsonnet)s
 %(example1/example3.jsonnet.output)s
 
-The `new()` function allows us to modify the `replicas` on the deployment. The left side
-of the comparison will represent that.
+The `new()` function allows us to modify the `replicas` on the deployment, this will go
+into the 'actual' part of the test case.
 
-On the right side `base` is added with only the `replicas` attribute modified.
+On the 'expected' part `base` is added with only the `replicas` attribute modified.
 
 This test ensures only the replicas are changed, it also reinforces the values tested in
 the 'Basic' test.
@@ -84,12 +84,12 @@ Testing `withImages()` is a bit more complex. In the library this function modif
 hidden `container::` field, which eventually gets added to the deployment in `new()`
 through late-initialization.
 
-On the left side again `new()` is called, this time `withImages()` is concatenated to get
-a deployment with an alternative image.
+Again `new()` is called to set the 'actual' part, this time `withImages()` is
+concatenated to get a deployment with an alternative image.
 
-On the right hand the container with name `httpd` in the deployment needs to be modified
-with the new image name, using the `mapContainerWithName` helper function to keep the
-test cases readable.
+On the 'expected' side the container with name `httpd` in the deployment needs to be
+modified with the new image name, using the `mapContainerWithName` helper function to
+keep the test cases readable.
 
 Note that `mapContainerWithName` also preserves any other containers that may exist in
 the deployment, future-proofing the unit tests.
@@ -104,10 +104,10 @@ then be added as a feature to the library.
 The new test 'Set imagePullPolicy' is very similar to 'Set alternative image'.
 
 To use the same `base`, `new()` is concatenated with
-`withImagePullPolicy('Always')` on the left.
+`withImagePullPolicy('Always')` on 'actual'.
 
-On the right it uses the `mapWithContainerName` helper to set `imagePullPolicy` on the
-`httpd` container.
+On 'expected' it uses the `mapWithContainerName` helper to set `imagePullPolicy` on
+the `httpd` container.
 
 ---
 
