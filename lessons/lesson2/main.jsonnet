@@ -5,7 +5,7 @@ local examples = import './examples.jsonnet';
 
 lesson.new(
   'lesson2',
-  'Understanding Package management',
+  'Package management',
   |||
     There are a ton of Jsonnet libraries out there, ranging from big generated libraries
     to manually curated for a very specific purpose. Let's have a look at how to find and

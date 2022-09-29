@@ -30,11 +30,11 @@ For package management we'll use jsonnet-bundler, please
 > don't know how Kubernetes works, this isn't a requirement for understanding the Jsonnet
 > examples.
 
-1. [Write an extensible library](lesson1.md)
-1. [Understanding Package management](lesson2.md)
-1. [Exercise: rewrite a library with `k8s-libsonnet`](lesson3.md)
-1. [Further developing libraries](lesson4.md)
-1. [Providing documentation with Docsonnet](lesson5.md)
+1. [Introduction Exercise](lesson1.md)
+1. [Package management](lesson2.md)
+1. [Refactoring Exercise](lesson3.md)
+1. [Wrapping libraries](lesson4.md)
+1. [Documentation](lesson5.md)
 1. [Unit testing](lesson6.md)
 
 
